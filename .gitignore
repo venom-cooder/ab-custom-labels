@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Secrets (NEVER UPLOAD THESE)
+.env
+
+# Production Builds
+dist/
+build/
+
+# System Files
+.DS_Store
