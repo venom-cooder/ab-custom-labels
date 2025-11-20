@@ -15,7 +15,7 @@ const Gallery = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- CONFIG MATCHING GIT FOLDERS ---
+  // --- CONFIGURATION (Matches Git Folders) ---
   const config = {
     stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, 
     logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     
@@ -23,7 +23,7 @@ const Gallery = () => {
     cards:    { folder: 'Cards',    count: 9,  prefix: 'cards' }     
   };
 
-  const currentConfig = config[type] || { folder: '', count: 0, prefix: '' };
+  const currentConfig = config[type ? type.toLowerCase() : ''] || { folder: '', count: 0, prefix: '' };
 
   const items = Array.from({ length: currentConfig.count }, (_, i) => ({
     id: i + 1,
@@ -67,19 +67,19 @@ const Gallery = () => {
         </div>
       </nav>
 
-      {/* --- NEW INSTRUCTION HEADER --- */}
+      {/* --- ✅ THIS IS THE TEXT YOU WANTED --- */}
       <div style={{textAlign:'center', padding:'3rem 1.5rem 1rem', maxWidth:'900px', margin:'0 auto'}}>
         <h1 style={{fontSize:'3rem', fontWeight:'800', textTransform:'capitalize', marginBottom:'15px'}}>
           {type} Collection
         </h1>
         <p style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.6'}}>
-          Like a design? <b>Click any image</b> to order the exact same one or customize it to fit your brand.
+          <b>Click any image</b> to order the exact same design or customize it.
           <br />
-          Have a completely different idea? Click any item to open the form, describe your vision, and we will discuss it on WhatsApp!
+          Have a unique idea? Click an item, fill the form, and we'll discuss it on WhatsApp!
         </p>
       </div>
+      {/* --------------------------------------- */}
 
-      {/* --- MASONRY GRID --- */}
       <div className="masonry-grid">
         {items.map((item) => (
           <motion.div 
@@ -95,10 +95,10 @@ const Gallery = () => {
               onError={(e) => {
                 e.target.style.display = 'none'; 
                 e.target.parentNode.style.backgroundColor = '#ffecec';
-                e.target.parentNode.innerHTML += `<div style="padding:20px;color:red;">Missing:<br/>${item.imgSrc}</div>`;
+                e.target.parentNode.innerHTML += `<div style="padding:20px;color:red;font-size:0.8rem;">Missing:<br/>${item.imgSrc}</div>`;
               }} 
             />
-            <div className="overlay-btn">Customize / Order <FaPenNib size={10} style={{marginLeft:5}}/></div>
+            <div className="overlay-btn">Customize <FaPenNib size={10} style={{marginLeft:5}}/></div>
           </motion.div>
         ))}
       </div>
@@ -121,9 +121,9 @@ const Gallery = () => {
                 <form onSubmit={handleGenerate}>
                   <input name="name" required className="clean-input" placeholder="Your Name" />
                   <input name="contact" required className="clean-input" placeholder="WhatsApp Contact Number" />
-                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your changes or your new idea here..." />
+                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your changes or your new idea..." />
                   <input name="qty" type="number" required className="clean-input" placeholder="Quantity" />
-                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? 'Processing...' : 'Generate Request'}</button>
+                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
                 </form>
               ) : (
                 <div>

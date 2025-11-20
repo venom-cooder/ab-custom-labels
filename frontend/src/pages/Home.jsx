@@ -1,306 +1,218 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaBoxOpen, FaTimes, FaWhatsapp, FaShapes, FaIdCard, FaPenNib } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaPenNib } from 'react-icons/fa';
 
-// Import Animation Components
+// Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
 
 const Home = () => {
   const navigate = useNavigate();
-  
-  // --- STATE MANAGEMENT ---
-  const [isOrderModalOpen, setOrderModalOpen] = useState(false);
-  const [orderStage, setOrderStage] = useState('FORM'); 
-  const [formData, setFormData] = useState(null);
-  const [isSaving, setIsSaving] = useState(false);
-
-  // Vercel/Render API URL
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- ANIMATION VARIANTS (DEFINED HERE TO FIX RED LINE) ---
-  const bentoContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
+  // --- STATES ---
+  const [isOrderModalOpen, setOrderModalOpen] = useState(false);
+  const [formData, setFormData] = useState(null);
+  const [orderStage, setOrderStage] = useState('FORM');
+  
+  // Logo Animation State
+  const [logoIndex, setLogoIndex] = useState(0);
+  const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Assumes logo1.png ... logo10.png exist
 
-  const bentoItem = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { type: 'spring', stiffness: 50 }
-    }
-  };
+  // Cycle Logos every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLogoIndex((prev) => (prev + 1) % logos.length);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
 
-  const scrollUp = { 
-    animate: { y: [0, -500], transition: { repeat: Infinity, duration: 15, ease: "linear" } } 
-  };
-  const scrollDown = { 
-    animate: { y: [-500, 0], transition: { repeat: Infinity, duration: 18, ease: "linear" } } 
-  };
-
-  // --- 1. HANDLE FORM SUBMISSION ---
+  // --- HANDLERS ---
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setIsSaving(true);
-    
     const data = new FormData(e.target);
-    
     const newOrder = {
       name: data.get('name'),
       contact: data.get('contact'),
       details: data.get('details'),
-      type: 'Home Page Request',
+      type: 'Home Request',
       date: new Date().toLocaleString()
     };
-
     setFormData(newOrder);
-
-    try {
-      await axios.post(`${API_URL}/api/orders`, newOrder);
-      console.log("Order saved to Cloud DB");
-    } catch (err) {
-      // FIX: Using 'err' inside console.error removes the red line
-      console.error("Failed to save order:", err);
-    }
-
-    setIsSaving(false);
+    try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(e){}
     setOrderStage('SUMMARY');
   };
 
-  // --- 2. CONNECT TO WHATSAPP ---
   const connectWhatsApp = () => {
-    const msg = `*NEW PROJECT INQUIRY - AB CUSTOM LABELS* 🚀\n\n` +
-                `👤 Name: ${formData.name}\n` +
-                `📞 Contact: ${formData.contact}\n` +
-                `📝 Request: ${formData.details}`;
-    
+    const msg = `*NEW INQUIRY* 🚀\n👤 Name: ${formData.name}\n📞 Contact: ${formData.contact}\n📝 Request: ${formData.details}`;
     window.open(`https://wa.me/919243858944?text=${encodeURIComponent(msg)}`, '_blank');
-    
-    setOrderModalOpen(false);
-    setOrderStage('FORM');
+    setOrderModalOpen(false); setOrderStage('FORM');
   };
 
   return (
     <div className="app-container">
-      {/* --- NAVBAR --- */}
+      
+      {/* --- 1. IMPROVED HEADER --- */}
       <nav>
-        <div className="logo">AB CUSTOM LABELS</div>
-        <MagneticBtn 
-          onClick={() => setOrderModalOpen(true)} 
-          style={{ width: 'auto', padding: '10px 24px', fontSize: '0.9rem' }}
-        >
+        <div className="logo" onClick={()=>navigate('/')}>AB CUSTOM.</div>
+        
+        {/* Direct Links Section */}
+        <div className="nav-links">
+          <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
+          <span className="nav-link" onClick={()=>navigate('/career')}>Career</span>
+          <span className="nav-link" onClick={()=>window.scrollTo(0, document.body.scrollHeight)}>About</span>
+        </div>
+
+        <MagneticBtn onClick={() => setOrderModalOpen(true)} style={{ width: 'auto', padding: '10px 20px', fontSize: '0.85rem' }}>
           Start Project
         </MagneticBtn>
       </nav>
 
-      {/* --- HERO SECTION --- */}
+      {/* --- 2. HERO TEXT --- */}
       <section className="hero-section">
-        <div className="hero-title" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="hero-title" style={{ display: 'flex', justifyContent: 'center' }}>
           <RevealText text="We Design Identities That Stick." />
         </div>
-        
-        <motion.p 
-          className="hero-desc"
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ delay: 0.5, duration: 1 }}
-        >
-          <b>AB CUSTOM LABELS</b> is a premium design house in Katni. Waterproof labels, holographic stickers, visiting cards, and logos that define your product's value.
+        <motion.p initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5}} className="hero-desc">
+          Premium branding assets. Waterproof labels, holographic stickers, and logos that define your product's value.
         </motion.p>
       </section>
 
-      {/* --- BENTO GRID NAVIGATION --- */}
+      {/* --- 3. FASCINATING CARD SHOWCASE (Cards 2 & 7) --- */}
+      <section className="featured-section">
+        <div className="blob"></div> {/* Background Glow */}
+        
+        <TiltCard className="feat-card-wrapper">
+          <img src="/images/Cards/cards2.png" alt="Featured 1" className="feat-card-img" />
+        </TiltCard>
+        
+        <TiltCard className="feat-card-wrapper" style={{marginTop:'50px'}}> {/* Offset for aesthetics */}
+          <img src="/images/Cards/cards7.png" alt="Featured 2" className="feat-card-img" />
+        </TiltCard>
+      </section>
+
+      {/* --- 4. COMPACT BENTO GRID --- */}
       <div className="bento-section">
-        <motion.div 
-          className="bento-grid"
-          variants={bentoContainer}
-          initial="hidden"
-          animate="visible"
-        >
+        <div style={{marginBottom:'20px', textAlign:'center', color:'#888', fontSize:'0.9rem'}}>
+          Select a category to view past work & customize
+        </div>
+        
+        <div className="bento-grid">
           
-          {/* 1. HERO CARD (Starts Order) */}
+          {/* Custom Order (Black Card) */}
           <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
-            <motion.div variants={bentoItem}>
-              <div className="tag">Start Here</div>
-              <div>
-                <h2 style={{fontSize:'2rem', marginBottom:'10px'}}>Custom Order.</h2>
-                <p style={{opacity: 0.8}}>Have a specific idea? Describe it, and we'll build it.</p>
-              </div>
-              <div style={{marginTop:'20px', display:'flex', alignItems:'center', gap:'10px', fontWeight:'bold'}}>
-                BEGIN PROCESS <FaArrowRight />
-              </div>
-            </motion.div>
+            <div style={{zIndex:1}}>
+              <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
+              <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
+            </div>
+            <button className="grid-btn">Open Form <FaArrowRight/></button>
           </TiltCard>
 
-          {/* 2. STICKERS (Gallery) */}
-          <TiltCard className="card tall-card" onClick={() => navigate('/gallery/stickers')}>
-            <motion.div variants={bentoItem} style={{height:'100%', display:'flex', flexDirection:'column'}}>
-              <div className="tag">Gallery</div>
-              <h3>Stickers</h3>
-              <p style={{color:'#666', fontSize:'0.9rem'}}>Die-cut & Vinyl</p>
-              <div style={{flex:1, display:'flex', justifyContent:'center', alignItems:'center', fontSize:'3rem', color:'#ddd'}}>
-                <FaShapes />
-              </div>
-              <button className="secondary-btn" style={{marginTop:'10px', width:'100%'}}>View Stickers</button>
-            </motion.div>
+          {/* Stickers */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
+            <h3>Stickers</h3>
+            <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl. <br/>Customize existing designs.</p>
+            <button className="grid-btn">View Stickers</button>
           </TiltCard>
 
-          {/* 3. LOGOS */}
-          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <motion.div variants={bentoItem}>
-              <h3>Logos</h3>
-              <p style={{color:'#666'}}>Identity Design</p>
-              <div style={{marginTop:'auto'}}>
-                <button className="secondary-btn" style={{width:'100%'}}>View Logos</button>
-              </div>
-            </motion.div>
-          </TiltCard>
-
-          {/* 4. LABELS */}
+          {/* Labels */}
           <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <motion.div variants={bentoItem}>
-              <h3>Labels</h3>
-              <p style={{color:'#666'}}>Product Packaging</p>
-              <div style={{marginTop:'auto'}}>
-                <button className="secondary-btn" style={{width:'100%'}}>View Labels</button>
-              </div>
-            </motion.div>
+            <h3>Labels</h3>
+            <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets. <br/>Browse archive.</p>
+            <button className="grid-btn">View Labels</button>
           </TiltCard>
 
-          {/* 5. VISITING CARDS */}
+          {/* Logos */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
+            <h3>Logos</h3>
+            <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity. <br/>See our portfolio.</p>
+            <button className="grid-btn">View Logos</button>
+          </TiltCard>
+
+          {/* Cards */}
           <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-             <motion.div variants={bentoItem}>
-              <h3>Visiting Cards</h3>
-              <p style={{color:'#666'}}>Business & Events</p>
-              <div style={{marginTop:'auto'}}>
-                <button className="secondary-btn" style={{width:'100%'}}>View Cards</button>
-              </div>
-            </motion.div>
+            <h3>Cards</h3>
+            <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting & Event Cards.</p>
+            <button className="grid-btn">View Cards</button>
           </TiltCard>
 
-        </motion.div>
+        </div>
       </div>
 
-      {/* --- VERTICAL SCROLL SHOWCASE --- */}
-      <section className="scroll-showcase">
-        <h3 style={{textAlign:'center', marginBottom:'30px', color:'#999', fontSize:'0.8rem', letterSpacing:'2px', textTransform:'uppercase'}}>
-          Recent Production
-        </h3>
-        <div className="scroll-container">
-          <motion.div className="scroll-col" variants={scrollUp} animate="animate">
-            {[1,2,3,4].map(n => <div key={n} className="showcase-item">Ref {n}</div>)}
-          </motion.div>
-          <motion.div className="scroll-col" style={{marginTop:'-50px'}} variants={scrollDown} animate="animate">
-            {[5,6,7,8].map(n => <div key={n} className="showcase-item">Ref {n}</div>)}
-          </motion.div>
-          <motion.div className="scroll-col" variants={scrollUp} animate="animate">
-            {[9,10,11,12].map(n => <div key={n} className="showcase-item">Ref {n}</div>)}
-          </motion.div>
+      {/* --- 5. LOGO FADER ANIMATION (Aesthetic) --- */}
+      <section className="logo-fader-section">
+        <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.8rem', color:'#999'}}>TRUSTED BRAND IDENTITIES</p>
+        <div className="logo-stage">
+          <AnimatePresence mode="wait">
+            <motion.img 
+              key={logoIndex}
+              src={`/images/Logos/logo${logos[logoIndex]}.png`} 
+              alt="Logo"
+              initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
+              transition={{ duration: 0.8 }}
+              style={{ maxWidth: '150px', maxHeight: '150px' }}
+            />
+          </AnimatePresence>
         </div>
       </section>
 
-      {/* --- FAQ SECTION --- */}
-      <section className="faq-section">
-        <h2 style={{textAlign:'center', marginBottom:'40px'}}>Frequently Asked Questions</h2>
-        <div className="faq-item">
-          <div className="faq-q">What is the minimum order quantity?</div>
-          <div className="faq-a">For stickers and labels, we start as low as 50 pieces. Logos are one-time design fees.</div>
-        </div>
-        <div className="faq-item">
-          <div className="faq-q">How do I customize a design?</div>
-          <div className="faq-a">Use the "Start Project" button or browse our gallery to select a reference style.</div>
-        </div>
-        <div className="faq-item">
-          <div className="faq-q">Do you ship pan-India?</div>
-          <div className="faq-a">Yes. We use premium courier partners to ensure your assets arrive safely within 3-5 days.</div>
-        </div>
+      {/* --- 6. STICKER MARQUEE (Moving Right) --- */}
+      <section className="marquee-container">
+        {/* Duplicate list 3 times for seamless loop */}
+        <motion.div 
+          className="marquee-track"
+          animate={{ x: [0, 1000] }} // Moving Right
+          transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
+        >
+          {/* Create an array of 20 stickers to scroll */}
+          {[...Array(10), ...Array(10)].map((_, i) => (
+            <img 
+              key={i} 
+              src={`/images/Stickers/stickers${(i % 10) + 1}.png`} 
+              alt="sticker" 
+              className="marquee-img"
+            />
+          ))}
+        </motion.div>
       </section>
 
-      {/* --- FOOTER --- */}
+      {/* --- FOOTER & MODAL (Keeping existing logic) --- */}
       <footer>
         <div className="footer-content">
           <h2 style={{fontSize:'2rem'}}>AB CUSTOM LABELS</h2>
           <p style={{color:'#888'}}>Make it Unforgettable.</p>
-          
-          <div style={{display:'flex', gap:'20px', margin:'20px 0', flexWrap:'wrap', justifyContent:'center'}}>
-            <a href="#" style={{color:'#666', textDecoration:'none'}}>Instagram</a>
-            <a href="#" style={{color:'#666', textDecoration:'none'}}>Privacy Policy</a>
-            <a href="#" style={{color:'#666', textDecoration:'none'}}>Terms</a>
-          </div>
-
-          <MagneticBtn 
-            onClick={() => window.open('https://wa.me/919243858944', '_blank')}
-            style={{ background: 'white', color: 'black', maxWidth: '300px', marginTop: '20px' }}
-          >
+          <MagneticBtn onClick={() => window.open('https://wa.me/919243858944', '_blank')} style={{ background: 'white', color: 'black', maxWidth: '300px', marginTop: '20px' }}>
             <FaWhatsapp /> Direct WhatsApp Contact
           </MagneticBtn>
-          
           <p style={{fontSize:'0.8rem', color:'#444', marginTop:'30px'}}>&copy; 2025 AB Custom Labels. Katni, MP.</p>
         </div>
       </footer>
 
-      {/* --- START PROJECT MODAL --- */}
       <AnimatePresence>
         {isOrderModalOpen && (
           <div className="modal-overlay">
-            <motion.div 
-              className="order-modal" 
-              initial={{scale:0.9, opacity:0}} 
-              animate={{scale:1, opacity:1}}
-              exit={{scale:0.9, opacity:0}}
-            >
-              <button 
-                onClick={() => setOrderModalOpen(false)} 
-                style={{position:'absolute', top:'20px', right:'20px', border:'none', background:'transparent', cursor:'pointer'}}
-              >
-                <FaTimes size={20} color="#888"/>
-              </button>
-
+            <motion.div className="order-modal" initial={{scale:0.9, opacity:0}} animate={{scale:1, opacity:1}} exit={{scale:0.9, opacity:0}}>
+              <button onClick={() => setOrderModalOpen(false)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20}/></button>
               {orderStage === 'FORM' ? (
                 <form onSubmit={handleFormSubmit}>
                   <h2 style={{marginBottom:'20px'}}>Start Your Project</h2>
-                  
-                  <label style={{fontSize:'0.9rem', fontWeight:'600', display:'block', marginBottom:'5px'}}>Brand / Name</label>
-                  <input name="name" required className="clean-input" placeholder="Ex: Urban Hype" />
-                  
-                  <label style={{fontSize:'0.9rem', fontWeight:'600', display:'block', marginBottom:'5px'}}>WhatsApp Contact</label>
-                  <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
-                  
-                  <label style={{fontSize:'0.9rem', fontWeight:'600', display:'block', marginBottom:'5px'}}>Requirements</label>
-                  <textarea name="details" required className="clean-input" rows="4" placeholder="I need 100 gold foil stickers..." />
-                  
-                  <button type="submit" className="primary-btn" disabled={isSaving}>
-                    {isSaving ? 'Generating...' : 'Generate Request'}
-                  </button>
+                  <input name="name" required className="clean-input" placeholder="Your Name" />
+                  <input name="contact" required className="clean-input" placeholder="WhatsApp Contact" />
+                  <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
+                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
                 </form>
               ) : (
                 <div>
                   <h2 style={{marginBottom:'10px'}}>Request Generated</h2>
-                  <div className="summary-box">
-                    <p><strong>Name:</strong> {formData.name}</p>
-                    <p><strong>Contact:</strong> {formData.contact}</p>
-                    <p><strong>Request:</strong> {formData.details}</p>
-                  </div>
-                  
-                  <p style={{textAlign:'center', fontSize:'0.9rem', color:'#666', marginBottom:'20px'}}>
-                    Your request has been saved. Connect to WhatsApp for pricing?
-                  </p>
-                  
-                  <button onClick={connectWhatsApp} className="primary-btn" style={{background:'#25D366'}}>
-                    <FaWhatsapp /> Yes, Chat on WhatsApp
-                  </button>
-                  
-                  <button onClick={() => setOrderModalOpen(false)} className="primary-btn secondary-btn">
-                    No, Cancel
-                  </button>
+                  <button onClick={connectWhatsApp} className="primary-btn" style={{background:'#25D366'}}><FaWhatsapp /> Chat on WhatsApp</button>
                 </div>
               )}
             </motion.div>
