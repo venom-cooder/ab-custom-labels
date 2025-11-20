@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaBoxOpen, FaTimes, FaWhatsapp, FaStar } from 'react-icons/fa';
+import { FaArrowRight, FaBoxOpen, FaTimes, FaWhatsapp } from 'react-icons/fa';
+
+// --- IMPORT ANIMATION COMPONENTS ---
+import TiltCard from '../components/anim/TiltCard';
+import RevealText from '../components/anim/RevealText';
+import MagneticBtn from '../components/anim/MagneticBtn';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -23,18 +28,16 @@ const Home = () => {
     
     const data = new FormData(e.target);
     
-    // Create Order Object
     const newOrder = {
       name: data.get('name'),
       contact: data.get('contact'),
       details: data.get('details'),
-      type: 'Home Page Request', // Helps identify source in Admin
+      type: 'Home Page Request',
       date: new Date().toLocaleString()
     };
 
     setFormData(newOrder);
 
-    // Send to Backend (Cloud DB)
     try {
       await axios.post(`${API_URL}/api/orders`, newOrder);
       console.log("Order saved to Cloud DB");
@@ -55,29 +58,11 @@ const Home = () => {
     
     window.open(`https://wa.me/919243858944?text=${encodeURIComponent(msg)}`, '_blank');
     
-    // Reset
     setOrderModalOpen(false);
     setOrderStage('FORM');
   };
 
-  // --- ANIMATION VARIANTS ---
-  const bentoContainer = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
-  const bentoItem = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { type: 'spring', stiffness: 50 }
-    }
-  };
-
+  // Animation Variants for Scroll Showcase
   const scrollUp = { 
     animate: { y: [0, -500], transition: { repeat: Infinity, duration: 15, ease: "linear" } } 
   };
@@ -90,47 +75,39 @@ const Home = () => {
       {/* --- NAVBAR --- */}
       <nav>
         <div className="logo">AB CUSTOM LABELS</div>
-        <button 
-          className="primary-btn" 
-          style={{width:'auto', padding:'10px 24px', fontSize: '0.9rem'}} 
-          onClick={() => setOrderModalOpen(true)}
+        {/* Magnetic Button for Start Project */}
+        <MagneticBtn 
+          onClick={() => setOrderModalOpen(true)} 
+          style={{ width: 'auto', padding: '10px 24px', fontSize: '0.9rem' }}
         >
           Start Project
-        </button>
+        </MagneticBtn>
       </nav>
 
       {/* --- HERO SECTION --- */}
       <section className="hero-section">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.8 }}
+        {/* Animated Text Reveal */}
+        <div className="hero-title" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <RevealText text="We Design Identities That Stick." />
+        </div>
+        
+        <motion.p 
+          className="hero-desc"
+          initial={{ opacity: 0 }} 
+          animate={{ opacity: 1 }} 
+          transition={{ delay: 0.5, duration: 1 }}
         >
-          <h1 className="hero-title">We Design Identities<br/>That Stick.</h1>
-          <p className="hero-desc">
-            <b>AB CUSTOM LABELS</b> is a premium design house in Katni. We don't just print; we engineer branding assets. 
-            Waterproof labels, holographic stickers, and logos that define your product's value.
-          </p>
-        </motion.div>
+          <b>AB CUSTOM LABELS</b> is a premium design house in Katni. We don't just print; we engineer branding assets. 
+          Waterproof labels, holographic stickers, and logos that define your product's value.
+        </motion.p>
       </section>
 
-      {/* --- BENTO GRID NAVIGATION --- */}
+      {/* --- BENTO GRID NAVIGATION (3D TILT ENABLED) --- */}
       <div className="bento-section">
-        <motion.div 
-          className="bento-grid"
-          variants={bentoContainer}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="bento-grid">
           
-          {/* 1. HERO CARD (Starts Order) */}
-          <motion.div 
-            className="card hero-card" 
-            variants={bentoItem}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setOrderModalOpen(true)}
-          >
+          {/* 1. HERO CARD (Starts Order) - Now 3D */}
+          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
             <div className="tag">Start Here</div>
             <div>
               <h2 style={{fontSize:'2rem', marginBottom:'10px'}}>Custom Order.</h2>
@@ -139,52 +116,30 @@ const Home = () => {
             <div style={{marginTop:'20px', display:'flex', alignItems:'center', gap:'10px', fontWeight:'bold'}}>
               BEGIN PROCESS <FaArrowRight />
             </div>
-          </motion.div>
+          </TiltCard>
 
-          {/* 2. STICKERS (Gallery) */}
-          <motion.div 
-            className="card tall-card" 
-            variants={bentoItem}
-            whileHover={{ scale: 1.02 }}
-            onClick={() => navigate('/gallery/stickers')}
-          >
+          {/* 2. STICKERS (Gallery) - Now 3D */}
+          <TiltCard className="card tall-card" onClick={() => navigate('/gallery/stickers')}>
             <div className="tag">Gallery</div>
             <h3>Stickers</h3>
             <p style={{color:'#666', fontSize:'0.9rem'}}>Die-cut & Vinyl</p>
             <div style={{marginTop:'auto', fontSize:'3rem', color:'#ccc', display:'flex', justifyContent:'center'}}>
               <FaBoxOpen />
             </div>
-          </motion.div>
+          </TiltCard>
 
-          {/* 3. LOGOS */}
-          <motion.div 
-            className="card" 
-            variants={bentoItem}
-            whileHover={{ scale: 1.02 }}
-            onClick={() => navigate('/gallery/logos')}
-          >
+          {/* 3. LOGOS - Now 3D */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
             <h3>Logos</h3>
             <p style={{color:'#666'}}>Identity Design</p>
-          </motion.div>
+          </TiltCard>
 
-          {/* 4. LABELS */}
-          <motion.div 
-            className="card" 
-            variants={bentoItem}
-            whileHover={{ scale: 1.02 }}
-            onClick={() => navigate('/gallery/labels')}
-          >
+          {/* 4. LABELS - Now 3D */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
             <h3>Labels</h3>
             <p style={{color:'#666'}}>Product Packaging</p>
-          </motion.div>
-          
-          {/* 5. REVIEWS (Added back for layout balance) */}
-          <motion.div className="card" variants={bentoItem}>
-             <h3>4.9 <FaStar color="#FFD700" size={15}/></h3>
-             <p style={{color:'#666'}}>Trusted Quality</p>
-          </motion.div>
-
-        </motion.div>
+          </TiltCard>
+        </div>
       </div>
 
       {/* --- VERTICAL SCROLL SHOWCASE --- */}
@@ -193,17 +148,12 @@ const Home = () => {
           Recent Production
         </h3>
         <div className="scroll-container">
-          {/* Col 1: Up */}
           <motion.div className="scroll-col" variants={scrollUp} animate="animate">
             {[1,2,3,4].map(n => <div key={n} className="showcase-item">Ref {n}</div>)}
           </motion.div>
-          
-          {/* Col 2: Down */}
           <motion.div className="scroll-col" style={{marginTop:'-50px'}} variants={scrollDown} animate="animate">
             {[5,6,7,8].map(n => <div key={n} className="showcase-item">Ref {n}</div>)}
           </motion.div>
-          
-          {/* Col 3: Up (Hidden on Mobile via CSS) */}
           <motion.div className="scroll-col" variants={scrollUp} animate="animate">
             {[9,10,11,12].map(n => <div key={n} className="showcase-item">Ref {n}</div>)}
           </motion.div>
@@ -239,13 +189,13 @@ const Home = () => {
             <a href="#" style={{color:'#666', textDecoration:'none'}}>Terms</a>
           </div>
 
-          <button 
+          {/* Magnetic Button for Footer Contact */}
+          <MagneticBtn 
             onClick={() => window.open('https://wa.me/919243858944', '_blank')}
-            className="primary-btn" 
-            style={{background:'white', color:'black', maxWidth:'300px', marginTop: '20px'}}
+            style={{ background: 'white', color: 'black', maxWidth: '300px', marginTop: '20px' }}
           >
             <FaWhatsapp /> Direct WhatsApp Contact
-          </button>
+          </MagneticBtn>
           
           <p style={{fontSize:'0.8rem', color:'#444', marginTop:'30px'}}>&copy; 2025 AB Custom Labels. Katni, MP.</p>
         </div>
@@ -282,11 +232,10 @@ const Home = () => {
                   <textarea name="details" required className="clean-input" rows="4" placeholder="I need 100 gold foil stickers..." />
                   
                   <button type="submit" className="primary-btn" disabled={isSaving}>
-                    {isSaving ? 'Processing...' : 'Generate Request'}
+                    {isSaving ? 'Generating...' : 'Generate Request'}
                   </button>
                 </form>
               ) : (
-                /* SUMMARY VIEW */
                 <div>
                   <h2 style={{marginBottom:'10px'}}>Request Generated</h2>
                   <div className="summary-box">
