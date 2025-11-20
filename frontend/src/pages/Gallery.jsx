@@ -5,7 +5,7 @@ import axios from 'axios';
 import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes } from 'react-icons/fa';
 
 const Gallery = () => {
-  const { type } = useParams(); // "stickers", "logos", "labels", "cards"
+  const { type } = useParams(); 
   const navigate = useNavigate();
   
   const [selectedItem, setSelectedItem] = useState(null);
@@ -15,12 +15,13 @@ const Gallery = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- CONFIGURATION ---
+  // --- ⚠️ CONFIGURATION FIXED TO MATCH GIT UPLOAD ---
+  // Your Git log confirmed folders are: 'Stickers', 'Logos', 'Labels', 'Cards'
   const config = {
-    stickers: { folder: 'stickers', count: 10, prefix: 'stickers' },
-    logos:    { folder: 'logos',    count: 10, prefix: 'logo' },
-    labels:   { folder: 'labels',   count: 29, prefix: 'labels' },
-    cards:    { folder: 'cards',    count: 9,  prefix: 'cards' }
+    stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, 
+    logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     
+    labels:   { folder: 'Labels',   count: 29, prefix: 'labels' },   
+    cards:    { folder: 'Cards',    count: 9,  prefix: 'cards' }     
   };
 
   const currentConfig = config[type] || { folder: '', count: 0, prefix: '' };
@@ -28,10 +29,10 @@ const Gallery = () => {
   const items = Array.from({ length: currentConfig.count }, (_, i) => ({
     id: i + 1,
     title: `${type.toUpperCase()} #${i + 1}`,
+    // Path: /images/Stickers/stickers1.png
     imgSrc: `/images/${currentConfig.folder}/${currentConfig.prefix}${i + 1}.png`
   }));
 
-  // --- SUBMIT ---
   const handleGenerate = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -46,15 +47,8 @@ const Gallery = () => {
     };
     setCustomData({ ...newOrder, changes: data.get('changes') });
 
-    try { 
-      await axios.post(`${API_URL}/api/orders`, newOrder); 
-    } catch(err) {
-      // FIX: Use console.error to avoid red line
-      console.error(err); 
-    }
-    
-    setIsSaving(false); 
-    setStage('CONFIRM');
+    try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(err){ console.error(err); }
+    setIsSaving(false); setStage('CONFIRM');
   };
 
   const handleFinalWhatsApp = () => {
@@ -86,11 +80,11 @@ const Gallery = () => {
             <img 
               src={item.imgSrc} 
               alt={item.title} 
-              loading="lazy" 
+              loading="lazy"
               onError={(e) => {
-                e.target.style.display = 'none';
+                e.target.style.display = 'none'; 
                 e.target.parentNode.style.backgroundColor = '#ffecec';
-                e.target.parentNode.innerHTML += `<p style="padding:20px; color:red; font-size:0.8rem">Image Not Found:<br/>${item.imgSrc}</p>`;
+                e.target.parentNode.innerHTML += `<div style="padding:20px;color:red;">Image Not Found:<br/>${item.imgSrc}</div>`;
               }} 
             />
             <div className="overlay-btn">Customize <FaPenNib size={10} style={{marginLeft:5}}/></div>
