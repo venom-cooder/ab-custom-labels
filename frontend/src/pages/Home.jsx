@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaPenNib } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram } from 'react-icons/fa';
 
-// Animation Components
+// Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
@@ -13,24 +13,23 @@ const Home = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- STATES ---
+  // States
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
   
-  // Logo Animation State
+  // Logo Animation
   const [logoIndex, setLogoIndex] = useState(0);
-  const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Assumes logo1.png ... logo10.png exist
+  const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  // Cycle Logos every 2.5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 2500);
+    }, 2000); // Faster switch for dynamic feel
     return () => clearInterval(interval);
   }, []);
 
-  // --- HANDLERS ---
+  // Handlers
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
@@ -55,57 +54,35 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      {/* --- 1. IMPROVED HEADER --- */}
+      {/* NAVBAR */}
       <nav>
         <div className="logo" onClick={()=>navigate('/')}>AB CUSTOM.</div>
-        
-        {/* Direct Links Section */}
         <div className="nav-links">
           <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
           <span className="nav-link" onClick={()=>navigate('/career')}>Career</span>
-          <span className="nav-link" onClick={()=>window.scrollTo(0, document.body.scrollHeight)}>About</span>
         </div>
-
         <MagneticBtn onClick={() => setOrderModalOpen(true)} style={{ width: 'auto', padding: '10px 20px', fontSize: '0.85rem' }}>
           Start Project
         </MagneticBtn>
       </nav>
 
-      {/* --- 2. HERO TEXT --- */}
+      {/* 1. HERO */}
       <section className="hero-section">
         <div className="hero-title" style={{ display: 'flex', justifyContent: 'center' }}>
           <RevealText text="We Design Identities That Stick." />
         </div>
         <motion.p initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5}} className="hero-desc">
-          Premium branding assets. Waterproof labels, holographic stickers, and logos that define your product's value.
+          Premium branding assets. Waterproof labels, holographic stickers, visiting cards, and logos.
         </motion.p>
       </section>
 
-      {/* --- 3. FASCINATING CARD SHOWCASE (Cards 2 & 7) --- */}
-      <section className="featured-section">
-        <div className="blob"></div> {/* Background Glow */}
-        
-        <TiltCard className="feat-card-wrapper">
-          <img src="/images/Cards/cards2.png" alt="Featured 1" className="feat-card-img" />
-        </TiltCard>
-        
-        <TiltCard className="feat-card-wrapper" style={{marginTop:'50px'}}> {/* Offset for aesthetics */}
-          <img src="/images/Cards/cards7.png" alt="Featured 2" className="feat-card-img" />
-        </TiltCard>
-      </section>
-
-      {/* --- 4. COMPACT BENTO GRID --- */}
+      {/* 2. BENTO GRID (THE BLOCKS) */}
       <div className="bento-section">
-        <div style={{marginBottom:'20px', textAlign:'center', color:'#888', fontSize:'0.9rem'}}>
-          Select a category to view past work & customize
-        </div>
-        
         <div className="bento-grid">
-          
-          {/* Custom Order (Black Card) */}
+          {/* Custom Order */}
           <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
             <div style={{zIndex:1}}>
               <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
@@ -114,65 +91,55 @@ const Home = () => {
             <button className="grid-btn">Open Form <FaArrowRight/></button>
           </TiltCard>
 
-          {/* Stickers */}
+          {/* Categories */}
           <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
-            <h3>Stickers</h3>
-            <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl. <br/>Customize existing designs.</p>
+            <h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p>
             <button className="grid-btn">View Stickers</button>
           </TiltCard>
 
-          {/* Labels */}
           <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <h3>Labels</h3>
-            <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets. <br/>Browse archive.</p>
+            <h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p>
             <button className="grid-btn">View Labels</button>
           </TiltCard>
 
-          {/* Logos */}
           <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <h3>Logos</h3>
-            <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity. <br/>See our portfolio.</p>
+            <h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p>
             <button className="grid-btn">View Logos</button>
           </TiltCard>
 
-          {/* Cards */}
           <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-            <h3>Cards</h3>
-            <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting & Event Cards.</p>
+            <h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p>
             <button className="grid-btn">View Cards</button>
           </TiltCard>
-
         </div>
       </div>
 
-      {/* --- 5. LOGO FADER ANIMATION (Aesthetic) --- */}
+      {/* 3. MY WORK (LOGOS) */}
       <section className="logo-fader-section">
-        <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.8rem', color:'#999'}}>TRUSTED BRAND IDENTITIES</p>
+        <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#999', fontWeight:'bold'}}>MY WORK</p>
         <div className="logo-stage">
           <AnimatePresence mode="wait">
             <motion.img 
               key={logoIndex}
               src={`/images/Logos/logo${logos[logoIndex]}.png`} 
               alt="Logo"
-              initial={{ opacity: 0, scale: 0.8, filter: 'blur(10px)' }}
+              initial={{ opacity: 0, scale: 0.9, filter: 'blur(5px)' }}
               animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.1, filter: 'blur(10px)' }}
-              transition={{ duration: 0.8 }}
-              style={{ maxWidth: '150px', maxHeight: '150px' }}
+              exit={{ opacity: 0, scale: 1.05, filter: 'blur(5px)' }}
+              transition={{ duration: 0.5 }}
+              style={{ maxWidth: '100%', maxHeight: '100%' }}
             />
           </AnimatePresence>
         </div>
       </section>
 
-      {/* --- 6. STICKER MARQUEE (Moving Right) --- */}
+      {/* 4. STICKER MARQUEE (COLORED) */}
       <section className="marquee-container">
-        {/* Duplicate list 3 times for seamless loop */}
         <motion.div 
           className="marquee-track"
-          animate={{ x: [0, 1000] }} // Moving Right
+          animate={{ x: [0, -1000] }} // Moving Left for flow
           transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
         >
-          {/* Create an array of 20 stickers to scroll */}
           {[...Array(10), ...Array(10)].map((_, i) => (
             <img 
               key={i} 
@@ -184,18 +151,41 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* --- FOOTER & MODAL (Keeping existing logic) --- */}
+      {/* 5. THE 2 CARDS (STATIC) */}
+      <section className="featured-section">
+        <h3 style={{textAlign:'center', color:'#ccc', fontSize:'2rem', marginBottom:'-20px'}}>HIGHLIGHTS</h3>
+        <img src="/images/Cards/cards2.png" alt="Highlight 1" className="feat-card-img" />
+        <img src="/images/Cards/cards7.png" alt="Highlight 2" className="feat-card-img" />
+      </section>
+
+      {/* 6. CLEAN FOOTER */}
       <footer>
         <div className="footer-content">
-          <h2 style={{fontSize:'2rem'}}>AB CUSTOM LABELS</h2>
-          <p style={{color:'#888'}}>Make it Unforgettable.</p>
-          <MagneticBtn onClick={() => window.open('https://wa.me/919243858944', '_blank')} style={{ background: 'white', color: 'black', maxWidth: '300px', marginTop: '20px' }}>
-            <FaWhatsapp /> Direct WhatsApp Contact
-          </MagneticBtn>
-          <p style={{fontSize:'0.8rem', color:'#444', marginTop:'30px'}}>&copy; 2025 AB Custom Labels. Katni, MP.</p>
+          <h2 style={{fontSize:'2.5rem', marginBottom:'10px'}}>AB CUSTOM LABELS</h2>
+          <p style={{color:'#888', fontSize:'1.1rem'}}>Make it Unforgettable.</p>
+          
+          {/* Instagram Link */}
+          <a 
+            href="https://www.instagram.com/abcustomlables?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
+            target="_blank" 
+            style={{color:'#666', textDecoration:'none', display:'flex', alignItems:'center', gap:'8px', marginTop:'20px'}}
+          >
+            <FaInstagram size={20}/> Follow on Instagram
+          </a>
+
+          {/* HUGE WhatsApp Button */}
+          <button 
+            onClick={() => window.open('https://wa.me/919243858944', '_blank')}
+            className="big-whatsapp-btn"
+          >
+            <FaWhatsapp size={28} /> Chat on WhatsApp
+          </button>
+          
+          <p style={{fontSize:'0.8rem', color:'#444', marginTop:'40px'}}>&copy; 2025 AB Custom Labels. Katni, MP.</p>
         </div>
       </footer>
 
+      {/* MODAL */}
       <AnimatePresence>
         {isOrderModalOpen && (
           <div className="modal-overlay">
@@ -207,18 +197,19 @@ const Home = () => {
                   <input name="name" required className="clean-input" placeholder="Your Name" />
                   <input name="contact" required className="clean-input" placeholder="WhatsApp Contact" />
                   <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
-                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
+                  <button type="submit" className="primary-btn" style={{width:'100%'}} disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
                 </form>
               ) : (
                 <div>
                   <h2 style={{marginBottom:'10px'}}>Request Generated</h2>
-                  <button onClick={connectWhatsApp} className="primary-btn" style={{background:'#25D366'}}><FaWhatsapp /> Chat on WhatsApp</button>
+                  <button onClick={connectWhatsApp} className="primary-btn" style={{background:'#25D366', width:'100%'}}><FaWhatsapp /> Chat on WhatsApp</button>
                 </div>
               )}
             </motion.div>
           </div>
         )}
       </AnimatePresence>
+
     </div>
   );
 };
