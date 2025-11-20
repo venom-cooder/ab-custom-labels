@@ -15,6 +15,7 @@ const Gallery = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
+  // --- CONFIGURATION ---
   const config = {
     stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, 
     logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     
@@ -32,7 +33,6 @@ const Gallery = () => {
 
   // --- HANDLERS ---
   const openCustomForm = () => {
-    // Open modal without a specific image selected (General Custom Request)
     setSelectedItem({ title: 'My Custom Idea', imgSrc: null });
     setStage('INPUT');
   };
@@ -50,6 +50,7 @@ const Gallery = () => {
       date: new Date().toLocaleString()
     };
     setCustomData({ ...newOrder, changes: data.get('changes') });
+
     try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(err){ console.error(err); }
     setIsSaving(false); setStage('CONFIRM');
   };
@@ -63,17 +64,38 @@ const Gallery = () => {
 
   return (
     <div className="app-container">
+      {/* NAVBAR */}
       <nav>
         <div onClick={() => navigate('/')} style={{display:'flex', alignItems:'center', gap:'10px', cursor:'pointer', fontWeight:'600'}}>
           <FaArrowLeft /> Back to Home
         </div>
         <div style={{textTransform:'capitalize', fontWeight:'800', fontSize:'1.1rem'}}>
-          AB {type} Collection
+          AB {type} Archive
         </div>
       </nav>
 
+      {/* --- TOP HEADER (INTERACTIVE TEXT) --- */}
+      <div style={{textAlign:'center', padding:'3rem 1.5rem 1rem', maxWidth:'800px', margin:'0 auto'}}>
+        <motion.h1 
+          initial={{opacity:0, y:10}} 
+          animate={{opacity:1, y:0}} 
+          style={{fontSize:'2.5rem', fontWeight:'800', textTransform:'capitalize', marginBottom:'10px'}}
+        >
+          {type} Collection
+        </motion.h1>
+        
+        <motion.p 
+          initial={{opacity:0}} 
+          animate={{opacity:1}} 
+          transition={{delay:0.2}}
+          style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.5'}}
+        >
+          Browse our past work below. <b>Click any image</b> to order the exact same design or customize it to fit your brand.
+        </motion.p>
+      </div>
+
       {/* --- MASONRY GRID --- */}
-      <div className="masonry-grid" style={{paddingTop:'2rem'}}>
+      <div className="masonry-grid">
         {items.map((item) => (
           <motion.div 
             key={item.id} 
@@ -113,7 +135,6 @@ const Gallery = () => {
               <button onClick={() => setSelectedItem(null)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20}/></button>
               
               <div style={{display:'flex', gap:'20px', alignItems:'center', marginBottom:'20px'}}>
-                {/* Only show image if it exists (not for custom idea) */}
                 {selectedItem.imgSrc && (
                   <img src={selectedItem.imgSrc} style={{width:'80px', borderRadius:'8px', border:'1px solid #eee'}} />
                 )}
