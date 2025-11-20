@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios'; 
+import axios from 'axios';
 import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes } from 'react-icons/fa';
 
 const Gallery = () => {
-  const { type } = useParams(); // Gets "stickers", "logos", etc.
+  const { type } = useParams(); // "stickers", "logos", "labels", "cards"
   const navigate = useNavigate();
   
-  // --- STATE MANAGEMENT ---
+  // --- STATE ---
   const [selectedItem, setSelectedItem] = useState(null);
   const [stage, setStage] = useState('INPUT'); // 'INPUT' -> 'CONFIRM'
   const [customData, setCustomData] = useState(null);
@@ -17,13 +17,27 @@ const Gallery = () => {
   // Vercel/Render API URL
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // Dummy Data (In a real app, you'd fetch this from API too)
-  const items = Array.from({ length: 25 }, (_, i) => ({ 
-    id: i + 1, 
-    title: `${type.slice(0, -1).toUpperCase()} #${i + 1}` 
+  // --- 1. DYNAMIC IMAGE CONFIGURATION ---
+  // This maps the URL type to your specific folder structure and filenames
+  const config = {
+    stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, // stickers1.png ...
+    logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     // logo1.png ...
+    labels:   { folder: 'Labels',   count: 29, prefix: 'labels' },   // labels1.png ...
+    cards:    { folder: 'Cards',    count: 9,  prefix: 'cards' }     // cards1.png ...
+  };
+
+  // Get config for current page type (default to empty if not found)
+  const currentConfig = config[type] || { folder: '', count: 0, prefix: '' };
+
+  // Generate the list of items pointing to real images
+  const items = Array.from({ length: currentConfig.count }, (_, i) => ({
+    id: i + 1,
+    title: `${type.toUpperCase()} #${i + 1}`,
+    // Points to: public/images/Folder/prefix1.png
+    imgSrc: `/images/${currentConfig.folder}/${currentConfig.prefix}${i + 1}.png`
   }));
 
-  // --- 1. HANDLE GENERATE REQUEST & SAVE TO DB ---
+  // --- 2. HANDLE FORM SUBMIT (SAVE TO DB) ---
   const handleGenerate = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -53,7 +67,7 @@ const Gallery = () => {
     setStage('CONFIRM');
   };
 
-  // --- 2. HANDLE FINAL WHATSAPP CLICK ---
+  // --- 3. HANDLE WHATSAPP CONNECT ---
   const handleFinalWhatsApp = () => {
     const phone = "919243858944";
     const msg = `*GALLERY INQUIRY - AB CUSTOM LABELS* 🖼\n\n` +
@@ -65,7 +79,7 @@ const Gallery = () => {
     
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
     
-    // Reset UI
+    // Reset
     setSelectedItem(null);
     setStage('INPUT');
   };
@@ -80,26 +94,31 @@ const Gallery = () => {
         >
           <FaArrowLeft /> Back to Home
         </div>
-        <div style={{textTransform:'capitalize', fontWeight:'800', letterSpacing:'-0.5px', fontSize:'1.1rem'}}>
+        <div style={{textTransform:'capitalize', fontWeight:'800', fontSize:'1.1rem', letterSpacing:'-0.5px'}}>
           AB {type} Archive
         </div>
       </nav>
 
-      {/* --- GALLERY GRID --- */}
-      <div className="gallery-grid">
+      {/* --- MASONRY GALLERY GRID (Original Resolutions) --- */}
+      <div className="masonry-grid">
         {items.map((item) => (
           <motion.div 
             key={item.id} 
-            className="gallery-card"
-            whileHover={{ y: -4, borderColor: '#000' }}
-            whileTap={{ scale: 0.98 }}
+            className="masonry-item"
+            whileHover={{ scale: 1.02 }}
             onClick={() => { setSelectedItem(item); setStage('INPUT'); }}
           >
-            {/* Placeholder Image Logic */}
-            <div style={{fontSize:'2rem', color:'#e0e0e0', fontWeight:'800'}}>{item.id}</div>
+            {/* The Real Image */}
+            <img 
+              src={item.imgSrc} 
+              alt={item.title} 
+              loading="lazy" 
+              onError={(e) => {e.target.src = 'https://via.placeholder.com/300?text=Image+Not+Found'}} // Fallback if file missing
+            />
             
-            <div style={{marginTop:'15px', fontSize:'0.85rem', color:'#666', fontWeight:'600', display:'flex', alignItems:'center', gap:'5px'}}>
-              <FaPenNib size={10} /> Customize
+            {/* Hover Overlay */}
+            <div className="overlay-btn">
+              Customize <FaPenNib size={10} style={{marginLeft:5}}/>
             </div>
           </motion.div>
         ))}
@@ -118,28 +137,36 @@ const Gallery = () => {
             >
               <button 
                 onClick={() => setSelectedItem(null)} 
-                style={{position:'absolute', top:'20px', right:'20px', border:'none', background:'transparent', cursor:'pointer'}}
+                style={{position:'absolute', top:'15px', right:'15px', border:'none', background:'transparent', cursor:'pointer'}}
               >
                 <FaTimes size={20} color="#888"/>
               </button>
 
-              <h2 style={{marginBottom:'5px'}}>Customize {selectedItem.title}</h2>
-              <p style={{fontSize:'0.9rem', color:'#666', marginBottom:'20px'}}>
-                Provide details to check availability.
-              </p>
+              {/* Thumbnail Preview in Modal */}
+              <div style={{display:'flex', gap:'15px', alignItems:'center', marginBottom:'25px'}}>
+                <img 
+                  src={selectedItem.imgSrc} 
+                  style={{width:'60px', height:'60px', objectFit:'cover', borderRadius:'8px', border:'1px solid #eee'}} 
+                  alt="preview"
+                />
+                <div>
+                  <h2 style={{margin:0, fontSize:'1.2rem'}}>Customize This</h2>
+                  <p style={{margin:0, fontSize:'0.8rem', color:'#666'}}>{selectedItem.title}</p>
+                </div>
+              </div>
 
               {stage === 'INPUT' ? (
                 <form onSubmit={handleGenerate}>
-                  <label style={{fontSize:'0.9rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>Your Name</label>
+                  <label style={{fontSize:'0.8rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>Your Name</label>
                   <input name="name" required className="clean-input" placeholder="Ex: Rahul Design" />
 
-                  <label style={{fontSize:'0.9rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>WhatsApp Contact</label>
+                  <label style={{fontSize:'0.8rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>WhatsApp Contact</label>
                   <input name="contact" required className="clean-input" placeholder="+91 99999 99999" />
 
-                  <label style={{fontSize:'0.9rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>What changes do you want?</label>
+                  <label style={{fontSize:'0.8rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>What changes do you want?</label>
                   <textarea name="changes" required className="clean-input" rows="3" placeholder="Change color to red, add my logo..." />
 
-                  <label style={{fontSize:'0.9rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>Quantity</label>
+                  <label style={{fontSize:'0.8rem', fontWeight:'600', marginBottom:'5px', display:'block'}}>Quantity</label>
                   <input name="qty" type="number" required className="clean-input" placeholder="50" />
 
                   <button type="submit" className="primary-btn" disabled={isSaving}>
@@ -147,7 +174,6 @@ const Gallery = () => {
                   </button>
                 </form>
               ) : (
-                /* SUMMARY & CONFIRM STAGE */
                 <div>
                   <div className="summary-box">
                     <p><strong>Reference:</strong> {selectedItem.title}</p>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaBoxOpen, FaTimes, FaWhatsapp } from 'react-icons/fa';
+import { FaArrowRight, FaBoxOpen, FaTimes, FaWhatsapp, FaShapes, FaIdCard } from 'react-icons/fa';
 
 // --- IMPORT ANIMATION COMPONENTS ---
 import TiltCard from '../components/anim/TiltCard';
@@ -62,7 +62,24 @@ const Home = () => {
     setOrderStage('FORM');
   };
 
-  // Animation Variants for Scroll Showcase
+  // --- ANIMATION VARIANTS ---
+  const bentoContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const bentoItem = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { type: 'spring', stiffness: 50 }
+    }
+  };
+
   const scrollUp = { 
     animate: { y: [0, -500], transition: { repeat: Infinity, duration: 15, ease: "linear" } } 
   };
@@ -97,16 +114,20 @@ const Home = () => {
           animate={{ opacity: 1 }} 
           transition={{ delay: 0.5, duration: 1 }}
         >
-          <b>AB CUSTOM LABELS</b> is a premium design house in Katni. We don't just print; we engineer branding assets. 
-          Waterproof labels, holographic stickers, and logos that define your product's value.
+          <b>AB CUSTOM LABELS</b> is a premium design house in Katni. Waterproof labels, holographic stickers, visiting cards, and logos that define your product's value.
         </motion.p>
       </section>
 
-      {/* --- BENTO GRID NAVIGATION (3D TILT ENABLED) --- */}
+      {/* --- BENTO GRID NAVIGATION --- */}
       <div className="bento-section">
-        <div className="bento-grid">
+        <motion.div 
+          className="bento-grid"
+          variants={bentoContainer}
+          initial="hidden"
+          animate="visible"
+        >
           
-          {/* 1. HERO CARD (Starts Order) - Now 3D */}
+          {/* 1. HERO CARD (Starts Order) */}
           <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
             <div className="tag">Start Here</div>
             <div>
@@ -118,28 +139,45 @@ const Home = () => {
             </div>
           </TiltCard>
 
-          {/* 2. STICKERS (Gallery) - Now 3D */}
+          {/* 2. STICKERS (Gallery) */}
           <TiltCard className="card tall-card" onClick={() => navigate('/gallery/stickers')}>
             <div className="tag">Gallery</div>
             <h3>Stickers</h3>
             <p style={{color:'#666', fontSize:'0.9rem'}}>Die-cut & Vinyl</p>
-            <div style={{marginTop:'auto', fontSize:'3rem', color:'#ccc', display:'flex', justifyContent:'center'}}>
-              <FaBoxOpen />
+            <div style={{flex:1, display:'flex', justifyContent:'center', alignItems:'center', fontSize:'3rem', color:'#ddd'}}>
+              <FaShapes />
             </div>
+            <button className="secondary-btn" style={{marginTop:'10px', width:'100%'}}>View Stickers</button>
           </TiltCard>
 
-          {/* 3. LOGOS - Now 3D */}
+          {/* 3. LOGOS */}
           <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
             <h3>Logos</h3>
             <p style={{color:'#666'}}>Identity Design</p>
+            <div style={{marginTop:'auto'}}>
+              <button className="secondary-btn" style={{width:'100%'}}>View Logos</button>
+            </div>
           </TiltCard>
 
-          {/* 4. LABELS - Now 3D */}
+          {/* 4. LABELS */}
           <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
             <h3>Labels</h3>
             <p style={{color:'#666'}}>Product Packaging</p>
+            <div style={{marginTop:'auto'}}>
+              <button className="secondary-btn" style={{width:'100%'}}>View Labels</button>
+            </div>
           </TiltCard>
-        </div>
+
+          {/* 5. CARDS (New Section) */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
+            <h3>Visiting Cards</h3>
+            <p style={{color:'#666'}}>Business & Events</p>
+            <div style={{marginTop:'auto'}}>
+              <button className="secondary-btn" style={{width:'100%'}}>View Cards</button>
+            </div>
+          </TiltCard>
+
+        </motion.div>
       </div>
 
       {/* --- VERTICAL SCROLL SHOWCASE --- */}
