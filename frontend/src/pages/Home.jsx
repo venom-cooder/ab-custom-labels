@@ -25,7 +25,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 2000); // Faster switch for dynamic feel
+    }, 2000);
     return () => clearInterval(interval);
   }, []);
 
@@ -64,8 +64,9 @@ const Home = () => {
           <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
           <span className="nav-link" onClick={()=>navigate('/career')}>Career</span>
         </div>
+        {/* UPDATED BUTTON TEXT */}
         <MagneticBtn onClick={() => setOrderModalOpen(true)} style={{ width: 'auto', padding: '10px 20px', fontSize: '0.85rem' }}>
-          Start Project
+          Place Order
         </MagneticBtn>
       </nav>
 
@@ -79,44 +80,70 @@ const Home = () => {
         </motion.p>
       </section>
 
-      {/* 2. BENTO GRID (THE BLOCKS) */}
+      {/* 2. BENTO GRID (Fixed Buttons at Bottom) */}
       <div className="bento-section">
         <div className="bento-grid">
+          
           {/* Custom Order */}
           <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
-            <div style={{zIndex:1}}>
-              <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
-              <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div style={{zIndex:1}}>
+                <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
+                <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
+              </div>
+              <button className="grid-btn" style={{marginTop:'20px'}}>Open Form <FaArrowRight/></button>
             </div>
-            <button className="grid-btn">Open Form <FaArrowRight/></button>
           </TiltCard>
 
-          {/* Categories */}
+          {/* Stickers */}
           <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
-            <h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p>
-            <button className="grid-btn">View Stickers</button>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div>
+                <h3>Stickers</h3> 
+                <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p>
+              </div>
+              <button className="grid-btn">View Stickers</button>
+            </div>
           </TiltCard>
 
+          {/* Labels */}
           <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p>
-            <button className="grid-btn">View Labels</button>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div>
+                <h3>Labels</h3> 
+                <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p>
+              </div>
+              <button className="grid-btn">View Labels</button>
+            </div>
           </TiltCard>
 
+          {/* Logos */}
           <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p>
-            <button className="grid-btn">View Logos</button>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div>
+                <h3>Logos</h3> 
+                <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p>
+              </div>
+              <button className="grid-btn">View Logos</button>
+            </div>
           </TiltCard>
 
+          {/* Cards */}
           <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-            <h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p>
-            <button className="grid-btn">View Cards</button>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div>
+                <h3>Cards</h3> 
+                <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p>
+              </div>
+              <button className="grid-btn">View Cards</button>
+            </div>
           </TiltCard>
         </div>
       </div>
 
-      {/* 3. MY WORK (LOGOS) */}
+      {/* 3. OUR WORK (LOGOS) - Text Updated */}
       <section className="logo-fader-section">
-        <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#999', fontWeight:'bold'}}>MY WORK</p>
+        <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#999', fontWeight:'bold'}}>OUR WORK</p>
         <div className="logo-stage">
           <AnimatePresence mode="wait">
             <motion.img 
@@ -133,11 +160,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. STICKER MARQUEE (COLORED) */}
+      {/* 4. STICKER MARQUEE */}
       <section className="marquee-container">
         <motion.div 
           className="marquee-track"
-          animate={{ x: [0, -1000] }} // Moving Left for flow
+          animate={{ x: [0, -1000] }} 
           transition={{ repeat: Infinity, duration: 30, ease: "linear" }}
         >
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -151,20 +178,19 @@ const Home = () => {
         </motion.div>
       </section>
 
-      {/* 5. THE 2 CARDS (STATIC) */}
+      {/* 5. HIGHLIGHTS */}
       <section className="featured-section">
         <h3 style={{textAlign:'center', color:'#ccc', fontSize:'2rem', marginBottom:'-20px'}}>HIGHLIGHTS</h3>
-        <img src="/images/Cards/cards2.png" alt="Highlight 1" className="feat-card-img" />
-        <img src="/images/Cards/cards7.png" alt="Highlight 2" className="feat-card-img" />
+        <img src="/images/Cards/cards5.png" alt="Highlight 1" className="feat-card-img" />
+        <img src="/images/Cards/cards3.png" alt="Highlight 2" className="feat-card-img" />
       </section>
 
-      {/* 6. CLEAN FOOTER */}
+      {/* 6. FOOTER */}
       <footer>
         <div className="footer-content">
           <h2 style={{fontSize:'2.5rem', marginBottom:'10px'}}>AB CUSTOM LABELS</h2>
           <p style={{color:'#888', fontSize:'1.1rem'}}>Make it Unforgettable.</p>
           
-          {/* Instagram Link */}
           <a 
             href="https://www.instagram.com/abcustomlables?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
             target="_blank" 
@@ -173,7 +199,6 @@ const Home = () => {
             <FaInstagram size={20}/> Follow on Instagram
           </a>
 
-          {/* HUGE WhatsApp Button */}
           <button 
             onClick={() => window.open('https://wa.me/919243858944', '_blank')}
             className="big-whatsapp-btn"

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes } from 'react-icons/fa';
+import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes, FaLightbulb } from 'react-icons/fa';
 
 const Gallery = () => {
   const { type } = useParams(); 
@@ -15,7 +15,6 @@ const Gallery = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- CONFIGURATION (Matches Git Folders) ---
   const config = {
     stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, 
     logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     
@@ -31,6 +30,13 @@ const Gallery = () => {
     imgSrc: `/images/${currentConfig.folder}/${currentConfig.prefix}${i + 1}.png`
   }));
 
+  // --- HANDLERS ---
+  const openCustomForm = () => {
+    // Open modal without a specific image selected (General Custom Request)
+    setSelectedItem({ title: 'My Custom Idea', imgSrc: null });
+    setStage('INPUT');
+  };
+
   const handleGenerate = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -38,20 +44,19 @@ const Gallery = () => {
     const newOrder = {
       name: data.get('name'),
       contact: data.get('contact'),
-      details: `Ref: ${selectedItem.title} | Changes: ${data.get('changes')} | Qty: ${data.get('qty')}`,
+      details: `Ref: ${selectedItem?.title || 'Custom Idea'} | Changes: ${data.get('changes')} | Qty: ${data.get('qty')}`,
       type: `Gallery Inquiry (${type})`,
       qty: data.get('qty'),
       date: new Date().toLocaleString()
     };
     setCustomData({ ...newOrder, changes: data.get('changes') });
-
     try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(err){ console.error(err); }
     setIsSaving(false); setStage('CONFIRM');
   };
 
   const handleFinalWhatsApp = () => {
     const phone = "919243858944";
-    const msg = `*GALLERY INQUIRY* 🖼\nRef: ${selectedItem.title}\n👤: ${customData.name}\n📞: ${customData.contact}\n📝: ${customData.changes}\n🔢: ${customData.qty}`;
+    const msg = `*GALLERY INQUIRY* 🖼\nRef: ${selectedItem?.title || 'Custom Idea'}\n👤: ${customData.name}\n📞: ${customData.contact}\n📝: ${customData.changes}\n🔢: ${customData.qty}`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
     setSelectedItem(null); setStage('INPUT');
   };
@@ -63,24 +68,12 @@ const Gallery = () => {
           <FaArrowLeft /> Back to Home
         </div>
         <div style={{textTransform:'capitalize', fontWeight:'800', fontSize:'1.1rem'}}>
-          AB {type} Archive
+          AB {type} Collection
         </div>
       </nav>
 
-      {/* --- ✅ THIS IS THE TEXT YOU WANTED --- */}
-      <div style={{textAlign:'center', padding:'3rem 1.5rem 1rem', maxWidth:'900px', margin:'0 auto'}}>
-        <h1 style={{fontSize:'3rem', fontWeight:'800', textTransform:'capitalize', marginBottom:'15px'}}>
-          {type} Collection
-        </h1>
-        <p style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.6'}}>
-          <b>Click any image</b> to order the exact same design or customize it.
-          <br />
-          Have a unique idea? Click an item, fill the form, and we'll discuss it on WhatsApp!
-        </p>
-      </div>
-      {/* --------------------------------------- */}
-
-      <div className="masonry-grid">
+      {/* --- MASONRY GRID --- */}
+      <div className="masonry-grid" style={{paddingTop:'2rem'}}>
         {items.map((item) => (
           <motion.div 
             key={item.id} 
@@ -92,17 +85,27 @@ const Gallery = () => {
               src={item.imgSrc} 
               alt={item.title} 
               loading="lazy"
-              onError={(e) => {
-                e.target.style.display = 'none'; 
-                e.target.parentNode.style.backgroundColor = '#ffecec';
-                e.target.parentNode.innerHTML += `<div style="padding:20px;color:red;font-size:0.8rem;">Missing:<br/>${item.imgSrc}</div>`;
-              }} 
+              onError={(e) => { e.target.style.display = 'none'; }} 
             />
             <div className="overlay-btn">Customize <FaPenNib size={10} style={{marginLeft:5}}/></div>
           </motion.div>
         ))}
       </div>
 
+      {/* --- BOTTOM CTA FOR CUSTOM IDEAS --- */}
+      <div style={{padding:'4rem 2rem', textAlign:'center', background:'#fafafa', borderTop:'1px solid #eee'}}>
+        <h2 style={{marginBottom:'15px'}}>Don't see what you're looking for?</h2>
+        <p style={{color:'#666', marginBottom:'30px'}}>We can create anything from scratch. Tell us your idea.</p>
+        <button 
+          onClick={openCustomForm} 
+          className="primary-btn" 
+          style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}
+        >
+          <FaLightbulb /> Fill Form for Custom Idea
+        </button>
+      </div>
+
+      {/* --- MODAL --- */}
       <AnimatePresence>
         {selectedItem && (
           <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
@@ -110,9 +113,12 @@ const Gallery = () => {
               <button onClick={() => setSelectedItem(null)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20}/></button>
               
               <div style={{display:'flex', gap:'20px', alignItems:'center', marginBottom:'20px'}}>
-                <img src={selectedItem.imgSrc} style={{width:'80px', borderRadius:'8px', border:'1px solid #eee'}} onError={(e) => e.target.src = 'https://via.placeholder.com/80'}/>
+                {/* Only show image if it exists (not for custom idea) */}
+                {selectedItem.imgSrc && (
+                  <img src={selectedItem.imgSrc} style={{width:'80px', borderRadius:'8px', border:'1px solid #eee'}} />
+                )}
                 <div>
-                  <h3 style={{margin:0}}>Customize This</h3>
+                  <h3 style={{margin:0}}>Customize</h3>
                   <p style={{fontSize:'0.9rem', color:'#666', margin:0}}>{selectedItem.title}</p>
                 </div>
               </div>
@@ -121,9 +127,9 @@ const Gallery = () => {
                 <form onSubmit={handleGenerate}>
                   <input name="name" required className="clean-input" placeholder="Your Name" />
                   <input name="contact" required className="clean-input" placeholder="WhatsApp Contact Number" />
-                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your changes or your new idea..." />
+                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your idea or changes..." />
                   <input name="qty" type="number" required className="clean-input" placeholder="Quantity" />
-                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
+                  <button type="submit" className="primary-btn" style={{width:'100%'}} disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
                 </form>
               ) : (
                 <div>
@@ -132,7 +138,7 @@ const Gallery = () => {
                     <p><strong>Qty:</strong> {customData.qty}</p>
                     <p style={{marginTop:'10px', color:'green', fontWeight:'bold'}}>Request Saved!</p>
                   </div>
-                  <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366'}}><FaWhatsapp/> Chat on WhatsApp to Confirm</button>
+                  <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366', width:'100%'}}><FaWhatsapp/> Chat on WhatsApp</button>
                 </div>
               )}
             </motion.div>
