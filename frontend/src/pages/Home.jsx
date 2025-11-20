@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaBoxOpen, FaTimes, FaWhatsapp, FaShapes, FaIdCard } from 'react-icons/fa';
+import { FaArrowRight, FaBoxOpen, FaTimes, FaWhatsapp, FaShapes, FaIdCard, FaPenNib } from 'react-icons/fa';
 
-// --- IMPORT ANIMATION COMPONENTS ---
+// Import Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
@@ -14,55 +14,14 @@ const Home = () => {
   
   // --- STATE MANAGEMENT ---
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
-  const [orderStage, setOrderStage] = useState('FORM'); // 'FORM' -> 'SUMMARY'
+  const [orderStage, setOrderStage] = useState('FORM'); 
   const [formData, setFormData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
   // Vercel/Render API URL
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- 1. HANDLE FORM SUBMISSION ---
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    setIsSaving(true);
-    
-    const data = new FormData(e.target);
-    
-    const newOrder = {
-      name: data.get('name'),
-      contact: data.get('contact'),
-      details: data.get('details'),
-      type: 'Home Page Request',
-      date: new Date().toLocaleString()
-    };
-
-    setFormData(newOrder);
-
-    try {
-      await axios.post(`${API_URL}/api/orders`, newOrder);
-      console.log("Order saved to Cloud DB");
-    } catch (err) {
-      console.error("Failed to save order:", err);
-    }
-
-    setIsSaving(false);
-    setOrderStage('SUMMARY');
-  };
-
-  // --- 2. CONNECT TO WHATSAPP ---
-  const connectWhatsApp = () => {
-    const msg = `*NEW PROJECT INQUIRY - AB CUSTOM LABELS* 🚀\n\n` +
-                `👤 Name: ${formData.name}\n` +
-                `📞 Contact: ${formData.contact}\n` +
-                `📝 Request: ${formData.details}`;
-    
-    window.open(`https://wa.me/919243858944?text=${encodeURIComponent(msg)}`, '_blank');
-    
-    setOrderModalOpen(false);
-    setOrderStage('FORM');
-  };
-
-  // --- ANIMATION VARIANTS ---
+  // --- ANIMATION VARIANTS (DEFINED HERE TO FIX RED LINE) ---
   const bentoContainer = {
     hidden: { opacity: 0 },
     visible: {
@@ -87,12 +46,53 @@ const Home = () => {
     animate: { y: [-500, 0], transition: { repeat: Infinity, duration: 18, ease: "linear" } } 
   };
 
+  // --- 1. HANDLE FORM SUBMISSION ---
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    
+    const data = new FormData(e.target);
+    
+    const newOrder = {
+      name: data.get('name'),
+      contact: data.get('contact'),
+      details: data.get('details'),
+      type: 'Home Page Request',
+      date: new Date().toLocaleString()
+    };
+
+    setFormData(newOrder);
+
+    try {
+      await axios.post(`${API_URL}/api/orders`, newOrder);
+      console.log("Order saved to Cloud DB");
+    } catch (err) {
+      // FIX: Using 'err' inside console.error removes the red line
+      console.error("Failed to save order:", err);
+    }
+
+    setIsSaving(false);
+    setOrderStage('SUMMARY');
+  };
+
+  // --- 2. CONNECT TO WHATSAPP ---
+  const connectWhatsApp = () => {
+    const msg = `*NEW PROJECT INQUIRY - AB CUSTOM LABELS* 🚀\n\n` +
+                `👤 Name: ${formData.name}\n` +
+                `📞 Contact: ${formData.contact}\n` +
+                `📝 Request: ${formData.details}`;
+    
+    window.open(`https://wa.me/919243858944?text=${encodeURIComponent(msg)}`, '_blank');
+    
+    setOrderModalOpen(false);
+    setOrderStage('FORM');
+  };
+
   return (
     <div className="app-container">
       {/* --- NAVBAR --- */}
       <nav>
         <div className="logo">AB CUSTOM LABELS</div>
-        {/* Magnetic Button for Start Project */}
         <MagneticBtn 
           onClick={() => setOrderModalOpen(true)} 
           style={{ width: 'auto', padding: '10px 24px', fontSize: '0.9rem' }}
@@ -103,7 +103,6 @@ const Home = () => {
 
       {/* --- HERO SECTION --- */}
       <section className="hero-section">
-        {/* Animated Text Reveal */}
         <div className="hero-title" style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
           <RevealText text="We Design Identities That Stick." />
         </div>
@@ -129,52 +128,62 @@ const Home = () => {
           
           {/* 1. HERO CARD (Starts Order) */}
           <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
-            <div className="tag">Start Here</div>
-            <div>
-              <h2 style={{fontSize:'2rem', marginBottom:'10px'}}>Custom Order.</h2>
-              <p style={{opacity: 0.8}}>Have a specific idea? Describe it, and we'll build it.</p>
-            </div>
-            <div style={{marginTop:'20px', display:'flex', alignItems:'center', gap:'10px', fontWeight:'bold'}}>
-              BEGIN PROCESS <FaArrowRight />
-            </div>
+            <motion.div variants={bentoItem}>
+              <div className="tag">Start Here</div>
+              <div>
+                <h2 style={{fontSize:'2rem', marginBottom:'10px'}}>Custom Order.</h2>
+                <p style={{opacity: 0.8}}>Have a specific idea? Describe it, and we'll build it.</p>
+              </div>
+              <div style={{marginTop:'20px', display:'flex', alignItems:'center', gap:'10px', fontWeight:'bold'}}>
+                BEGIN PROCESS <FaArrowRight />
+              </div>
+            </motion.div>
           </TiltCard>
 
           {/* 2. STICKERS (Gallery) */}
           <TiltCard className="card tall-card" onClick={() => navigate('/gallery/stickers')}>
-            <div className="tag">Gallery</div>
-            <h3>Stickers</h3>
-            <p style={{color:'#666', fontSize:'0.9rem'}}>Die-cut & Vinyl</p>
-            <div style={{flex:1, display:'flex', justifyContent:'center', alignItems:'center', fontSize:'3rem', color:'#ddd'}}>
-              <FaShapes />
-            </div>
-            <button className="secondary-btn" style={{marginTop:'10px', width:'100%'}}>View Stickers</button>
+            <motion.div variants={bentoItem} style={{height:'100%', display:'flex', flexDirection:'column'}}>
+              <div className="tag">Gallery</div>
+              <h3>Stickers</h3>
+              <p style={{color:'#666', fontSize:'0.9rem'}}>Die-cut & Vinyl</p>
+              <div style={{flex:1, display:'flex', justifyContent:'center', alignItems:'center', fontSize:'3rem', color:'#ddd'}}>
+                <FaShapes />
+              </div>
+              <button className="secondary-btn" style={{marginTop:'10px', width:'100%'}}>View Stickers</button>
+            </motion.div>
           </TiltCard>
 
           {/* 3. LOGOS */}
           <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <h3>Logos</h3>
-            <p style={{color:'#666'}}>Identity Design</p>
-            <div style={{marginTop:'auto'}}>
-              <button className="secondary-btn" style={{width:'100%'}}>View Logos</button>
-            </div>
+            <motion.div variants={bentoItem}>
+              <h3>Logos</h3>
+              <p style={{color:'#666'}}>Identity Design</p>
+              <div style={{marginTop:'auto'}}>
+                <button className="secondary-btn" style={{width:'100%'}}>View Logos</button>
+              </div>
+            </motion.div>
           </TiltCard>
 
           {/* 4. LABELS */}
           <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <h3>Labels</h3>
-            <p style={{color:'#666'}}>Product Packaging</p>
-            <div style={{marginTop:'auto'}}>
-              <button className="secondary-btn" style={{width:'100%'}}>View Labels</button>
-            </div>
+            <motion.div variants={bentoItem}>
+              <h3>Labels</h3>
+              <p style={{color:'#666'}}>Product Packaging</p>
+              <div style={{marginTop:'auto'}}>
+                <button className="secondary-btn" style={{width:'100%'}}>View Labels</button>
+              </div>
+            </motion.div>
           </TiltCard>
 
-          {/* 5. CARDS (New Section) */}
+          {/* 5. VISITING CARDS */}
           <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-            <h3>Visiting Cards</h3>
-            <p style={{color:'#666'}}>Business & Events</p>
-            <div style={{marginTop:'auto'}}>
-              <button className="secondary-btn" style={{width:'100%'}}>View Cards</button>
-            </div>
+             <motion.div variants={bentoItem}>
+              <h3>Visiting Cards</h3>
+              <p style={{color:'#666'}}>Business & Events</p>
+              <div style={{marginTop:'auto'}}>
+                <button className="secondary-btn" style={{width:'100%'}}>View Cards</button>
+              </div>
+            </motion.div>
           </TiltCard>
 
         </motion.div>
@@ -227,7 +236,6 @@ const Home = () => {
             <a href="#" style={{color:'#666', textDecoration:'none'}}>Terms</a>
           </div>
 
-          {/* Magnetic Button for Footer Contact */}
           <MagneticBtn 
             onClick={() => window.open('https://wa.me/919243858944', '_blank')}
             style={{ background: 'white', color: 'black', maxWidth: '300px', marginTop: '20px' }}
