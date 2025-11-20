@@ -15,8 +15,7 @@ const Gallery = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- ⚠️ CONFIGURATION FIXED TO MATCH GIT UPLOAD ---
-  // Your Git log confirmed folders are: 'Stickers', 'Logos', 'Labels', 'Cards'
+  // --- CONFIG MATCHING GIT FOLDERS ---
   const config = {
     stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, 
     logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     
@@ -29,7 +28,6 @@ const Gallery = () => {
   const items = Array.from({ length: currentConfig.count }, (_, i) => ({
     id: i + 1,
     title: `${type.toUpperCase()} #${i + 1}`,
-    // Path: /images/Stickers/stickers1.png
     imgSrc: `/images/${currentConfig.folder}/${currentConfig.prefix}${i + 1}.png`
   }));
 
@@ -69,6 +67,19 @@ const Gallery = () => {
         </div>
       </nav>
 
+      {/* --- NEW INSTRUCTION HEADER --- */}
+      <div style={{textAlign:'center', padding:'3rem 1.5rem 1rem', maxWidth:'900px', margin:'0 auto'}}>
+        <h1 style={{fontSize:'3rem', fontWeight:'800', textTransform:'capitalize', marginBottom:'15px'}}>
+          {type} Collection
+        </h1>
+        <p style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.6'}}>
+          Like a design? <b>Click any image</b> to order the exact same one or customize it to fit your brand.
+          <br />
+          Have a completely different idea? Click any item to open the form, describe your vision, and we will discuss it on WhatsApp!
+        </p>
+      </div>
+
+      {/* --- MASONRY GRID --- */}
       <div className="masonry-grid">
         {items.map((item) => (
           <motion.div 
@@ -84,10 +95,10 @@ const Gallery = () => {
               onError={(e) => {
                 e.target.style.display = 'none'; 
                 e.target.parentNode.style.backgroundColor = '#ffecec';
-                e.target.parentNode.innerHTML += `<div style="padding:20px;color:red;">Image Not Found:<br/>${item.imgSrc}</div>`;
+                e.target.parentNode.innerHTML += `<div style="padding:20px;color:red;">Missing:<br/>${item.imgSrc}</div>`;
               }} 
             />
-            <div className="overlay-btn">Customize <FaPenNib size={10} style={{marginLeft:5}}/></div>
+            <div className="overlay-btn">Customize / Order <FaPenNib size={10} style={{marginLeft:5}}/></div>
           </motion.div>
         ))}
       </div>
@@ -101,26 +112,27 @@ const Gallery = () => {
               <div style={{display:'flex', gap:'20px', alignItems:'center', marginBottom:'20px'}}>
                 <img src={selectedItem.imgSrc} style={{width:'80px', borderRadius:'8px', border:'1px solid #eee'}} onError={(e) => e.target.src = 'https://via.placeholder.com/80'}/>
                 <div>
-                  <h3 style={{margin:0}}>Customize {selectedItem.title}</h3>
-                  <p style={{fontSize:'0.9rem', color:'#666', margin:0}}>Provide details below.</p>
+                  <h3 style={{margin:0}}>Customize This</h3>
+                  <p style={{fontSize:'0.9rem', color:'#666', margin:0}}>{selectedItem.title}</p>
                 </div>
               </div>
 
               {stage === 'INPUT' ? (
                 <form onSubmit={handleGenerate}>
                   <input name="name" required className="clean-input" placeholder="Your Name" />
-                  <input name="contact" required className="clean-input" placeholder="WhatsApp Contact" />
-                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe changes..." />
+                  <input name="contact" required className="clean-input" placeholder="WhatsApp Contact Number" />
+                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your changes or your new idea here..." />
                   <input name="qty" type="number" required className="clean-input" placeholder="Quantity" />
-                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
+                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? 'Processing...' : 'Generate Request'}</button>
                 </form>
               ) : (
                 <div>
                   <div className="summary-box">
                     <p><strong>Name:</strong> {customData.name}</p>
                     <p><strong>Qty:</strong> {customData.qty}</p>
+                    <p style={{marginTop:'10px', color:'green', fontWeight:'bold'}}>Request Saved!</p>
                   </div>
-                  <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366'}}><FaWhatsapp/> Send on WhatsApp</button>
+                  <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366'}}><FaWhatsapp/> Chat on WhatsApp to Confirm</button>
                 </div>
               )}
             </motion.div>
