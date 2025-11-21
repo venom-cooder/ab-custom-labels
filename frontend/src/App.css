@@ -1,3 +1,4 @@
+/* --- 1. IMPORTS & VARIABLES --- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
 :root {
@@ -5,134 +6,284 @@
   --bg-secondary: #f8f8f8;
   --text-main: #111111;
   --text-muted: #666666;
-  --accent: #000000;
+  --accent: #000000; /* Sharp Black */
   --border: #e4e4e7;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
+  --shadow-lg: 0 20px 50px rgba(0,0,0,0.1);
+  --radius: 16px;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
 
 body {
-  background: var(--bg-main); color: var(--text-main);
-  font-family: 'Inter', sans-serif; overflow-x: hidden;
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-.app-container { width: 100%; min-height: 100vh; display: flex; flex-direction: column; }
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-/* NAVBAR */
+/* --- 2. NAVBAR --- */
 nav {
-  padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center;
-  max-width: 1600px; margin: 0 auto; width: 100%;
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px);
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
+
 .nav-links { display: flex; gap: 25px; align-items: center; }
 .nav-link { text-decoration: none; color: #666; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: 0.2s; }
 .nav-link:hover { color: black; }
-.logo { font-size: 1.3rem; font-weight: 900; letter-spacing: -1px; cursor: pointer; }
+.logo { font-size: 1.3rem; font-weight: 900; letter-spacing: -1px; cursor: pointer; color: var(--accent); }
 
-/* HERO */
-.hero-section { padding: 4rem 2rem 2rem; text-align: center; max-width: 900px; margin: 0 auto; }
-.hero-title { font-size: 3.5rem; font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 1rem; }
-.hero-desc { font-size: 1.1rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.6; }
+/* --- 3. HERO SECTION --- */
+.hero-section {
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative; /* For Aurora Z-Index */
+}
 
-/* BENTO GRID (Blocks) */
-.bento-section { padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; }
-.bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; grid-auto-rows: 240px; }
+.hero-title {
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  color: var(--accent);
+}
+
+.hero-desc {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* --- 4. BENTO GRID (Home Page) --- */
+.bento-section {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  grid-auto-rows: 320px;
+}
 
 .card {
-  background: #f9f9f9; border: 1px solid #eee; border-radius: 20px;
-  padding: 1.5rem; position: relative; overflow: hidden; cursor: pointer;
-  display: flex; flex-direction: column; justify-content: space-between;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   transition: 0.3s ease;
 }
-.card:hover { border-color: black; background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-.hero-card { grid-column: span 2; background: black; color: white; }
 
-.grid-btn {
-  background: black; color: white; border: none; width: 100%;
-  padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem;
-  cursor: pointer; margin-top: auto;
+.card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+  background: white;
 }
-.hero-card .grid-btn { background: white; color: black; }
 
-/* LOGO FADER */
+.hero-card { grid-column: span 2; background: var(--text-main); color: white; }
+.hero-card p { color: #aaa; }
+.tall-card { grid-row: span 2; }
+
+.tag {
+  position: absolute; top: 1.5rem; right: 1.5rem;
+  background: white; color: black; padding: 6px 14px;
+  border-radius: 50px; font-size: 0.75rem; font-weight: 700;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* --- 5. MASONRY GRID (Gallery Page) --- */
+.masonry-grid {
+  column-count: 4; /* 4 Columns on Desktop */
+  column-gap: 30px;
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 30px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  position: relative;
+  cursor: pointer;
+  background: var(--bg-secondary);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.masonry-item img { width: 100%; height: auto; display: block; }
+
+.masonry-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.overlay-btn {
+  position: absolute; bottom: 15px; right: 15px;
+  background: white; color: black; padding: 10px 20px;
+  border-radius: 30px; font-weight: 700; font-size: 0.8rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  opacity: 0; transform: translateY(10px);
+  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex; align-items: center; gap: 5px;
+}
+
+.masonry-item:hover .overlay-btn { opacity: 1; transform: translateY(0); }
+
+/* --- 6. SECTIONS (Logos, Marquee, Highlights) --- */
 .logo-fader-section {
-  padding: 3rem 0; display: flex; flex-direction: column; align-items: center;
-  background: #fafafa; border-top: 1px solid #eee;
+  padding: 4rem 0; display: flex; flex-direction: column; align-items: center;
+  background: #fafafa; border-top: 1px solid var(--border);
 }
-.logo-stage { width: 180px; height: 180px; display: flex; align-items: center; justify-content: center; }
+.logo-stage { width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
 
-/* STICKER MARQUEE (Colored) */
-.marquee-container { overflow: hidden; white-space: nowrap; padding: 40px 0; background: white; border-bottom: 1px solid #eee; }
-.marquee-track { display: flex; gap: 50px; }
-/* REMOVED GRAYSCALE FILTER HERE */
+.marquee-container {
+  overflow: hidden; white-space: nowrap; padding: 50px 0;
+  background: white; border-bottom: 1px solid var(--border);
+}
+.marquee-track { display: flex; gap: 60px; }
 .marquee-img { height: 120px; width: auto; object-fit: contain; transition: 0.3s; }
 .marquee-img:hover { transform: scale(1.1); }
 
-/* FEATURED CARDS (The 2 Big Cards) */
 .featured-section {
-  padding: 5rem 2rem; position: relative; overflow: hidden;
-  background: radial-gradient(circle at center, #fdfdfd 0%, #fff 100%);
+  padding: 6rem 2rem; position: relative; overflow: hidden;
+  /* Background removed so Aurora can show through */
+  background: transparent; 
   display: flex; flex-direction: column; align-items: center; gap: 60px;
 }
 .feat-card-img {
-  width: 100%; max-width: 500px; /* Controlled size */
-  border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-  transition: 0.3s;
+  width: 100%; max-width: 600px; border-radius: 20px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.12); transition: 0.3s;
+  z-index: 2; position: relative;
 }
 
-/* GALLERY MASONRY (Made Smaller & Cleaner) */
-.masonry-grid {
-  column-count: 5; /* 5 Columns makes images smaller (like before) */
-  column-gap: 20px;
-  padding: 2rem; max-width: 1600px; margin: 0 auto; width: 100%;
+/* --- 7. BUTTONS --- */
+.primary-btn {
+  background: var(--accent); color: white; border: none; border-radius: 12px;
+  cursor: pointer; font-weight: 600; padding: 14px 28px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: 0.2s;
 }
-.masonry-item {
-  break-inside: avoid; margin-bottom: 20px;
-  border-radius: 12px; overflow: hidden;
-  border: 1px solid #eee; position: relative; cursor: pointer;
-  transition: transform 0.2s;
-}
-.masonry-item img { width: 100%; display: block; }
-.masonry-item:hover { transform: scale(1.02); border-color: black; }
-.overlay-btn {
-  position: absolute; bottom: 10px; right: 10px;
-  background: white; color: black; padding: 6px 14px;
-  border-radius: 20px; font-weight: 700; font-size: 0.75rem;
-  opacity: 0; transition: 0.2s;
-}
-.masonry-item:hover .overlay-btn { opacity: 1; }
+.primary-btn:hover { opacity: 0.9; transform: scale(1.02); }
 
-/* FOOTER (Clean) */
-footer { background: #000; color: #fff; padding: 5rem 2rem 3rem; text-align: center; }
-.footer-content { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+/* Buttons inside Bento Grid */
+.grid-btn {
+  background: black; color: white; border: none; width: 100%;
+  padding: 12px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
+  cursor: pointer; margin-top: auto; transition: 0.2s;
+}
+.grid-btn:hover { background: #333; transform: scale(1.02); }
+.hero-card .grid-btn { background: white; color: black; }
 
-/* BUTTONS */
-.primary-btn { background: black; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; padding: 12px 24px; }
-/* HUGE WHATSAPP BUTTON */
+/* New Hero Category Buttons */
+.category-pill {
+  background: white; border: 1px solid #e4e4e7;
+  padding: 12px 24px; border-radius: 50px;
+  font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: all 0.2s ease;
+}
+.category-pill:hover {
+  background: black; color: white;
+  transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  border-color: black;
+}
+
+/* Huge WhatsApp Button (Footer) */
 .big-whatsapp-btn {
-  background: white; color: black; 
-  width: 100%; max-width: 400px;
-  padding: 18px; font-size: 1.1rem; font-weight: 800;
+  background: white; color: black; width: 100%; max-width: 400px;
+  padding: 20px; font-size: 1.2rem; font-weight: 800;
   border-radius: 50px; border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center; gap: 10px;
-  margin-top: 30px; transition: 0.2s;
+  margin-top: 30px; transition: 0.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
-.big-whatsapp-btn:hover { transform: scale(1.02); box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+.big-whatsapp-btn:hover { transform: scale(1.02); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
 
-.clean-input { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+/* --- 8. SCROLL, FAQ, FOOTER --- */
+.scroll-showcase { padding: 4rem 0; background: #fafafa; border-top: 1px solid var(--border); overflow: hidden; }
+.scroll-container { display: flex; gap: 20px; justify-content: center; height: 600px; overflow: hidden; }
+.scroll-col { display: flex; flex-direction: column; gap: 20px; width: 280px; }
+.showcase-item { width: 100%; aspect-ratio: 3/4; background: white; border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: #eee; font-weight: 800; font-size: 2rem; }
 
-/* MODAL */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 999; display: flex; align-items: center; justify-content: center; }
-.order-modal { background: white; width: 90%; max-width: 450px; padding: 2.5rem; border-radius: 24px; max-height: 90vh; overflow-y: auto; }
+.faq-section { max-width: 800px; margin: 0 auto; padding: 6rem 2rem; }
+.faq-item { border-bottom: 1px solid var(--border); padding: 2rem 0; }
+.faq-q { font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem; }
+.faq-a { color: var(--text-muted); line-height: 1.6; font-size: 1rem; }
 
-/* MOBILE */
+footer { background: #050505; color: #fff; padding: 6rem 2rem 4rem; text-align: center; margin-top: auto; }
+.footer-content { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+
+/* --- 9. FORMS & MODALS --- */
+.clean-input { width: 100%; padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 1rem; background: #fcfcfc; outline: none; transition: 0.2s; }
+.clean-input:focus { border-color: black; background: white; box-shadow: 0 0 0 4px rgba(0,0,0,0.05); }
+
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+.order-modal { background: white; width: 100%; max-width: 500px; padding: 2.5rem; border-radius: 24px; box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto; }
+.summary-box { background: #f9fafb; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; border: 1px dashed #d1d5db; font-size: 0.95rem; line-height: 1.6; }
+
+/* =========================================
+   📱 MOBILE OPTIMIZATIONS
+   ========================================= */
 @media (max-width: 768px) {
-  .nav-links { display: none; }
-  .hero-title { font-size: 2.5rem; }
-  .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
-  .hero-card { grid-column: span 1; }
-  .masonry-grid { column-count: 3; column-gap: 10px; padding: 10px; } /* 3 Columns on mobile for smaller look */
-  .big-whatsapp-btn { width: 100%; }
+  .nav-links { display: none; } /* Hide Links */
+  .logo { font-size: 1.1rem; }
+  
+  .hero-title { font-size: 2.8rem; }
+  
+  /* Stack Bento Grid */
+  .bento-grid { grid-template-columns: 1fr; gap: 20px; }
+  .hero-card, .tall-card { grid-column: span 1; }
+  
+  /* Gallery 2 Columns */
+  .masonry-grid { column-count: 2; column-gap: 10px; padding: 1rem; }
+  
+  /* Scroll Showcase Fewer Columns */
+  .scroll-col { width: 45vw; }
+  .scroll-col:nth-child(3) { display: none; }
+  
+  .big-whatsapp-btn { width: 100%; padding: 15px; font-size: 1rem; }
+  
+  /* Make featured cards smaller */
+  .feat-card-img { max-width: 100%; }
 }
