@@ -4,10 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
 import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram } from 'react-icons/fa';
 
-// Components
+// Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
+import Beams from '../components/anim/Beams'; // <--- IMPORT THE 3D ANIMATION
 
 const Home = () => {
   const navigate = useNavigate();
@@ -17,8 +18,6 @@ const Home = () => {
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
-  
-  // Logo Animation
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -29,7 +28,6 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Handlers
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
@@ -64,26 +62,38 @@ const Home = () => {
           <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
           <span className="nav-link" onClick={()=>navigate('/career')}>Career</span>
         </div>
-        {/* UPDATED BUTTON TEXT */}
         <MagneticBtn onClick={() => setOrderModalOpen(true)} style={{ width: 'auto', padding: '10px 20px', fontSize: '0.85rem' }}>
           Place Order
         </MagneticBtn>
       </nav>
 
-      {/* 1. HERO */}
-      <section className="hero-section">
-        <div className="hero-title" style={{ display: 'flex', justifyContent: 'center' }}>
-          <RevealText text="We Design Identities That Stick." />
+      {/* --- 1. HERO WITH 3D BACKGROUND --- */}
+      <section style={{ position: 'relative', height: '600px', overflow: 'hidden' }}>
+        {/* THE 3D BEAMS BACKGROUND */}
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
+          <Beams />
         </div>
-        <motion.p initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5}} className="hero-desc">
-          Premium branding assets. Waterproof labels, holographic stickers, visiting cards, and logos.
-        </motion.p>
+
+        {/* HERO CONTENT (Floating on top) */}
+        <div style={{ position: 'relative', zIndex: 1, paddingTop: '150px', textAlign: 'center', paddingLeft:'20px', paddingRight:'20px' }}>
+          <div className="hero-title" style={{ display: 'flex', justifyContent: 'center' }}>
+            <RevealText text="We Design Identities That Stick." />
+          </div>
+          <motion.p 
+            initial={{opacity:0, y:20}} 
+            animate={{opacity:1, y:0}} 
+            transition={{delay:0.5}} 
+            className="hero-desc"
+            style={{ textShadow: '0 2px 10px rgba(255,255,255,0.8)' }} // Make text readable over beams
+          >
+            Premium branding assets. Waterproof labels, holographic stickers, visiting cards, and logos.
+          </motion.p>
+        </div>
       </section>
 
-      {/* 2. BENTO GRID (Fixed Buttons at Bottom) */}
+      {/* 2. BENTO GRID (Rest of the page continues...) */}
       <div className="bento-section">
         <div className="bento-grid">
-          
           {/* Custom Order */}
           <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
             <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
@@ -98,10 +108,7 @@ const Home = () => {
           {/* Stickers */}
           <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
             <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div>
-                <h3>Stickers</h3> 
-                <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p>
-              </div>
+              <div><h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p></div>
               <button className="grid-btn">View Stickers</button>
             </div>
           </TiltCard>
@@ -109,10 +116,7 @@ const Home = () => {
           {/* Labels */}
           <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
             <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div>
-                <h3>Labels</h3> 
-                <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p>
-              </div>
+              <div><h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p></div>
               <button className="grid-btn">View Labels</button>
             </div>
           </TiltCard>
@@ -120,10 +124,7 @@ const Home = () => {
           {/* Logos */}
           <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
             <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div>
-                <h3>Logos</h3> 
-                <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p>
-              </div>
+              <div><h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p></div>
               <button className="grid-btn">View Logos</button>
             </div>
           </TiltCard>
@@ -131,17 +132,14 @@ const Home = () => {
           {/* Cards */}
           <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
             <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div>
-                <h3>Cards</h3> 
-                <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p>
-              </div>
+              <div><h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p></div>
               <button className="grid-btn">View Cards</button>
             </div>
           </TiltCard>
         </div>
       </div>
 
-      {/* 3. OUR WORK (LOGOS) - Text Updated */}
+      {/* 3. OUR WORK */}
       <section className="logo-fader-section">
         <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#999', fontWeight:'bold'}}>OUR WORK</p>
         <div className="logo-stage">
@@ -150,9 +148,9 @@ const Home = () => {
               key={logoIndex}
               src={`/images/Logos/logo${logos[logoIndex]}.png`} 
               alt="Logo"
-              initial={{ opacity: 0, scale: 0.9, filter: 'blur(5px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.05, filter: 'blur(5px)' }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
               transition={{ duration: 0.5 }}
               style={{ maxWidth: '100%', maxHeight: '100%' }}
             />
@@ -181,8 +179,8 @@ const Home = () => {
       {/* 5. HIGHLIGHTS */}
       <section className="featured-section">
         <h3 style={{textAlign:'center', color:'#ccc', fontSize:'2rem', marginBottom:'-20px'}}>HIGHLIGHTS</h3>
-        <img src="/images/Cards/cards5.png" alt="Highlight 1" className="feat-card-img" />
-        <img src="/images/Cards/cards3.png" alt="Highlight 2" className="feat-card-img" />
+        <img src="/images/Cards/cards2.png" alt="Highlight 1" className="feat-card-img" />
+        <img src="/images/Cards/cards7.png" alt="Highlight 2" className="feat-card-img" />
       </section>
 
       {/* 6. FOOTER */}
@@ -190,22 +188,12 @@ const Home = () => {
         <div className="footer-content">
           <h2 style={{fontSize:'2.5rem', marginBottom:'10px'}}>AB CUSTOM LABELS</h2>
           <p style={{color:'#888', fontSize:'1.1rem'}}>Make it Unforgettable.</p>
-          
-          <a 
-            href="https://www.instagram.com/abcustomlables?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" 
-            target="_blank" 
-            style={{color:'#666', textDecoration:'none', display:'flex', alignItems:'center', gap:'8px', marginTop:'20px'}}
-          >
+          <a href="https://www.instagram.com/abcustomlables?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style={{color:'#666', textDecoration:'none', display:'flex', alignItems:'center', gap:'8px', marginTop:'20px'}}>
             <FaInstagram size={20}/> Follow on Instagram
           </a>
-
-          <button 
-            onClick={() => window.open('https://wa.me/919243858944', '_blank')}
-            className="big-whatsapp-btn"
-          >
+          <button onClick={() => window.open('https://wa.me/919243858944', '_blank')} className="big-whatsapp-btn">
             <FaWhatsapp size={28} /> Chat on WhatsApp
           </button>
-          
           <p style={{fontSize:'0.8rem', color:'#444', marginTop:'40px'}}>&copy; 2025 AB Custom Labels. Katni, MP.</p>
         </div>
       </footer>
