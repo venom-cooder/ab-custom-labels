@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
 import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram } from 'react-icons/fa';
 
-// Animation Components
+// Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-import Beams from '../components/anim/Beams'; // <--- IMPORT THE 3D ANIMATION
+import AuroraBackground from '../components/anim/AuroraBackground';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -52,9 +52,18 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      {/* NAVBAR */}
+      {/* NAVBAR with LOGO IMAGE */}
       <nav>
-        <div className="logo" onClick={()=>navigate('/')}>AB CUSTOM.</div>
+        <div 
+          className="logo" 
+          onClick={()=>navigate('/')} 
+          style={{display:'flex', alignItems:'center', gap:'12px'}}
+        >
+          {/* Logo Image from public folder */}
+          <img src="/logo.png" alt="AB Logo" style={{height:'40px', width:'auto'}} />
+          <span style={{fontSize:'1.2rem', fontWeight:'900', letterSpacing:'-0.5px'}}>AB CUSTOM LABELS</span>
+        </div>
+
         <div className="nav-links">
           <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
@@ -62,20 +71,20 @@ const Home = () => {
           <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
           <span className="nav-link" onClick={()=>navigate('/career')}>Career</span>
         </div>
+        
         <MagneticBtn onClick={() => setOrderModalOpen(true)} style={{ width: 'auto', padding: '10px 20px', fontSize: '0.85rem' }}>
           Place Order
         </MagneticBtn>
       </nav>
 
-      {/* --- 1. HERO WITH 3D BACKGROUND --- */}
-      <section style={{ position: 'relative', height: '600px', overflow: 'hidden' }}>
-        {/* THE 3D BEAMS BACKGROUND */}
-        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0 }}>
-          <Beams />
-        </div>
+      {/* --- 1. HERO WITH AURORA BACKGROUND --- */}
+      <section style={{ position: 'relative', height: '650px', overflow: 'hidden', display:'flex', alignItems:'center', justifyContent:'center' }}>
+        
+        {/* ANIMATED BACKGROUND */}
+        <AuroraBackground />
 
-        {/* HERO CONTENT (Floating on top) */}
-        <div style={{ position: 'relative', zIndex: 1, paddingTop: '150px', textAlign: 'center', paddingLeft:'20px', paddingRight:'20px' }}>
+        {/* HERO CONTENT */}
+        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px' }}>
           <div className="hero-title" style={{ display: 'flex', justifyContent: 'center' }}>
             <RevealText text="We Design Identities That Stick." />
           </div>
@@ -84,14 +93,25 @@ const Home = () => {
             animate={{opacity:1, y:0}} 
             transition={{delay:0.5}} 
             className="hero-desc"
-            style={{ textShadow: '0 2px 10px rgba(255,255,255,0.8)' }} // Make text readable over beams
+            style={{ color: '#333', fontWeight: '500' }} 
           >
             Premium branding assets. Waterproof labels, holographic stickers, visiting cards, and logos.
           </motion.p>
+          
+          <motion.div 
+            initial={{opacity:0, scale:0.9}} 
+            animate={{opacity:1, scale:1}} 
+            transition={{delay:0.8}}
+            style={{marginTop:'40px'}}
+          >
+            <MagneticBtn onClick={() => navigate('/gallery/stickers')} style={{ padding: '15px 30px', fontSize: '1rem' }}>
+              Explore Collections
+            </MagneticBtn>
+          </motion.div>
         </div>
       </section>
 
-      {/* 2. BENTO GRID (Rest of the page continues...) */}
+      {/* 2. BENTO GRID */}
       <div className="bento-section">
         <div className="bento-grid">
           {/* Custom Order */}
@@ -188,13 +208,19 @@ const Home = () => {
         <div className="footer-content">
           <h2 style={{fontSize:'2.5rem', marginBottom:'10px'}}>AB CUSTOM LABELS</h2>
           <p style={{color:'#888', fontSize:'1.1rem'}}>Make it Unforgettable.</p>
+          
           <a href="https://www.instagram.com/abcustomlables?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style={{color:'#666', textDecoration:'none', display:'flex', alignItems:'center', gap:'8px', marginTop:'20px'}}>
             <FaInstagram size={20}/> Follow on Instagram
           </a>
+
           <button onClick={() => window.open('https://wa.me/919243858944', '_blank')} className="big-whatsapp-btn">
             <FaWhatsapp size={28} /> Chat on WhatsApp
           </button>
-          <p style={{fontSize:'0.8rem', color:'#444', marginTop:'40px'}}>&copy; 2025 AB Custom Labels. Katni, MP.</p>
+          
+          <p style={{fontSize:'0.8rem', color:'#444', marginTop:'40px', lineHeight:'1.6'}}>
+            &copy; 2025 AB Custom Labels. All rights reserved.<br/>
+            Designed with ❤️ in India
+          </p>
         </div>
       </footer>
 
