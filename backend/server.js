@@ -24,6 +24,7 @@ app.use(express.json());
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
+app.use('/api/support', require('./routes/supportRoutes'));
 
 // 5. Health Check Route (Click your Render link to see this)
 app.get('/', (req, res) => {

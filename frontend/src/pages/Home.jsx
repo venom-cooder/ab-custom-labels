@@ -8,7 +8,6 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-// Removed GridDistortion
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
 
@@ -16,9 +15,12 @@ const Home = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
+  // States
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
+  
+  // Logo Animation State
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -29,6 +31,7 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Handlers
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
@@ -70,9 +73,9 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* 1. HERO (STATIC IMAGE BACKGROUND) */}
+      {/* --- 1. HERO SECTION (Static Premium Image) --- */}
       <div className="hero-wrapper">
-        {/* High Quality Static Background */}
+        {/* The CSS class .hero-static-bg handles the image */}
         <div className="hero-static-bg"></div>
         
         <div className="hero-overlay">
@@ -86,6 +89,7 @@ const Home = () => {
             From waterproof labels and holographic stickers to professional logos that define product value.
           </p>
 
+          {/* 4 Rectangular Buttons */}
           <div className="hero-buttons-grid">
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
@@ -95,25 +99,70 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. SPLIT SECTION (Fixed Colors) */}
+      {/* --- 2. BENTO GRID (Blocks with Bottom Buttons) --- */}
+      <div className="bento-section">
+        <div className="bento-grid">
+          {/* Custom Order Block */}
+          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div style={{zIndex:1}}>
+                <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
+                <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
+              </div>
+              <button className="grid-btn" style={{marginTop:'20px'}}>Open Form <FaArrowRight/></button>
+            </div>
+          </TiltCard>
+
+          {/* Stickers */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p></div>
+              <button className="grid-btn">View Stickers</button>
+            </div>
+          </TiltCard>
+
+          {/* Labels */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p></div>
+              <button className="grid-btn">View Labels</button>
+            </div>
+          </TiltCard>
+
+          {/* Logos */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p></div>
+              <button className="grid-btn">View Logos</button>
+            </div>
+          </TiltCard>
+
+          {/* Cards */}
+          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p></div>
+              <button className="grid-btn">View Cards</button>
+            </div>
+          </TiltCard>
+        </div>
+      </div>
+
+      {/* --- 3. SPLIT SECTION (Cards Right & Down) --- */}
       <section className="split-section">
         <div className="split-text">
-          {/* White Headline */}
           <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px', color:'#ffffff'}}>
             Unleash Your <br/> <span style={{color:'var(--accent)', fontStyle:'italic'}}>Creativity.</span>
           </h2>
-          
-          {/* Bright Silver Text */}
           <p style={{color:'#e0e0e0', marginBottom:'40px', fontSize:'1.1rem', lineHeight:'1.6'}}>
             We craft identities that people remember. Don't know what you want? Let the cards decide.
           </p>
-          
           <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>
             GIVE ORDER
           </button>
         </div>
 
         <div className="split-visual">
+          {/* CARD SWAP (Positioned by CSS) */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -135,7 +184,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. OUR WORK */}
+      {/* --- 4. OUR WORK (Logos Animation) --- */}
       <section style={{padding:'4rem 0', background:'#0a0a0a', display:'flex', flexDirection:'column', alignItems:'center', borderTop:'1px solid #222'}}>
         <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#555', fontWeight:'bold'}}>OUR WORK</p>
         <div style={{height:'150px', display:'flex', alignItems:'center'}}>
@@ -152,7 +201,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. STICKERS MARQUEE */}
+      {/* --- 5. STICKERS MARQUEE --- */}
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -161,7 +210,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* 5. HIGHLIGHTS */}
+      {/* --- 6. HIGHLIGHTS (Liquid Chrome + Stacked Cards) --- */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
@@ -178,7 +227,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 6. FOOTER */}
+      {/* --- 7. FOOTER --- */}
       <footer>
         <div className="footer-grid">
           <div className="footer-col">
@@ -189,7 +238,7 @@ const Home = () => {
           </div>
           <div className="footer-col">
             <h3>Company</h3>
-            <span className="footer-link">About Us</span>
+            <span className="footer-link" onClick={()=>window.scrollTo(0,0)}>About Us</span>
             <span className="footer-link" onClick={()=>navigate('/career')}>Career</span>
             <span className="footer-link">Social News</span>
           </div>

@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes, FaLightbulb, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaInstagram } from 'react-icons/fa';
+import { FaPenNib, FaWhatsapp, FaTimes, FaLightbulb } from 'react-icons/fa';
 
 const Gallery = () => {
   const { type } = useParams(); 
-  const navigate = useNavigate();
   
   const [selectedItem, setSelectedItem] = useState(null);
   const [stage, setStage] = useState('INPUT'); 
@@ -15,6 +14,7 @@ const Gallery = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
+  // --- CONFIGURATION ---
   const config = {
     stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, 
     logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     
@@ -26,10 +26,11 @@ const Gallery = () => {
 
   const items = Array.from({ length: currentConfig.count }, (_, i) => ({
     id: i + 1,
-    title: `${type.toUpperCase()} #${i + 1}`,
+    title: `${type ? type.toUpperCase() : ''} #${i + 1}`,
     imgSrc: `/images/${currentConfig.folder}/${currentConfig.prefix}${i + 1}.png`
   }));
 
+  // --- HANDLERS ---
   const openCustomForm = () => {
     setSelectedItem({ title: 'My Custom Idea', imgSrc: null });
     setStage('INPUT');
@@ -48,6 +49,7 @@ const Gallery = () => {
       date: new Date().toLocaleString()
     };
     setCustomData({ ...newOrder, changes: data.get('changes') });
+
     try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(err){ console.error(err); }
     setIsSaving(false); setStage('CONFIRM');
   };
@@ -61,27 +63,20 @@ const Gallery = () => {
 
   return (
     <div className="app-container">
-      <nav>
-        <div onClick={() => navigate('/')} style={{display:'flex', alignItems:'center', gap:'10px', cursor:'pointer', fontWeight:'600', color:'#fff'}}>
-          <FaArrowLeft /> Back to Home
-        </div>
-        <div style={{textTransform:'capitalize', fontWeight:'800', fontSize:'1.1rem', color:'#fff'}}>
-          AB {type} Archive
-        </div>
-      </nav>
-
+      
+      {/* --- HEADER --- */}
       <div style={{textAlign:'center', padding:'3rem 1.5rem 1rem', maxWidth:'900px', margin:'0 auto'}}>
         <h1 style={{fontSize:'3rem', fontWeight:'800', textTransform:'capitalize', marginBottom:'15px', color:'#fff'}}>
           {type} Collection
         </h1>
         <p style={{color:'#ccc', fontSize:'1.1rem', lineHeight:'1.6'}}>
-          <b>Click any image</b> to order the exact same design or customize it to fit your brand.
+          <b>Click any image</b> to order the exact same design or customize it.
           <br />
-          Have a unique idea? Click below to fill the form!
+          Have a unique idea? Click the button below the grid!
         </p>
       </div>
 
-      {/* GRID (Sized by App.css .masonry-grid) */}
+      {/* --- MASONRY GRID --- */}
       <div className="masonry-grid">
         {items.map((item) => (
           <motion.div 
@@ -101,49 +96,20 @@ const Gallery = () => {
         ))}
       </div>
 
+      {/* --- BOTTOM CTA FOR CUSTOM IDEAS --- */}
       <div style={{padding:'4rem 2rem', textAlign:'center', background:'#0a0a0a', borderTop:'1px solid #222'}}>
         <h2 style={{marginBottom:'15px', color:'#fff'}}>Don't see what you're looking for?</h2>
         <p style={{color:'#888', marginBottom:'30px'}}>We can create anything from scratch. Tell us your idea.</p>
-        <button onClick={openCustomForm} className="primary-btn" style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}>
+        <button 
+          onClick={openCustomForm} 
+          className="primary-btn" 
+          style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}
+        >
           <FaLightbulb /> Fill Form for Custom Idea
         </button>
       </div>
 
-      {/* --- FOOTER ADDED --- */}
-      <footer>
-        <div className="footer-grid">
-          <div className="footer-col">
-            <h3>Products</h3>
-            <span className="footer-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
-            <span className="footer-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-            <span className="footer-link" onClick={()=>navigate('/gallery/logos')}>Logo</span>
-          </div>
-          <div className="footer-col">
-            <h3>Company</h3>
-            <span className="footer-link" onClick={()=>window.scrollTo(0,0)}>About Us</span>
-            <span className="footer-link" onClick={()=>navigate('/career')}>Career</span>
-            <span className="footer-link">Social News</span>
-          </div>
-          <div className="footer-col">
-            <h3>Support</h3>
-            <span className="footer-link">Help</span>
-            <span className="footer-link">Contact Us</span>
-            <span className="footer-link">Feedback</span>
-          </div>
-          <div className="footer-col contact-col">
-            <div className="contact-row"><FaMapMarkerAlt color="#ff4444"/> Katni, MP</div>
-            <div className="contact-row"><FaPhoneAlt/> +91-9243858944</div>
-            <div className="contact-row"><FaEnvelope/> ab.customlabels@gmail.com</div>
-            <div className="social-icons">
-              <FaInstagram size={28} cursor="pointer" onClick={()=>window.open('https://www.instagram.com/abcustomlables','_blank')} />
-              <FaWhatsapp size={28} cursor="pointer" onClick={()=>window.open('https://wa.me/919243858944','_blank')} />
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">© 2025 AB Custom Labels. All rights reserved. | Designed with ❤️ in India</div>
-      </footer>
-
-      {/* MODAL */}
+      {/* --- MODAL --- */}
       <AnimatePresence>
         {selectedItem && (
           <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
@@ -164,7 +130,7 @@ const Gallery = () => {
                 <form onSubmit={handleGenerate}>
                   <input name="name" required className="clean-input" placeholder="Your Name" />
                   <input name="contact" required className="clean-input" placeholder="WhatsApp Contact Number" />
-                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your idea..." />
+                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your idea or changes..." />
                   <input name="qty" type="number" required className="clean-input" placeholder="Quantity" />
                   <button type="submit" className="primary-btn" style={{width:'100%'}} disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
                 </form>
