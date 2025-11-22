@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes, FaLightbulb } from 'react-icons/fa';
+import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes, FaLightbulb, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaInstagram } from 'react-icons/fa';
 
 const Gallery = () => {
   const { type } = useParams(); 
@@ -15,7 +15,6 @@ const Gallery = () => {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // --- CONFIGURATION ---
   const config = {
     stickers: { folder: 'Stickers', count: 10, prefix: 'stickers' }, 
     logos:    { folder: 'Logos',    count: 10, prefix: 'logo' },     
@@ -31,7 +30,6 @@ const Gallery = () => {
     imgSrc: `/images/${currentConfig.folder}/${currentConfig.prefix}${i + 1}.png`
   }));
 
-  // --- HANDLERS ---
   const openCustomForm = () => {
     setSelectedItem({ title: 'My Custom Idea', imgSrc: null });
     setStage('INPUT');
@@ -50,7 +48,6 @@ const Gallery = () => {
       date: new Date().toLocaleString()
     };
     setCustomData({ ...newOrder, changes: data.get('changes') });
-
     try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(err){ console.error(err); }
     setIsSaving(false); setStage('CONFIRM');
   };
@@ -64,37 +61,27 @@ const Gallery = () => {
 
   return (
     <div className="app-container">
-      {/* NAVBAR */}
       <nav>
-        <div onClick={() => navigate('/')} style={{display:'flex', alignItems:'center', gap:'10px', cursor:'pointer', fontWeight:'600'}}>
+        <div onClick={() => navigate('/')} style={{display:'flex', alignItems:'center', gap:'10px', cursor:'pointer', fontWeight:'600', color:'#fff'}}>
           <FaArrowLeft /> Back to Home
         </div>
-        <div style={{textTransform:'capitalize', fontWeight:'800', fontSize:'1.1rem'}}>
+        <div style={{textTransform:'capitalize', fontWeight:'800', fontSize:'1.1rem', color:'#fff'}}>
           AB {type} Archive
         </div>
       </nav>
 
-      {/* --- TOP HEADER (INTERACTIVE TEXT) --- */}
-      <div style={{textAlign:'center', padding:'3rem 1.5rem 1rem', maxWidth:'800px', margin:'0 auto'}}>
-        <motion.h1 
-          initial={{opacity:0, y:10}} 
-          animate={{opacity:1, y:0}} 
-          style={{fontSize:'2.5rem', fontWeight:'800', textTransform:'capitalize', marginBottom:'10px'}}
-        >
+      <div style={{textAlign:'center', padding:'3rem 1.5rem 1rem', maxWidth:'900px', margin:'0 auto'}}>
+        <h1 style={{fontSize:'3rem', fontWeight:'800', textTransform:'capitalize', marginBottom:'15px', color:'#fff'}}>
           {type} Collection
-        </motion.h1>
-        
-        <motion.p 
-          initial={{opacity:0}} 
-          animate={{opacity:1}} 
-          transition={{delay:0.2}}
-          style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.5'}}
-        >
-          Browse our past work below. <b>Click any image</b> to order the exact same design or customize it to fit your brand.
-        </motion.p>
+        </h1>
+        <p style={{color:'#ccc', fontSize:'1.1rem', lineHeight:'1.6'}}>
+          <b>Click any image</b> to order the exact same design or customize it to fit your brand.
+          <br />
+          Have a unique idea? Click below to fill the form!
+        </p>
       </div>
 
-      {/* --- MASONRY GRID --- */}
+      {/* GRID (Sized by App.css .masonry-grid) */}
       <div className="masonry-grid">
         {items.map((item) => (
           <motion.div 
@@ -114,33 +101,62 @@ const Gallery = () => {
         ))}
       </div>
 
-      {/* --- BOTTOM CTA FOR CUSTOM IDEAS --- */}
-      <div style={{padding:'4rem 2rem', textAlign:'center', background:'#fafafa', borderTop:'1px solid #eee'}}>
-        <h2 style={{marginBottom:'15px'}}>Don't see what you're looking for?</h2>
-        <p style={{color:'#666', marginBottom:'30px'}}>We can create anything from scratch. Tell us your idea.</p>
-        <button 
-          onClick={openCustomForm} 
-          className="primary-btn" 
-          style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}
-        >
+      <div style={{padding:'4rem 2rem', textAlign:'center', background:'#0a0a0a', borderTop:'1px solid #222'}}>
+        <h2 style={{marginBottom:'15px', color:'#fff'}}>Don't see what you're looking for?</h2>
+        <p style={{color:'#888', marginBottom:'30px'}}>We can create anything from scratch. Tell us your idea.</p>
+        <button onClick={openCustomForm} className="primary-btn" style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}>
           <FaLightbulb /> Fill Form for Custom Idea
         </button>
       </div>
 
-      {/* --- MODAL --- */}
+      {/* --- FOOTER ADDED --- */}
+      <footer>
+        <div className="footer-grid">
+          <div className="footer-col">
+            <h3>Products</h3>
+            <span className="footer-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
+            <span className="footer-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
+            <span className="footer-link" onClick={()=>navigate('/gallery/logos')}>Logo</span>
+          </div>
+          <div className="footer-col">
+            <h3>Company</h3>
+            <span className="footer-link" onClick={()=>window.scrollTo(0,0)}>About Us</span>
+            <span className="footer-link" onClick={()=>navigate('/career')}>Career</span>
+            <span className="footer-link">Social News</span>
+          </div>
+          <div className="footer-col">
+            <h3>Support</h3>
+            <span className="footer-link">Help</span>
+            <span className="footer-link">Contact Us</span>
+            <span className="footer-link">Feedback</span>
+          </div>
+          <div className="footer-col contact-col">
+            <div className="contact-row"><FaMapMarkerAlt color="#ff4444"/> Katni, MP</div>
+            <div className="contact-row"><FaPhoneAlt/> +91-9243858944</div>
+            <div className="contact-row"><FaEnvelope/> ab.customlabels@gmail.com</div>
+            <div className="social-icons">
+              <FaInstagram size={28} cursor="pointer" onClick={()=>window.open('https://www.instagram.com/abcustomlables','_blank')} />
+              <FaWhatsapp size={28} cursor="pointer" onClick={()=>window.open('https://wa.me/919243858944','_blank')} />
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">© 2025 AB Custom Labels. All rights reserved. | Designed with ❤️ in India</div>
+      </footer>
+
+      {/* MODAL */}
       <AnimatePresence>
         {selectedItem && (
           <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
             <motion.div className="order-modal" onClick={(e) => e.stopPropagation()} initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-              <button onClick={() => setSelectedItem(null)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20}/></button>
+              <button onClick={() => setSelectedItem(null)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#fff"/></button>
               
               <div style={{display:'flex', gap:'20px', alignItems:'center', marginBottom:'20px'}}>
                 {selectedItem.imgSrc && (
-                  <img src={selectedItem.imgSrc} style={{width:'80px', borderRadius:'8px', border:'1px solid #eee'}} />
+                  <img src={selectedItem.imgSrc} style={{width:'80px', borderRadius:'8px', border:'1px solid #333'}} />
                 )}
                 <div>
-                  <h3 style={{margin:0}}>Customize</h3>
-                  <p style={{fontSize:'0.9rem', color:'#666', margin:0}}>{selectedItem.title}</p>
+                  <h3 style={{margin:0, color:'#fff'}}>Customize</h3>
+                  <p style={{fontSize:'0.9rem', color:'#888', margin:0}}>{selectedItem.title}</p>
                 </div>
               </div>
 
@@ -148,7 +164,7 @@ const Gallery = () => {
                 <form onSubmit={handleGenerate}>
                   <input name="name" required className="clean-input" placeholder="Your Name" />
                   <input name="contact" required className="clean-input" placeholder="WhatsApp Contact Number" />
-                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your idea or changes..." />
+                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe your idea..." />
                   <input name="qty" type="number" required className="clean-input" placeholder="Quantity" />
                   <button type="submit" className="primary-btn" style={{width:'100%'}} disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
                 </form>
