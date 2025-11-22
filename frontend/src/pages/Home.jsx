@@ -8,9 +8,9 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
+// GridDistortion and AuroraBackground removed
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
-import AuroraBackground from '../components/anim/AuroraBackground'; // <--- Using Aurora
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ const Home = () => {
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
   
+  // Logo Animation State
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -72,59 +73,44 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* --- 1. HERO SECTION (Aurora + Dark Text) --- */}
-      <div style={{ width: '100%', height: '750px', position: 'relative', overflow:'hidden', background:'#fff' }}>
-        
-        {/* Background: Aurora */}
-        <AuroraBackground />
+      {/* --- 1. HERO SECTION (New Dark Grid Pattern) --- */}
+      <div className="distortion-wrapper">
+        {/* CSS-based animated background layers */}
+        <div className="hero-bg-pattern"></div>
+        <div className="hero-radial-overlay"></div>
         
         <div className="hero-overlay">
-          {/* Text: Dark Black for contrast on Aurora */}
-          <h1 className="hero-title" style={{ color: '#000', textShadow: 'none' }}>
-            MAKE IT <span style={{color:'#00cc00'}}>STICK.</span>
+          {/* UPDATED TEXT */}
+          <h1 className="hero-title">
+            WELCOME TO <br/>
+            <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
           </h1>
           
-          <p className="hero-desc" style={{ color: '#444', fontWeight: '500' }}>
-            <b>AB Custom Labels</b> is a premium design house based in Katni, MP. 
-            We don't just print; we engineer branding assets. Waterproof labels, holographic stickers, and logos that define your product's value.
+          <p className="hero-desc">
+            Your premier design house for engineering branding assets. 
+            From waterproof labels and holographic stickers to professional logos that define product value.
           </p>
 
-          {/* Buttons: Dark Style to match text */}
           <div className="hero-buttons-grid">
-            {['Logos', 'Labels', 'Cards', 'Stickers'].map((cat) => (
-              <button 
-                key={cat}
-                className="category-rect-btn" 
-                onClick={()=>navigate(`/gallery/${cat.toLowerCase()}`)}
-                style={{ 
-                  borderColor: '#333', 
-                  color: '#000', 
-                  background: 'rgba(0,0,0,0.05)' 
-                }}
-              >
-                {cat === 'Logos' && <FaPenNib/>}
-                {cat === 'Labels' && <FaTag/>}
-                {cat === 'Cards' && <FaIdCard/>}
-                {cat === 'Stickers' && <FaShapes/>}
-                {cat.toUpperCase()}
-              </button>
-            ))}
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/cards')}><FaIdCard/> CARDS</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/stickers')}><FaShapes/> STICKERS</button>
           </div>
         </div>
       </div>
 
-      {/* --- 2. SPLIT SECTION (4 Cards + Equal Button) --- */}
+      {/* --- 2. SPLIT SECTION --- */}
       <section className="split-section">
         <div className="split-text">
           <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px'}}>
             Unleash Your <br/> <span style={{color:'var(--accent)', fontStyle:'italic'}}>Creativity.</span>
           </h2>
           <p style={{color:'#888', marginBottom:'40px', fontSize:'1.1rem'}}>
-            From stickers that pop to cards that impress. We craft identities that people remember.
-            Don't know what you want? Let the cards decide.
+            We craft identities that people remember. Don't know what you want? Let the cards decide.
           </p>
-          <button className="primary-btn" onClick={()=>alert("Randomizer Coming Soon!")}>
-            🎲 I'M FEELING LUCKY
+          <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>
+            GIVE ORDER
           </button>
         </div>
 
@@ -171,15 +157,16 @@ const Home = () => {
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
-            <img key={i} src={`/images/Stickers/stickers${(i % 10) + 1}.png`} style={{height:'100px', width:'auto'}} alt="sticker"/>
+            <img key={i} src={`/images/Stickers/stickers${(i % 10) + 1}.png`} style={{height:'100px', width:'auto', filter:'grayscale(0.3)'}} alt="sticker"/>
           ))}
         </motion.div>
       </div>
 
-      {/* --- 5. HIGHLIGHTS (Stacked, Card 5 & 3) --- */}
+      {/* --- 5. HIGHLIGHTS --- */}
       <section className="highlights-section">
         <div className="liquid-bg">
-          <LiquidChrome baseColor={[0.6, 0.6, 0.6]} speed={0.4} amplitude={0.3} />
+          {/* Updated color to match gold/warm tone slightly */}
+          <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
         </div>
         <div className="stacked-cards">
           <div className="glass-card">
@@ -215,12 +202,12 @@ const Home = () => {
             <span className="footer-link">Feedback</span>
           </div>
           <div className="footer-col contact-col">
-            <div className="contact-row"><FaMapMarkerAlt color="#ff4444"/> Katni, MP</div>
+            <div className="contact-row"><FaMapMarkerAlt color="var(--accent)"/> Katni, MP</div>
             <div className="contact-row"><FaPhoneAlt/> +91-9243858944</div>
             <div className="contact-row"><FaEnvelope/> ab.customlabels@gmail.com</div>
             <div className="social-icons">
-              <FaInstagram size={28} cursor="pointer" onClick={()=>window.open('https://www.instagram.com/abcustomlables','_blank')} />
-              <FaWhatsapp size={28} cursor="pointer" onClick={()=>window.open('https://wa.me/919243858944','_blank')} />
+              <FaInstagram size={28} cursor="pointer" onClick={()=>window.open('https://www.instagram.com/abcustomlables','_blank')} color="var(--text-muted)" onMouseOver={(e)=>e.currentTarget.style.color='var(--accent)'} onMouseOut={(e)=>e.currentTarget.style.color='var(--text-muted)'} />
+              <FaWhatsapp size={28} cursor="pointer" onClick={()=>window.open('https://wa.me/919243858944','_blank')} color="var(--text-muted)" onMouseOver={(e)=>e.currentTarget.style.color='var(--accent)'} onMouseOut={(e)=>e.currentTarget.style.color='var(--text-muted)'} />
             </div>
           </div>
         </div>
@@ -231,9 +218,10 @@ const Home = () => {
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>
-             <h2 style={{color:'white'}}>Start Project</h2>
+             <h2 style={{color:'white', marginBottom:'20px'}}>Start Project</h2>
+             <p style={{color:'#ccc', marginBottom:'30px'}}>Connect with us directly on WhatsApp to discuss your custom requirements.</p>
              <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
-               <FaWhatsapp/> Open WhatsApp
+               <FaWhatsapp size={24}/> Open WhatsApp Chat
              </button>
           </div>
         </div>
