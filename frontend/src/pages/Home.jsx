@@ -8,7 +8,7 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-import GridDistortion from '../components/anim/GridDistortion';
+// Removed GridDistortion
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
 
@@ -56,7 +56,8 @@ const Home = () => {
       {/* NAVBAR */}
       <nav>
         <div className="logo" onClick={()=>navigate('/')}>
-          <img src="/logo.png" alt="AB" style={{height:'35px'}} /> AB CUSTOM.
+          <img src="/Logos.png" alt="AB" style={{height:'40px', width:'auto'}} /> 
+          AB CUSTOM LABELS
         </div>
         <div className="nav-links">
           <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
@@ -69,13 +70,10 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* 1. HERO (FASCINATING GOLD BACKGROUND) */}
-      <div className="distortion-wrapper">
-        <GridDistortion 
-          // NEW: Premium Gold/Black Fluid Art
-          imageSrc="https://images.unsplash.com/photo-1604076913837-52ab5629fba9?q=80&w=2000&auto=format&fit=crop" 
-          grid={15} mouse={0.1} strength={0.3} relaxation={0.9} 
-        />
+      {/* 1. HERO (STATIC IMAGE BACKGROUND) */}
+      <div className="hero-wrapper">
+        {/* High Quality Static Background */}
+        <div className="hero-static-bg"></div>
         
         <div className="hero-overlay">
           <h1 className="hero-title">
@@ -97,15 +95,19 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. SPLIT SECTION (Cards Pushed Down/Right) */}
+      {/* 2. SPLIT SECTION (Fixed Colors) */}
       <section className="split-section">
         <div className="split-text">
-          <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px'}}>
+          {/* White Headline */}
+          <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px', color:'#ffffff'}}>
             Unleash Your <br/> <span style={{color:'var(--accent)', fontStyle:'italic'}}>Creativity.</span>
           </h2>
-          <p style={{color:'#888', marginBottom:'40px', fontSize:'1.1rem'}}>
+          
+          {/* Bright Silver Text */}
+          <p style={{color:'#e0e0e0', marginBottom:'40px', fontSize:'1.1rem', lineHeight:'1.6'}}>
             We craft identities that people remember. Don't know what you want? Let the cards decide.
           </p>
+          
           <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>
             GIVE ORDER
           </button>
@@ -159,7 +161,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* 5. HIGHLIGHTS (Stacked) */}
+      {/* 5. HIGHLIGHTS */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
