@@ -56,22 +56,7 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      {/* NAVBAR */}
-      <nav>
-        <div className="logo" onClick={()=>navigate('/')}>
-          <img src="/Logos.png" alt="AB" style={{height:'40px', width:'auto'}} /> 
-          AB CUSTOM LABELS
-        </div>
-        <div className="nav-links">
-          <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
-        </div>
-        <button onClick={() => setOrderModalOpen(true)} className="primary-btn">
-          GIVE ORDER
-        </button>
-      </nav>
+      
 
       {/* --- 1. HERO SECTION (Static Premium Image) --- */}
       <div className="hero-wrapper">
@@ -99,53 +84,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- 2. BENTO GRID (Blocks with Bottom Buttons) --- */}
-      <div className="bento-section">
-        <div className="bento-grid">
-          {/* Custom Order Block */}
-          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div style={{zIndex:1}}>
-                <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
-                <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
-              </div>
-              <button className="grid-btn" style={{marginTop:'20px'}}>Open Form <FaArrowRight/></button>
-            </div>
-          </TiltCard>
-
-          {/* Stickers */}
-          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p></div>
-              <button className="grid-btn">View Stickers</button>
-            </div>
-          </TiltCard>
-
-          {/* Labels */}
-          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p></div>
-              <button className="grid-btn">View Labels</button>
-            </div>
-          </TiltCard>
-
-          {/* Logos */}
-          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p></div>
-              <button className="grid-btn">View Logos</button>
-            </div>
-          </TiltCard>
-
-          {/* Cards */}
-          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p></div>
-              <button className="grid-btn">View Cards</button>
-            </div>
-          </TiltCard>
-        </div>
-      </div>
+      
 
       {/* --- 3. SPLIT SECTION (Cards Right & Down) --- */}
       <section className="split-section">
