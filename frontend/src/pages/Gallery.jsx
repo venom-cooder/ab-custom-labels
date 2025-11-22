@@ -4,8 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes, FaLightbulb } from 'react-icons/fa';
 
-// IMPORT FOOTER
-import Footer from '../components/Footer';
+
 
 const Gallery = () => {
   const { type } = useParams(); 
@@ -82,8 +81,7 @@ const Gallery = () => {
         </button>
       </div>
 
-      {/* --- FOOTER COMPONENT --- */}
-      <Footer />
+      
 
       {/* --- MODAL (Keeping existing modal logic) --- */}
       <AnimatePresence>

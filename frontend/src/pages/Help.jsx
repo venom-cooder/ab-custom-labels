@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Footer from '../components/Footer';
 
 const Help = () => {
   const navigate = useNavigate();
@@ -36,7 +35,7 @@ const Help = () => {
           </form>
         </div>
       </div>
-      <Footer />
+      
     </div>
   );
 };

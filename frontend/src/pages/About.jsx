@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../components/Footer';
+
 import MagneticBtn from '../components/anim/MagneticBtn';
 
 const About = () => {

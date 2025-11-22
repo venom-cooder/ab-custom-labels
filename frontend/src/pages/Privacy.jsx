@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../components/Footer';
+
 
 const Privacy = () => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const Privacy = () => {
         
         <p>If you still have any questions or concerns, please contact us at <b>ab.customlabels@gmail.com</b>.</p>
       </div>
-      <Footer />
+      
     </div>
   );
 };
