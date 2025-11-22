@@ -8,7 +8,7 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-// GridDistortion and AuroraBackground removed
+import GridDistortion from '../components/anim/GridDistortion';
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
 
@@ -16,12 +16,9 @@ const Home = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // States
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
-  
-  // Logo Animation State
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -32,7 +29,6 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Handlers
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
@@ -60,12 +56,14 @@ const Home = () => {
       {/* NAVBAR */}
       <nav>
         <div className="logo" onClick={()=>navigate('/')}>
-          <img src="/logo.png" alt="AB" style={{height:'35px'}} /> AB CUSTOM.
+          {/* UPDATED LOGO PATH */}
+          <img src="/Logos.png" alt="AB" style={{height:'40px', width:'auto'}} /> 
+          AB CUSTOM LABELS
         </div>
         <div className="nav-links">
           <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
         </div>
         <button onClick={() => setOrderModalOpen(true)} className="primary-btn">
@@ -73,14 +71,15 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* --- 1. HERO SECTION (New Dark Grid Pattern) --- */}
+      {/* 1. HERO (New Background Image) */}
       <div className="distortion-wrapper">
-        {/* CSS-based animated background layers */}
-        <div className="hero-bg-pattern"></div>
-        <div className="hero-radial-overlay"></div>
+        <GridDistortion 
+          // Premium Dark Abstract Background
+          imageSrc="https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&w=2000&auto=format&fit=crop" 
+          grid={15} mouse={0.1} strength={0.2} relaxation={0.9} 
+        />
         
         <div className="hero-overlay">
-          {/* UPDATED TEXT */}
           <h1 className="hero-title">
             WELCOME TO <br/>
             <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
@@ -100,7 +99,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- 2. SPLIT SECTION --- */}
+      {/* 2. SPLIT SECTION (Cards Extreme Right) */}
       <section className="split-section">
         <div className="split-text">
           <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px'}}>
@@ -136,7 +135,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 3. OUR WORK (Logos) --- */}
+      {/* 3. OUR WORK */}
       <section style={{padding:'4rem 0', background:'#0a0a0a', display:'flex', flexDirection:'column', alignItems:'center', borderTop:'1px solid #222'}}>
         <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#555', fontWeight:'bold'}}>OUR WORK</p>
         <div style={{height:'150px', display:'flex', alignItems:'center'}}>
@@ -153,7 +152,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 4. STICKERS MARQUEE --- */}
+      {/* 4. STICKERS MARQUEE */}
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -162,10 +161,9 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* --- 5. HIGHLIGHTS --- */}
+      {/* 5. HIGHLIGHTS (Stacked) */}
       <section className="highlights-section">
         <div className="liquid-bg">
-          {/* Updated color to match gold/warm tone slightly */}
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
         </div>
         <div className="stacked-cards">
@@ -180,7 +178,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 6. FOOTER --- */}
+      {/* 6. FOOTER */}
       <footer>
         <div className="footer-grid">
           <div className="footer-col">
@@ -206,8 +204,8 @@ const Home = () => {
             <div className="contact-row"><FaPhoneAlt/> +91-9243858944</div>
             <div className="contact-row"><FaEnvelope/> ab.customlabels@gmail.com</div>
             <div className="social-icons">
-              <FaInstagram size={28} cursor="pointer" onClick={()=>window.open('https://www.instagram.com/abcustomlables','_blank')} color="var(--text-muted)" onMouseOver={(e)=>e.currentTarget.style.color='var(--accent)'} onMouseOut={(e)=>e.currentTarget.style.color='var(--text-muted)'} />
-              <FaWhatsapp size={28} cursor="pointer" onClick={()=>window.open('https://wa.me/919243858944','_blank')} color="var(--text-muted)" onMouseOver={(e)=>e.currentTarget.style.color='var(--accent)'} onMouseOut={(e)=>e.currentTarget.style.color='var(--text-muted)'} />
+              <FaInstagram size={28} cursor="pointer" onClick={()=>window.open('https://www.instagram.com/abcustomlables','_blank')} />
+              <FaWhatsapp size={28} cursor="pointer" onClick={()=>window.open('https://wa.me/919243858944','_blank')} />
             </div>
           </div>
         </div>
@@ -219,7 +217,7 @@ const Home = () => {
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>
              <h2 style={{color:'white', marginBottom:'20px'}}>Start Project</h2>
-             <p style={{color:'#ccc', marginBottom:'30px'}}>Connect with us directly on WhatsApp to discuss your custom requirements.</p>
+             <p style={{color:'#ccc', marginBottom:'30px'}}>Connect with us directly on WhatsApp.</p>
              <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
                <FaWhatsapp size={24}/> Open WhatsApp Chat
              </button>
