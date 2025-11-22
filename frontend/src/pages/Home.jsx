@@ -69,12 +69,12 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* 1. HERO SECTION - NEW FASCINATING BACKGROUND */}
+      {/* 1. HERO (FASCINATING GOLD BACKGROUND) */}
       <div className="distortion-wrapper">
         <GridDistortion 
-          // NEW IMAGE: Abstract Dark Fluid Art (Fascinating)
-          imageSrc="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop" 
-          grid={15} mouse={0.1} strength={0.25} relaxation={0.9} 
+          // NEW: Premium Gold/Black Fluid Art
+          imageSrc="https://images.unsplash.com/photo-1604076913837-52ab5629fba9?q=80&w=2000&auto=format&fit=crop" 
+          grid={15} mouse={0.1} strength={0.3} relaxation={0.9} 
         />
         
         <div className="hero-overlay">
@@ -97,7 +97,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. SPLIT SECTION (Cards Pushed Right & Down) */}
+      {/* 2. SPLIT SECTION (Cards Pushed Down/Right) */}
       <section className="split-section">
         <div className="split-text">
           <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px'}}>
@@ -112,7 +112,6 @@ const Home = () => {
         </div>
 
         <div className="split-visual">
-          {/* CARDS DOWN & RIGHT */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -160,7 +159,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* 5. HIGHLIGHTS */}
+      {/* 5. HIGHLIGHTS (Stacked) */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
