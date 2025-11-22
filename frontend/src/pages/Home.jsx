@@ -2,20 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
+import GridDistortion from '../components/anim/GridDistortion';
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
+
+// Global Footer
+import Footer from '../components/Footer';
 
 const Home = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // States
+  // States for Page-Specific Modals (triggered by buttons inside the page)
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
@@ -56,11 +60,10 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      
+      {/* NO NAVBAR HERE (Handled by App.jsx) */}
 
       {/* --- 1. HERO SECTION (Static Premium Image) --- */}
-      <div className="hero-wrapper">
-        {/* The CSS class .hero-static-bg handles the image */}
+      <div className="distortion-wrapper">
         <div className="hero-static-bg"></div>
         
         <div className="hero-overlay">
@@ -74,7 +77,6 @@ const Home = () => {
             From waterproof labels and holographic stickers to professional logos that define product value.
           </p>
 
-          {/* 4 Rectangular Buttons */}
           <div className="hero-buttons-grid">
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
@@ -84,9 +86,7 @@ const Home = () => {
         </div>
       </div>
 
-      
-
-      {/* --- 3. SPLIT SECTION (Cards Right & Down) --- */}
+      {/* --- 2. SPLIT SECTION --- */}
       <section className="split-section">
         <div className="split-text">
           <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px', color:'#ffffff'}}>
@@ -101,7 +101,6 @@ const Home = () => {
         </div>
 
         <div className="split-visual">
-          {/* CARD SWAP (Positioned by CSS) */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -123,7 +122,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 4. OUR WORK (Logos Animation) --- */}
+      {/* --- 3. OUR WORK (Logos Animation) --- */}
       <section style={{padding:'4rem 0', background:'#0a0a0a', display:'flex', flexDirection:'column', alignItems:'center', borderTop:'1px solid #222'}}>
         <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#555', fontWeight:'bold'}}>OUR WORK</p>
         <div style={{height:'150px', display:'flex', alignItems:'center'}}>
@@ -140,7 +139,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 5. STICKERS MARQUEE --- */}
+      {/* --- 4. STICKERS MARQUEE --- */}
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -149,7 +148,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* --- 6. HIGHLIGHTS (Liquid Chrome + Stacked Cards) --- */}
+      {/* --- 5. HIGHLIGHTS (Stacked) --- */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
@@ -166,49 +165,31 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 7. FOOTER --- */}
-      <footer>
-        <div className="footer-grid">
-          <div className="footer-col">
-            <h3>Products</h3>
-            <span className="footer-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
-            <span className="footer-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-            <span className="footer-link" onClick={()=>navigate('/gallery/logos')}>Logo</span>
-          </div>
-          <div className="footer-col">
-            <h3>Company</h3>
-            <span className="footer-link" onClick={()=>window.scrollTo(0,0)}>About Us</span>
-            <span className="footer-link" onClick={()=>navigate('/career')}>Career</span>
-            <span className="footer-link">Social News</span>
-          </div>
-          <div className="footer-col">
-            <h3>Support</h3>
-            <span className="footer-link">Help</span>
-            <span className="footer-link">Contact Us</span>
-            <span className="footer-link">Feedback</span>
-          </div>
-          <div className="footer-col contact-col">
-            <div className="contact-row"><FaMapMarkerAlt color="var(--accent)"/> Katni, MP</div>
-            <div className="contact-row"><FaPhoneAlt/> +91-9243858944</div>
-            <div className="contact-row"><FaEnvelope/> ab.customlabels@gmail.com</div>
-            <div className="social-icons">
-              <FaInstagram size={28} cursor="pointer" onClick={()=>window.open('https://www.instagram.com/abcustomlables','_blank')} />
-              <FaWhatsapp size={28} cursor="pointer" onClick={()=>window.open('https://wa.me/919243858944','_blank')} />
-            </div>
-          </div>
-        </div>
-        <div className="footer-bottom">© 2025 AB Custom Labels. All rights reserved. | Designed with ❤️ in India</div>
-      </footer>
+      {/* --- 6. FOOTER COMPONENT --- */}
+      <Footer />
 
-      {/* MODAL */}
+      {/* --- MODAL --- */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>
-             <h2 style={{color:'white', marginBottom:'20px'}}>Start Project</h2>
-             <p style={{color:'#ccc', marginBottom:'30px'}}>Connect with us directly on WhatsApp.</p>
-             <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
-               <FaWhatsapp size={24}/> Open WhatsApp Chat
-             </button>
+             <button onClick={() => setOrderModalOpen(false)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#fff"/></button>
+             {orderStage === 'FORM' ? (
+                <form onSubmit={handleFormSubmit}>
+                  <h2 style={{color:'white', marginBottom:'20px'}}>Start Your Project</h2>
+                  <input name="name" required className="clean-input" placeholder="Your Name" />
+                  <input name="contact" required className="clean-input" placeholder="WhatsApp Contact" />
+                  <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
+                  <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
+                </form>
+              ) : (
+                <div>
+                  <h2 style={{marginBottom:'10px', color:'white'}}>Request Generated</h2>
+                  <p style={{color:'#ccc', marginBottom:'20px'}}>Connect with us directly on WhatsApp.</p>
+                  <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
+                    <FaWhatsapp size={24}/> Open WhatsApp Chat
+                  </button>
+                </div>
+              )}
           </div>
         </div>
       )}
