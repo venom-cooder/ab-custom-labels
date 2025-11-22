@@ -1,4 +1,3 @@
-=/* frontend/src/App.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
 :root {
@@ -35,7 +34,7 @@ nav {
 .hero-title { font-size: 5rem; font-weight: 900; line-height: 1; margin-bottom: 20px; text-shadow: 0 10px 30px black; }
 .hero-desc { font-size: 1.2rem; color: #ccc; margin-bottom: 40px; line-height: 1.6; }
 
-/* HERO CATEGORY BUTTONS (The 4 Buttons) */
+/* HERO CATEGORY BUTTONS */
 .hero-buttons-grid {
   display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 20px;
 }
@@ -43,7 +42,7 @@ nav {
   background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.2); color: white;
   padding: 15px 30px; font-size: 1rem; font-weight: 600;
-  border-radius: 4px; /* RECTANGULAR */
+  border-radius: 4px; 
   cursor: pointer; transition: 0.3s; min-width: 150px;
   display: flex; align-items: center; justify-content: center; gap: 10px;
 }
@@ -68,12 +67,20 @@ nav {
 .swap-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.3s; }
 .swap-content { position: absolute; bottom: 20px; left: 20px; z-index: 2; text-align: left; }
 
-/* HIGHLIGHTS (Stacked Vertically) */
+/* ANIMATION SECTIONS */
+.logo-fader-section { padding: 4rem 0; background: #0a0a0a; display: flex; flex-direction: column; align-items: center; border-top: 1px solid #222; }
+.logo-stage { width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
+
+.marquee-container { padding: 40px 0; background: #000; border-top: 1px solid #222; border-bottom: 1px solid #222; overflow: hidden; white-space: nowrap; }
+.marquee-track { display: flex; gap: 50px; }
+.marquee-img { height: 100px; width: auto; transition: 0.2s; } 
+
+/* HIGHLIGHTS */
 .highlights-section { position: relative; padding: 6rem 0; overflow: hidden; background: #050505; }
 .liquid-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
 .stacked-cards { 
   position: relative; z-index: 2; 
-  display: flex; flex-direction: column; align-items: center; gap: 100px; /* High gap between stacked cards */
+  display: flex; flex-direction: column; align-items: center; gap: 100px; 
 }
 .glass-card {
   width: 600px; max-width: 90%; 
@@ -94,11 +101,11 @@ footer { background: #000; padding: 5rem 5% 2rem; border-top: 1px solid #222; co
 .social-icons { display: flex; gap: 15px; margin-top: 15px; }
 .footer-bottom { border-top: 1px solid #222; padding-top: 20px; text-align: center; font-size: 0.8rem; color: #666; }
 
-/* BUTTONS (RECTANGULAR) */
+/* COMPONENTS & BUTTONS */
 .primary-btn { 
   background: var(--accent); color: black; border: none; 
   padding: 15px 30px; font-weight: 900; font-size: 1rem;
-  border-radius: 4px; /* RECTANGULAR */
+  border-radius: 4px; 
   cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px;
 }
 .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0,255,0,0.3); }
@@ -107,6 +114,20 @@ footer { background: #000; padding: 5rem 5% 2rem; border-top: 1px solid #222; co
 .clean-input { width: 100%; padding: 15px; background: #111; border: 1px solid #333; color: white; margin-bottom: 15px; border-radius: 4px; }
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999; display: flex; align-items: center; justify-content: center; }
 .order-modal { background: #111; padding: 40px; border-radius: 4px; width: 90%; max-width: 500px; border: 1px solid #333; position: relative; }
+
+/* BENTO GRID */
+.bento-section { padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; }
+.bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; grid-auto-rows: 240px; }
+.hero-card { grid-column: span 2; background: black; color: white; }
+.grid-btn { background: black; color: white; border: none; width: 100%; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; cursor: pointer; margin-top: auto; }
+.hero-card .grid-btn { background: white; color: black; }
+
+/* MASONRY (Gallery) */
+.masonry-grid { column-count: 5; column-gap: 20px; padding: 2rem; max-width: 1600px; margin: 0 auto; width: 100%; }
+.masonry-item { break-inside: avoid; margin-bottom: 20px; border-radius: 12px; overflow: hidden; border: 1px solid #eee; position: relative; cursor: pointer; transition: transform 0.2s; }
+.masonry-item img { width: 100%; display: block; }
+.overlay-btn { position: absolute; bottom: 10px; right: 10px; background: white; color: black; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 0.75rem; opacity: 0; transition: 0.2s; }
+.masonry-item:hover .overlay-btn { opacity: 1; }
 
 /* MOBILE */
 @media (max-width: 768px) {
@@ -118,4 +139,7 @@ footer { background: #000; padding: 5rem 5% 2rem; border-top: 1px solid #222; co
   .footer-grid { grid-template-columns: 1fr; text-align: center; }
   .contact-col { grid-column: 1; text-align: center; align-items: center; margin-top: 30px; }
   .nav-links { display: none; }
+  .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .hero-card { grid-column: span 1; }
+  .masonry-grid { column-count: 3; column-gap: 10px; padding: 10px; }
 }
