@@ -42,7 +42,8 @@ const Navbar = () => {
     <>
       <nav>
         <div className="logo" onClick={() => navigate('/')} style={{display:'flex', alignItems:'center', gap:'10px'}}>
-          <img src="/public/Logos.png" alt="AB" style={{height:'40px'}} /> 
+          {/* ✅ UPDATED LOGO PATH */}
+          <img src="/Logos.png" alt="AB Logo" style={{height:'40px', width:'auto'}} /> 
           AB CUSTOM LABELS
         </div>
         
@@ -54,7 +55,7 @@ const Navbar = () => {
           <span className="nav-link" onClick={() => navigate('/career')}>Career</span>
         </div>
 
-        {/* THE BUTTON THAT OPENS THE FORM */}
+        {/* GIVE ORDER BUTTON */}
         <button onClick={() => setModalOpen(true)} className="primary-btn" style={{fontSize:'0.9rem', padding:'12px 24px'}}>
           GIVE ORDER
         </button>
