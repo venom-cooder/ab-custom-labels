@@ -15,12 +15,9 @@ const Home = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
-  // States
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
-  
-  // Logo Animation State
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -31,7 +28,6 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Handlers
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.target);
@@ -56,11 +52,11 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      
+      {/* NAVBAR handled globally, but buttons specific to Home hero are here */}
 
-      {/* --- 1. HERO SECTION (Static Premium Image) --- */}
-      <div className="hero-wrapper">
-        {/* The CSS class .hero-static-bg handles the image */}
+      {/* 1. HERO SECTION (Static Premium Image) */}
+      <div className="distortion-wrapper">
+        {/* THE BACKGROUND IMAGE */}
         <div className="hero-static-bg"></div>
         
         <div className="hero-overlay">
@@ -74,7 +70,6 @@ const Home = () => {
             From waterproof labels and holographic stickers to professional logos that define product value.
           </p>
 
-          {/* 4 Rectangular Buttons */}
           <div className="hero-buttons-grid">
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
@@ -84,9 +79,7 @@ const Home = () => {
         </div>
       </div>
 
-      
-
-      {/* --- 3. SPLIT SECTION (Cards Right & Down) --- */}
+      {/* 2. SPLIT SECTION (Cards Right & Down) */}
       <section className="split-section">
         <div className="split-text">
           <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px', color:'#ffffff'}}>
@@ -101,7 +94,6 @@ const Home = () => {
         </div>
 
         <div className="split-visual">
-          {/* CARD SWAP (Positioned by CSS) */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -123,7 +115,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 4. OUR WORK (Logos Animation) --- */}
+      {/* 3. OUR WORK */}
       <section style={{padding:'4rem 0', background:'#0a0a0a', display:'flex', flexDirection:'column', alignItems:'center', borderTop:'1px solid #222'}}>
         <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#555', fontWeight:'bold'}}>OUR WORK</p>
         <div style={{height:'150px', display:'flex', alignItems:'center'}}>
@@ -140,7 +132,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 5. STICKERS MARQUEE --- */}
+      {/* 4. STICKERS MARQUEE */}
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -149,7 +141,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* --- 6. HIGHLIGHTS (Liquid Chrome + Stacked Cards) --- */}
+      {/* 5. HIGHLIGHTS */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
@@ -166,7 +158,7 @@ const Home = () => {
         </div>
       </section>
 
-   
+      {/* FOOTER (Handled Globally by App.jsx now) */}
 
       {/* MODAL */}
       {isOrderModalOpen && (
