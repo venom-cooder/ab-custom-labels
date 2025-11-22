@@ -166,6 +166,7 @@ const Home = () => {
         </div>
       </section>
 
+   
 
       {/* MODAL */}
       {isOrderModalOpen && (
