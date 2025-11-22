@@ -56,14 +56,12 @@ const Home = () => {
       {/* NAVBAR */}
       <nav>
         <div className="logo" onClick={()=>navigate('/')}>
-          {/* UPDATED LOGO PATH */}
-          <img src="/Logos.png" alt="AB" style={{height:'40px', width:'auto'}} /> 
-          AB CUSTOM LABELS
+          <img src="/logo.png" alt="AB" style={{height:'35px'}} /> AB CUSTOM.
         </div>
         <div className="nav-links">
           <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
         </div>
         <button onClick={() => setOrderModalOpen(true)} className="primary-btn">
@@ -71,12 +69,12 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* 1. HERO (New Background Image) */}
+      {/* 1. HERO SECTION - NEW FASCINATING BACKGROUND */}
       <div className="distortion-wrapper">
         <GridDistortion 
-          // Premium Dark Abstract Background
-          imageSrc="https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&w=2000&auto=format&fit=crop" 
-          grid={15} mouse={0.1} strength={0.2} relaxation={0.9} 
+          // NEW IMAGE: Abstract Dark Fluid Art (Fascinating)
+          imageSrc="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2000&auto=format&fit=crop" 
+          grid={15} mouse={0.1} strength={0.25} relaxation={0.9} 
         />
         
         <div className="hero-overlay">
@@ -99,7 +97,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. SPLIT SECTION (Cards Extreme Right) */}
+      {/* 2. SPLIT SECTION (Cards Pushed Right & Down) */}
       <section className="split-section">
         <div className="split-text">
           <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px'}}>
@@ -114,6 +112,7 @@ const Home = () => {
         </div>
 
         <div className="split-visual">
+          {/* CARDS DOWN & RIGHT */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -161,7 +160,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* 5. HIGHLIGHTS (Stacked) */}
+      {/* 5. HIGHLIGHTS */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
