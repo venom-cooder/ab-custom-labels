@@ -8,9 +8,9 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-import GridDistortion from '../components/anim/GridDistortion';
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
+import AuroraBackground from '../components/anim/AuroraBackground'; // <--- Using Aurora
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const Home = () => {
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
   
-  // Logo Animation State
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -64,38 +63,52 @@ const Home = () => {
         </div>
         <div className="nav-links">
           <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
           <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
         </div>
-        {/* RECTANGULAR BUTTON: GIVE ORDER */}
         <button onClick={() => setOrderModalOpen(true)} className="primary-btn">
           GIVE ORDER
         </button>
       </nav>
 
-      {/* --- 1. HERO SECTION (Buttons Restored) --- */}
-      <div className="distortion-wrapper">
-        <GridDistortion 
-          imageSrc="/images/Stickers/stickers1.png" 
-          grid={15} mouse={0.1} strength={0.2} relaxation={0.9} 
-        />
+      {/* --- 1. HERO SECTION (Aurora + Dark Text) --- */}
+      <div style={{ width: '100%', height: '750px', position: 'relative', overflow:'hidden', background:'#fff' }}>
+        
+        {/* Background: Aurora */}
+        <AuroraBackground />
         
         <div className="hero-overlay">
-          <h1 className="hero-title">MAKE IT <span style={{color:'var(--accent)'}}>STICK.</span></h1>
+          {/* Text: Dark Black for contrast on Aurora */}
+          <h1 className="hero-title" style={{ color: '#000', textShadow: 'none' }}>
+            MAKE IT <span style={{color:'#00cc00'}}>STICK.</span>
+          </h1>
           
-          {/* RESTORED TEXT */}
-          <p className="hero-desc">
+          <p className="hero-desc" style={{ color: '#444', fontWeight: '500' }}>
             <b>AB Custom Labels</b> is a premium design house based in Katni, MP. 
             We don't just print; we engineer branding assets. Waterproof labels, holographic stickers, and logos that define your product's value.
           </p>
 
-          {/* RESTORED 4 BUTTONS (Rectangular) */}
+          {/* Buttons: Dark Style to match text */}
           <div className="hero-buttons-grid">
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/cards')}><FaIdCard/> CARDS</button>
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/stickers')}><FaShapes/> STICKERS</button>
+            {['Logos', 'Labels', 'Cards', 'Stickers'].map((cat) => (
+              <button 
+                key={cat}
+                className="category-rect-btn" 
+                onClick={()=>navigate(`/gallery/${cat.toLowerCase()}`)}
+                style={{ 
+                  borderColor: '#333', 
+                  color: '#000', 
+                  background: 'rgba(0,0,0,0.05)' 
+                }}
+              >
+                {cat === 'Logos' && <FaPenNib/>}
+                {cat === 'Labels' && <FaTag/>}
+                {cat === 'Cards' && <FaIdCard/>}
+                {cat === 'Stickers' && <FaShapes/>}
+                {cat.toUpperCase()}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -110,14 +123,12 @@ const Home = () => {
             From stickers that pop to cards that impress. We craft identities that people remember.
             Don't know what you want? Let the cards decide.
           </p>
-          {/* RECTANGULAR BUTTON MATCHING HERO */}
           <button className="primary-btn" onClick={()=>alert("Randomizer Coming Soon!")}>
             🎲 I'M FEELING LUCKY
           </button>
         </div>
 
         <div className="split-visual">
-          {/* 4 CARDS NOW */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -170,8 +181,6 @@ const Home = () => {
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.6, 0.6, 0.6]} speed={0.4} amplitude={0.3} />
         </div>
-        
-        {/* STACKED LAYOUT (Not Side by Side) */}
         <div className="stacked-cards">
           <div className="glass-card">
             <img src="/images/Cards/cards5.png" alt="Highlight 1" />
@@ -184,7 +193,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 6. FOOTER (Right Aligned) --- */}
+      {/* --- 6. FOOTER --- */}
       <footer>
         <div className="footer-grid">
           <div className="footer-col">
