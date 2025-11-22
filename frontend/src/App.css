@@ -2,15 +2,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
 
 :root {
-  --bg-main: #ffffff;
-  --bg-secondary: #f8f8f8;
-  --text-main: #111111;
-  --text-muted: #666666;
-  --accent: #000000; /* Sharp Black */
-  --border: #e4e4e7;
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
-  --shadow-lg: 0 20px 50px rgba(0,0,0,0.1);
-  --radius: 16px;
+  /* DARK THEME PALETTE */
+  --bg-main: #050505;      /* Deep Black */
+  --bg-card: #121212;      /* Slightly Lighter Black */
+  --text-main: #ffffff;    /* Pure White */
+  --text-muted: #888888;   /* Grey Text */
+  --accent: #00ff00;       /* Neon Green (Fancy Text) */
+  --border: #222222;       /* Subtle Borders */
+  --shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
 * {
@@ -25,7 +24,6 @@ body {
   color: var(--text-main);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
 }
 
 .app-container {
@@ -35,255 +33,254 @@ body {
   flex-direction: column;
 }
 
-/* --- 2. NAVBAR --- */
+/* --- 2. NAVBAR (Dark & Blurred) --- */
 nav {
-  padding: 1.2rem 2rem;
+  padding: 1.2rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1600px;
-  margin: 0 auto;
   width: 100%;
   position: sticky;
   top: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
+  z-index: 1000;
+  background: rgba(5, 5, 5, 0.8);
+  backdrop-filter: blur(15px);
   border-bottom: 1px solid var(--border);
 }
 
-.nav-links { display: flex; gap: 25px; align-items: center; }
-.nav-link { text-decoration: none; color: #666; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: 0.2s; }
-.nav-link:hover { color: black; }
-.logo { font-size: 1.3rem; font-weight: 900; letter-spacing: -1px; cursor: pointer; color: var(--accent); }
+.nav-links { display: flex; gap: 30px; align-items: center; }
+.nav-link { 
+  text-decoration: none; color: var(--text-muted); 
+  font-weight: 500; font-size: 0.95rem; transition: 0.3s; cursor: pointer; 
+}
+.nav-link:hover { color: var(--text-main); }
 
-/* --- 3. HERO SECTION --- */
-.hero-section {
-  padding: 6rem 2rem 4rem;
+.logo { 
+  font-size: 1.4rem; font-weight: 800; letter-spacing: -1px; 
+  color: white; cursor: pointer; display: flex; alignItems: center; gap: 10px;
+}
+
+/* --- 3. ANIMATION CONTAINERS (React Bits) --- */
+
+/* Hero Background */
+.distortion-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0; left: 0; z-index: 0;
+}
+
+/* Card Swap Section */
+.card-swap-container {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  perspective: 1000px;
+}
+
+.swap-card {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border-radius: 16px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  color: white;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Highlights Background */
+.liquidChrome-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+}
+
+/* --- 4. SECTIONS --- */
+
+/* Hero Overlay Text */
+.hero-content-overlay {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
-  max-width: 1000px;
-  margin: 0 auto;
-  position: relative; /* For Aurora Z-Index */
+  z-index: 10;
+  pointer-events: none; /* Let clicks pass through to distortion */
 }
 
 .hero-title {
-  font-size: 4rem;
-  font-weight: 800;
-  letter-spacing: -2px;
-  line-height: 1;
-  margin-bottom: 1.5rem;
-  color: var(--accent);
+  font-size: 5rem; font-weight: 900; letter-spacing: -2px;
+  line-height: 1; margin-bottom: 1rem;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
-.hero-desc {
-  font-size: 1.2rem;
-  color: var(--text-muted);
-  line-height: 1.6;
-  max-width: 650px;
-  margin: 0 auto;
-}
-
-/* --- 4. BENTO GRID (Home Page) --- */
-.bento-section {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 25px;
-  grid-auto-rows: 320px;
-}
-
-.card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
+/* Split Section (Green Text & Random Button) */
+.split-section {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: space-between;
-  transition: 0.3s ease;
-}
-
-.card:hover {
-  border-color: var(--accent);
-  box-shadow: var(--shadow-sm);
-  background: white;
-}
-
-.hero-card { grid-column: span 2; background: var(--text-main); color: white; }
-.hero-card p { color: #aaa; }
-.tall-card { grid-row: span 2; }
-
-.tag {
-  position: absolute; top: 1.5rem; right: 1.5rem;
-  background: white; color: black; padding: 6px 14px;
-  border-radius: 50px; font-size: 0.75rem; font-weight: 700;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-/* --- 5. MASONRY GRID (Gallery Page) --- */
-.masonry-grid {
-  column-count: 4; /* 4 Columns on Desktop */
-  column-gap: 30px;
-  padding: 2rem;
-  max-width: 1600px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.masonry-item {
-  break-inside: avoid;
-  margin-bottom: 30px;
-  border-radius: 16px;
-  overflow: hidden;
-  border: 1px solid var(--border);
+  padding: 8rem 10%;
+  background: var(--bg-main);
+  min-height: 700px;
   position: relative;
+  overflow: hidden;
+}
+
+.fancy-text {
+  font-size: 4rem; font-weight: 800; line-height: 1.1;
+}
+.fancy-green { color: var(--accent); font-family: serif; font-style: italic; }
+
+/* Highlights (Liquid Chrome) */
+.highlights-section {
+  position: relative;
+  height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.floating-cards-wrapper {
+  z-index: 5;
+  display: flex;
+  gap: 60px;
+  perspective: 1000px;
+}
+
+.glass-card {
+  width: 320px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  transition: 0.3s;
+}
+.glass-card:hover { transform: translateY(-10px); border-color: rgba(255,255,255,0.3); }
+
+/* --- 5. FOOTER (Matching Your Image) --- */
+footer {
+  background: #161616;
+  color: #fff;
+  padding: 5rem 5% 1rem;
+  border-top: 1px solid #222;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 Columns */
+  gap: 30px;
+  margin-bottom: 4rem;
+}
+
+.footer-col h3 {
+  font-size: 1.1rem; margin-bottom: 25px;
+  color: #fff; font-weight: 700; letter-spacing: 0.5px;
+}
+
+.footer-link {
+  display: block;
+  color: #bbb;
+  text-decoration: none;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
   cursor: pointer;
-  background: var(--bg-secondary);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.masonry-item img { width: 100%; height: auto; display: block; }
-
-.masonry-item:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--accent);
-}
-
-.overlay-btn {
-  position: absolute; bottom: 15px; right: 15px;
-  background: white; color: black; padding: 10px 20px;
-  border-radius: 30px; font-weight: 700; font-size: 0.8rem;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  opacity: 0; transform: translateY(10px);
-  transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  display: flex; align-items: center; gap: 5px;
-}
-
-.masonry-item:hover .overlay-btn { opacity: 1; transform: translateY(0); }
-
-/* --- 6. SECTIONS (Logos, Marquee, Highlights) --- */
-.logo-fader-section {
-  padding: 4rem 0; display: flex; flex-direction: column; align-items: center;
-  background: #fafafa; border-top: 1px solid var(--border);
-}
-.logo-stage { width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
-
-.marquee-container {
-  overflow: hidden; white-space: nowrap; padding: 50px 0;
-  background: white; border-bottom: 1px solid var(--border);
-}
-.marquee-track { display: flex; gap: 60px; }
-.marquee-img { height: 120px; width: auto; object-fit: contain; transition: 0.3s; }
-.marquee-img:hover { transform: scale(1.1); }
-
-.featured-section {
-  padding: 6rem 2rem; position: relative; overflow: hidden;
-  /* Background removed so Aurora can show through */
-  background: transparent; 
-  display: flex; flex-direction: column; align-items: center; gap: 60px;
-}
-.feat-card-img {
-  width: 100%; max-width: 600px; border-radius: 20px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.12); transition: 0.3s;
-  z-index: 2; position: relative;
-}
-
-/* --- 7. BUTTONS --- */
-.primary-btn {
-  background: var(--accent); color: white; border: none; border-radius: 12px;
-  cursor: pointer; font-weight: 600; padding: 14px 28px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
   transition: 0.2s;
 }
-.primary-btn:hover { opacity: 0.9; transform: scale(1.02); }
+.footer-link:hover { color: #fff; text-decoration: underline; }
 
-/* Buttons inside Bento Grid */
-.grid-btn {
-  background: black; color: white; border: none; width: 100%;
-  padding: 12px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;
-  cursor: pointer; margin-top: auto; transition: 0.2s;
-}
-.grid-btn:hover { background: #333; transform: scale(1.02); }
-.hero-card .grid-btn { background: white; color: black; }
-
-/* New Hero Category Buttons */
-.category-pill {
-  background: white; border: 1px solid #e4e4e7;
-  padding: 12px 24px; border-radius: 50px;
-  font-size: 0.9rem; font-weight: 600;
-  cursor: pointer; display: flex; align-items: center; gap: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.03); transition: all 0.2s ease;
-}
-.category-pill:hover {
-  background: black; color: white;
-  transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  border-color: black;
+/* Contact Column (Right Aligned) */
+.contact-col {
+  grid-column: span 2; /* Takes up last 2 columns space for width */
+  text-align: right;
 }
 
-/* Huge WhatsApp Button (Footer) */
-.big-whatsapp-btn {
-  background: white; color: black; width: 100%; max-width: 400px;
-  padding: 20px; font-size: 1.2rem; font-weight: 800;
-  border-radius: 50px; border: none; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  margin-top: 30px; transition: 0.2s; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+.contact-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+  color: #ddd;
+  font-size: 0.95rem;
 }
-.big-whatsapp-btn:hover { transform: scale(1.02); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
 
-/* --- 8. SCROLL, FAQ, FOOTER --- */
-.scroll-showcase { padding: 4rem 0; background: #fafafa; border-top: 1px solid var(--border); overflow: hidden; }
-.scroll-container { display: flex; gap: 20px; justify-content: center; height: 600px; overflow: hidden; }
-.scroll-col { display: flex; flex-direction: column; gap: 20px; width: 280px; }
-.showcase-item { width: 100%; aspect-ratio: 3/4; background: white; border: 1px solid var(--border); border-radius: 16px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm); color: #eee; font-weight: 800; font-size: 2rem; }
+.social-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 25px;
+}
 
-.faq-section { max-width: 800px; margin: 0 auto; padding: 6rem 2rem; }
-.faq-item { border-bottom: 1px solid var(--border); padding: 2rem 0; }
-.faq-q { font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem; }
-.faq-a { color: var(--text-muted); line-height: 1.6; font-size: 1rem; }
+.footer-bottom {
+  border-top: 1px solid #333;
+  padding-top: 25px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #888;
+}
 
-footer { background: #050505; color: #fff; padding: 6rem 2rem 4rem; text-align: center; margin-top: auto; }
-.footer-content { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+/* --- 6. BUTTONS --- */
+.primary-btn {
+  background: var(--text-main);
+  color: black;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 14px 30px;
+  transition: 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.primary-btn:hover { transform: scale(1.05); background: #ddd; }
 
-/* --- 9. FORMS & MODALS --- */
-.clean-input { width: 100%; padding: 16px; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 1rem; background: #fcfcfc; outline: none; transition: 0.2s; }
-.clean-input:focus { border-color: black; background: white; box-shadow: 0 0 0 4px rgba(0,0,0,0.05); }
+.random-btn {
+  margin-top: 30px;
+  background: transparent;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 10px;
+  transition: 0.3s;
+}
+.random-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.order-modal { background: white; width: 100%; max-width: 500px; padding: 2.5rem; border-radius: 24px; box-shadow: var(--shadow-lg); position: relative; max-height: 90vh; overflow-y: auto; }
-.summary-box { background: #f9fafb; padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0; border: 1px dashed #d1d5db; font-size: 0.95rem; line-height: 1.6; }
+/* --- 7. MODALS & FORMS --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; display: flex; align-items: center; justify-content: center; }
+.order-modal { background: #1a1a1a; width: 100%; max-width: 500px; padding: 2.5rem; border-radius: 20px; border: 1px solid #333; position: relative; }
+.clean-input { width: 100%; padding: 14px; margin-bottom: 15px; background: #0a0a0a; border: 1px solid #333; color: white; border-radius: 8px; outline: none; }
+.clean-input:focus { border-color: var(--accent); }
 
 /* =========================================
-   📱 MOBILE OPTIMIZATIONS
+   📱 MOBILE RESPONSIVENESS
    ========================================= */
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-col { grid-column: span 2; text-align: left; margin-top: 30px; }
+  .contact-row, .social-icons { justify-content: flex-start; }
+}
+
 @media (max-width: 768px) {
-  .nav-links { display: none; } /* Hide Links */
-  .logo { font-size: 1.1rem; }
+  .nav-links { display: none; }
+  .hero-title { font-size: 3rem; }
   
-  .hero-title { font-size: 2.8rem; }
+  .split-section { flex-direction: column; padding: 4rem 2rem; text-align: center; }
+  .card-swap-container { margin-top: 50px; transform: scale(0.9); right: auto; }
   
-  /* Stack Bento Grid */
-  .bento-grid { grid-template-columns: 1fr; gap: 20px; }
-  .hero-card, .tall-card { grid-column: span 1; }
+  .floating-cards-wrapper { flex-direction: column; gap: 30px; }
+  .glass-card { width: 100%; }
   
-  /* Gallery 2 Columns */
-  .masonry-grid { column-count: 2; column-gap: 10px; padding: 1rem; }
-  
-  /* Scroll Showcase Fewer Columns */
-  .scroll-col { width: 45vw; }
-  .scroll-col:nth-child(3) { display: none; }
-  
-  .big-whatsapp-btn { width: 100%; padding: 15px; font-size: 1rem; }
-  
-  /* Make featured cards smaller */
-  .feat-card-img { max-width: 100%; }
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+  .contact-col { text-align: center; }
+  .contact-row, .social-icons { justify-content: center; }
 }
