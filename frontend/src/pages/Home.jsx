@@ -21,11 +21,23 @@ const Home = () => {
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+  // State for Hero Text Loop
+  const [showHeroText, setShowHeroText] = useState(true);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Text Loop: Toggle every 5s (5s ON, 5s OFF = 10s Cycle)
+    const textInterval = setInterval(() => {
+      setShowHeroText(prev => !prev);
+    }, 5000);
+
+    const logoInterval = setInterval(() => {
       setLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 2000); 
-    return () => clearInterval(interval);
+    }, 2000);
+    
+    return () => {
+      clearInterval(textInterval);
+      clearInterval(logoInterval);
+    };
   }, []);
 
   const handleFormSubmit = async (e) => {
@@ -52,18 +64,48 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      {/* NAVBAR (App.jsx handles structure, Home handles content) - No <nav> here */}
+      {/* NAVBAR */}
+      <nav>
+        <div className="logo" onClick={()=>navigate('/')}>
+          <img src="/Logos.png" alt="AB" style={{height:'40px', width:'auto'}} /> 
+          AB CUSTOM LABELS
+        </div>
+        <div className="nav-links">
+          <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
+          <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
+        </div>
+        <button onClick={() => setOrderModalOpen(true)} className="primary-btn">
+          GIVE ORDER
+        </button>
+      </nav>
 
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO SECTION (Breathing BG + Animating Text) */}
       <div className="distortion-wrapper">
         <div className="hero-static-bg"></div>
         
         <div className="hero-overlay">
-          <h1 className="hero-title">
-            WELCOME TO <br/>
-            <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
-          </h1>
           
+          {/* Text Container (Height fixed to prevent jumping) */}
+          <div style={{height:'180px', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'20px'}}>
+            <AnimatePresence mode="wait">
+              {showHeroText && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.05 }}
+                  transition={{ duration: 1.5, ease: "easeInOut" }}
+                >
+                   <h1 className="hero-title">
+                     WELCOME TO <br/>
+                     <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
+                   </h1>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <p className="hero-desc">
             Your premier design house for engineering branding assets. 
             From waterproof labels and holographic stickers to professional logos that define product value.
@@ -78,23 +120,21 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. SPLIT SECTION (Left Text / Right Corner Cards) */}
-      <section className="split-section">
-        {/* Left: Text */}
-        <div className="split-text">
-          <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px', color:'#ffffff'}}>
-            Unleash Your <br/> <span style={{color:'var(--accent)', fontStyle:'italic'}}>Creativity.</span>
-          </h2>
+      {/* 2. WHAT WE MAKE SECTION (New Layout) */}
+      <section className="make-section">
+        <div className="make-text">
+          <h2>WHAT WE <span style={{color:'var(--accent)'}}>MAKE</span></h2>
           <p style={{color:'#e0e0e0', marginBottom:'40px', fontSize:'1.1rem', lineHeight:'1.6'}}>
-            We craft identities that people remember. Don't know what you want? Let the cards decide.
+            From stickers that pop to cards that impress. We craft identities that people remember.
+            Explore our diverse collection below.
           </p>
           <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>
-            GIVE ORDER
+            PLACE CUSTOM ORDER
           </button>
         </div>
 
-        {/* Right: Card Swap */}
-        <div className="split-visual">
+        <div className="make-visual">
+          {/* CARD SWAP (Right Side) */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -133,7 +173,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. MARQUEE */}
+      {/* 4. STICKERS MARQUEE */}
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -159,7 +199,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Modal Logic */}
+      {/* MODAL */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>
