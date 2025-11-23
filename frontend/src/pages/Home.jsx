@@ -9,8 +9,10 @@ import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
 import GridDistortion from '../components/anim/GridDistortion';
-import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
+
+// NEW: Import the Changing Image Component
+import ChangingImage from '../components/anim/ChangingImage';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -91,36 +93,25 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. WHAT WE MAKE (CENTERED TEXT, RIGHT CARDS) */}
+      {/* 2. WHAT WE MAKE (Text Left + 4 Changing Images Right) */}
       <section className="make-section">
         <div className="make-text">
           <h2>WHAT WE <span style={{color:'var(--accent)'}}>MAKE</span></h2>
-          <p style={{color:'#e0e0e0'}}>
+          <p>
             From stickers that pop to cards that impress. We craft identities that people remember.
-            <br/>Explore our diverse collection of premium assets below.
+            <br/>
+            Browse our diverse categories to find the perfect match for your brand.
           </p>
-          {/* NO BUTTON HERE */}
         </div>
 
         <div className="make-visual">
-          <CardSwap cardDistance={50} verticalDistance={60}>
-            <Card>
-              <img src="/images/Cards/cards1.png" alt="Card" />
-              <div className="swap-content"><h3>Cards</h3><p>Premium Finish</p></div>
-            </Card>
-            <Card>
-              <img src="/images/Stickers/stickers2.png" alt="Sticker" />
-              <div className="swap-content"><h3>Stickers</h3><p>Die-cut Vinyl</p></div>
-            </Card>
-            <Card>
-              <img src="/images/Logos/logo3.png" alt="Logo" />
-              <div className="swap-content"><h3>Logos</h3><p>Brand Identity</p></div>
-            </Card>
-            <Card>
-              <img src="/images/Labels/labels4.png" alt="Label" />
-              <div className="swap-content"><h3>Labels</h3><p>Packaging</p></div>
-            </Card>
-          </CardSwap>
+          {/* NEW 2x2 LIVE GRID */}
+          <div className="live-grid">
+            <ChangingImage folder="Stickers" prefix="stickers" count={5} label="Stickers" />
+            <ChangingImage folder="Logos" prefix="logo" count={5} label="Logos" />
+            <ChangingImage folder="Labels" prefix="labels" count={5} label="Labels" />
+            <ChangingImage folder="Cards" prefix="cards" count={5} label="Cards" />
+          </div>
         </div>
       </section>
 
@@ -167,8 +158,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* FOOTER (Handled Globally) */}
-      
       {/* MODAL */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
