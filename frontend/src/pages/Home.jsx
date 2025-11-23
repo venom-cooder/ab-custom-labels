@@ -8,10 +8,7 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-import GridDistortion from '../components/anim/GridDistortion';
 import LiquidChrome from '../components/anim/LiquidChrome';
-
-// NEW: Import the Changing Image Component
 import ChangingImage from '../components/anim/ChangingImage';
 
 const Home = () => {
@@ -24,11 +21,23 @@ const Home = () => {
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
+  // --- TEXT LOOP STATE ---
+  const [showHeroText, setShowHeroText] = useState(true);
+
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Toggle Text every 5 seconds (5s Visible + 5s Hidden = 10s Cycle)
+    const textInterval = setInterval(() => {
+      setShowHeroText(prev => !prev);
+    }, 5000);
+
+    const logoInterval = setInterval(() => {
       setLogoIndex((prev) => (prev + 1) % logos.length);
     }, 2000); 
-    return () => clearInterval(interval);
+    
+    return () => {
+      clearInterval(textInterval);
+      clearInterval(logoInterval);
+    };
   }, []);
 
   const handleFormSubmit = async (e) => {
@@ -55,35 +64,39 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      {/* NAVBAR */}
-      <nav>
-        <div className="logo" onClick={()=>navigate('/')}>
-          <img src="/Logos.png" alt="AB" style={{height:'40px', width:'auto'}} /> 
-          AB CUSTOM LABELS
-        </div>
-        <div className="nav-links">
-          <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
-        </div>
-        <button onClick={() => setOrderModalOpen(true)} className="primary-btn">
-          GIVE ORDER
-        </button>
-      </nav>
+      
 
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO (Breathing BG + Fading Text) */}
       <div className="distortion-wrapper">
+        {/* The .hero-static-bg class handles the Breathing Animation in CSS */}
         <div className="hero-static-bg"></div>
+        
         <div className="hero-overlay">
-          <h1 className="hero-title">
-            WELCOME TO <br/>
-            <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
-          </h1>
+          
+          {/* FADING TEXT CONTAINER */}
+          <div className="title-container">
+            <AnimatePresence mode="wait">
+              {showHeroText && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.05 }}
+                  transition={{ duration: 1.5, ease: "easeInOut" }}
+                >
+                  <h1 className="hero-title">
+                    WELCOME TO <br/>
+                    <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
+                  </h1>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          
           <p className="hero-desc">
             Your premier design house for engineering branding assets. 
             From waterproof labels and holographic stickers to professional logos that define product value.
           </p>
+
           <div className="hero-buttons-grid">
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
@@ -93,19 +106,18 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. WHAT WE MAKE (Text Left + 4 Changing Images Right) */}
+      {/* 2. WHAT WE MAKE (Text Left + Live Grid Right) */}
       <section className="make-section">
         <div className="make-text">
           <h2>WHAT WE <span style={{color:'var(--accent)'}}>MAKE</span></h2>
           <p>
             From stickers that pop to cards that impress. We craft identities that people remember.
-            <br/>
-            Browse our diverse categories to find the perfect match for your brand.
+            <br/>Browse our diverse categories below.
           </p>
         </div>
 
         <div className="make-visual">
-          {/* NEW 2x2 LIVE GRID */}
+          {/* 2x2 LIVE CHANGING GRID */}
           <div className="live-grid">
             <ChangingImage folder="Stickers" prefix="stickers" count={5} label="Stickers" />
             <ChangingImage folder="Logos" prefix="logo" count={5} label="Logos" />
@@ -157,6 +169,8 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* FOOTER (Global) */}
 
       {/* MODAL */}
       {isOrderModalOpen && (
