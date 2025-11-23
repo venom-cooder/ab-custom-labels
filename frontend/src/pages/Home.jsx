@@ -8,6 +8,7 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
+import GridDistortion from '../components/anim/GridDistortion';
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
 
@@ -21,23 +22,11 @@ const Home = () => {
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  // State for Hero Text Loop
-  const [showHeroText, setShowHeroText] = useState(true);
-
   useEffect(() => {
-    // Text Loop: Toggle every 5s (5s ON, 5s OFF = 10s Cycle)
-    const textInterval = setInterval(() => {
-      setShowHeroText(prev => !prev);
-    }, 5000);
-
-    const logoInterval = setInterval(() => {
+    const interval = setInterval(() => {
       setLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 2000);
-    
-    return () => {
-      clearInterval(textInterval);
-      clearInterval(logoInterval);
-    };
+    }, 2000); 
+    return () => clearInterval(interval);
   }, []);
 
   const handleFormSubmit = async (e) => {
@@ -81,36 +70,18 @@ const Home = () => {
         </button>
       </nav>
 
-      {/* 1. HERO SECTION (Breathing BG + Animating Text) */}
+      {/* 1. HERO SECTION */}
       <div className="distortion-wrapper">
         <div className="hero-static-bg"></div>
-        
         <div className="hero-overlay">
-          
-          {/* Text Container (Height fixed to prevent jumping) */}
-          <div style={{height:'180px', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'20px'}}>
-            <AnimatePresence mode="wait">
-              {showHeroText && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  transition={{ duration: 1.5, ease: "easeInOut" }}
-                >
-                   <h1 className="hero-title">
-                     WELCOME TO <br/>
-                     <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
-                   </h1>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
+          <h1 className="hero-title">
+            WELCOME TO <br/>
+            <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
+          </h1>
           <p className="hero-desc">
             Your premier design house for engineering branding assets. 
             From waterproof labels and holographic stickers to professional logos that define product value.
           </p>
-
           <div className="hero-buttons-grid">
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
@@ -120,21 +91,18 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. WHAT WE MAKE SECTION (New Layout) */}
+      {/* 2. WHAT WE MAKE (CENTERED TEXT, RIGHT CARDS) */}
       <section className="make-section">
         <div className="make-text">
           <h2>WHAT WE <span style={{color:'var(--accent)'}}>MAKE</span></h2>
-          <p style={{color:'#e0e0e0', marginBottom:'40px', fontSize:'1.1rem', lineHeight:'1.6'}}>
+          <p style={{color:'#e0e0e0'}}>
             From stickers that pop to cards that impress. We craft identities that people remember.
-            Explore our diverse collection below.
+            <br/>Explore our diverse collection of premium assets below.
           </p>
-          <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>
-            PLACE CUSTOM ORDER
-          </button>
+          {/* NO BUTTON HERE */}
         </div>
 
         <div className="make-visual">
-          {/* CARD SWAP (Right Side) */}
           <CardSwap cardDistance={50} verticalDistance={60}>
             <Card>
               <img src="/images/Cards/cards1.png" alt="Card" />
@@ -199,6 +167,8 @@ const Home = () => {
         </div>
       </section>
 
+      {/* FOOTER (Handled Globally) */}
+      
       {/* MODAL */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
