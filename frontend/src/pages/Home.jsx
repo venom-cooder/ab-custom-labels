@@ -4,11 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
 import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
 
-// Components
+// Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-// GridDistortion removed - Using CSS Animation
 import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
 
@@ -22,23 +21,11 @@ const Home = () => {
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  // State for Hero Text Visibility Loop
-  const [showHeroText, setShowHeroText] = useState(true);
-
-  // Loop Text every 10 seconds
   useEffect(() => {
-    const textInterval = setInterval(() => {
-      setShowHeroText(prev => !prev);
-    }, 5000); // Toggles every 5s -> 5s ON, 5s OFF = 10s cycle feel
-    
-    const logoInterval = setInterval(() => {
+    const interval = setInterval(() => {
       setLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 2000);
-    
-    return () => {
-      clearInterval(textInterval);
-      clearInterval(logoInterval);
-    };
+    }, 2000); 
+    return () => clearInterval(interval);
   }, []);
 
   const handleFormSubmit = async (e) => {
@@ -65,48 +52,17 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      {/* NAVBAR */}
-      <nav>
-        <div className="logo" onClick={()=>navigate('/')}>
-          <img src="/Logos.png" alt="AB" style={{height:'40px', width:'auto'}} /> 
-          AB CUSTOM LABELS
-        </div>
-        <div className="nav-links">
-          <span className="nav-link" onClick={()=>navigate('/gallery/stickers')}>Stickers</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/labels')}>Labels</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/logos')}>Logos</span>
-          <span className="nav-link" onClick={()=>navigate('/gallery/cards')}>Cards</span>
-        </div>
-        <button onClick={() => setOrderModalOpen(true)} className="primary-btn">
-          GIVE ORDER
-        </button>
-      </nav>
+      {/* NAVBAR (App.jsx handles structure, Home handles content) - No <nav> here */}
 
-      {/* 1. HERO SECTION (BREATHING BG + LOOPING TEXT) */}
+      {/* 1. HERO SECTION */}
       <div className="distortion-wrapper">
-        {/* CSS Animation: .hero-static-bg (Breathing) */}
         <div className="hero-static-bg"></div>
         
         <div className="hero-overlay">
-          
-          {/* ANIMATING TEXT LOOP */}
-          <div style={{height:'150px', display:'flex', alignItems:'center', justifyContent:'center'}}>
-            <AnimatePresence mode="wait">
-              {showHeroText && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 1 }}
-                >
-                  <h1 className="hero-title">
-                    WELCOME TO <br/>
-                    <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
-                  </h1>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          <h1 className="hero-title">
+            WELCOME TO <br/>
+            <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
+          </h1>
           
           <p className="hero-desc">
             Your premier design house for engineering branding assets. 
@@ -122,46 +78,45 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. BENTO GRID */}
-      <div className="bento-section" style={{background:'#050505', padding:'4rem 0'}}>
-        <div className="bento-grid">
-          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div style={{zIndex:1}}>
-                <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
-                <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
-              </div>
-              <button className="grid-btn" style={{marginTop:'20px'}}>Open Form <FaArrowRight/></button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p></div>
-              <button className="grid-btn">View Stickers</button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p></div>
-              <button className="grid-btn">View Labels</button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p></div>
-              <button className="grid-btn">View Logos</button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p></div>
-              <button className="grid-btn">View Cards</button>
-            </div>
-          </TiltCard>
+      {/* 2. SPLIT SECTION (Left Text / Right Corner Cards) */}
+      <section className="split-section">
+        {/* Left: Text */}
+        <div className="split-text">
+          <h2 style={{fontSize:'3.5rem', fontWeight:'800', lineHeight:'1.1', marginBottom:'20px', color:'#ffffff'}}>
+            Unleash Your <br/> <span style={{color:'var(--accent)', fontStyle:'italic'}}>Creativity.</span>
+          </h2>
+          <p style={{color:'#e0e0e0', marginBottom:'40px', fontSize:'1.1rem', lineHeight:'1.6'}}>
+            We craft identities that people remember. Don't know what you want? Let the cards decide.
+          </p>
+          <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>
+            GIVE ORDER
+          </button>
         </div>
-      </div>
 
-      {/* 3. OUR WORK (Logos) */}
+        {/* Right: Card Swap */}
+        <div className="split-visual">
+          <CardSwap cardDistance={50} verticalDistance={60}>
+            <Card>
+              <img src="/images/Cards/cards1.png" alt="Card" />
+              <div className="swap-content"><h3>Cards</h3><p>Premium Finish</p></div>
+            </Card>
+            <Card>
+              <img src="/images/Stickers/stickers2.png" alt="Sticker" />
+              <div className="swap-content"><h3>Stickers</h3><p>Die-cut Vinyl</p></div>
+            </Card>
+            <Card>
+              <img src="/images/Logos/logo3.png" alt="Logo" />
+              <div className="swap-content"><h3>Logos</h3><p>Brand Identity</p></div>
+            </Card>
+            <Card>
+              <img src="/images/Labels/labels4.png" alt="Label" />
+              <div className="swap-content"><h3>Labels</h3><p>Packaging</p></div>
+            </Card>
+          </CardSwap>
+        </div>
+      </section>
+
+      {/* 3. OUR WORK */}
       <section style={{padding:'4rem 0', background:'#0a0a0a', display:'flex', flexDirection:'column', alignItems:'center', borderTop:'1px solid #222'}}>
         <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#555', fontWeight:'bold'}}>OUR WORK</p>
         <div style={{height:'150px', display:'flex', alignItems:'center'}}>
@@ -178,38 +133,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. CENTERED "WHAT WE MAKE" + CARD SWAP */}
-      <section className="center-showcase">
-        <div className="center-text">
-          <h2>WHAT WE <span style={{color:'var(--accent)'}}>MAKE</span></h2>
-          <p>
-            From high-durability industrial labels to elegant wedding invites. 
-            Our card collection represents the pinnacle of print quality.
-          </p>
-        </div>
-
-        {/* CARD SWAP (Centered Below Text) */}
-        <CardSwap cardDistance={50} verticalDistance={60}>
-          <Card>
-            <img src="/images/Cards/cards1.png" alt="Card" />
-            <div className="swap-content"><h3>Cards</h3><p>Premium Finish</p></div>
-          </Card>
-          <Card>
-            <img src="/images/Stickers/stickers2.png" alt="Sticker" />
-            <div className="swap-content"><h3>Stickers</h3><p>Die-cut Vinyl</p></div>
-          </Card>
-          <Card>
-            <img src="/images/Logos/logo3.png" alt="Logo" />
-            <div className="swap-content"><h3>Logos</h3><p>Brand Identity</p></div>
-          </Card>
-          <Card>
-            <img src="/images/Labels/labels4.png" alt="Label" />
-            <div className="swap-content"><h3>Labels</h3><p>Packaging</p></div>
-          </Card>
-        </CardSwap>
-      </section>
-
-      {/* 5. STICKERS MARQUEE */}
+      {/* 4. MARQUEE */}
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -218,7 +142,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* 6. HIGHLIGHTS */}
+      {/* 5. HIGHLIGHTS */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
@@ -235,7 +159,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* FOOTER & MODAL are handled by App.jsx and the Modal code below */}
+      {/* Modal Logic */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>
