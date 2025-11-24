@@ -8,8 +8,12 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
+import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
 import ChangingImage from '../components/anim/ChangingImage';
+
+// Global Footer
+import Footer from '../components/Footer';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,11 +25,10 @@ const Home = () => {
   const [logoIndex, setLogoIndex] = useState(0);
   const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  // --- TEXT LOOP STATE ---
+  // Text Loop State
   const [showHeroText, setShowHeroText] = useState(true);
 
   useEffect(() => {
-    // Toggle Text every 5 seconds (5s Visible + 5s Hidden = 10s Cycle)
     const textInterval = setInterval(() => {
       setShowHeroText(prev => !prev);
     }, 5000);
@@ -64,17 +67,20 @@ const Home = () => {
   return (
     <div className="app-container">
       
-      
+      {/* --- NO NAVBAR HERE (Handled by App.jsx) --- */}
 
-      {/* 1. HERO (Breathing BG + Fading Text) */}
+      {/* --- 1. HERO SECTION --- */}
       <div className="distortion-wrapper">
-        {/* The .hero-static-bg class handles the Breathing Animation in CSS */}
-        <div className="hero-static-bg"></div>
+        {/* BACKGROUND IMAGE: Using local Home.png */}
+        <div 
+          className="hero-static-bg" 
+          style={{ backgroundImage: "url('/images/Home.png')" }}
+        ></div>
         
         <div className="hero-overlay">
           
-          {/* FADING TEXT CONTAINER */}
-          <div className="title-container">
+          {/* FADING TEXT LOOP */}
+          <div style={{height:'180px', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'20px'}}>
             <AnimatePresence mode="wait">
               {showHeroText && (
                 <motion.div
@@ -106,18 +112,56 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 2. WHAT WE MAKE (Text Left + Live Grid Right) */}
+      {/* --- 2. BENTO GRID --- */}
+      <div className="bento-section" style={{background:'#050505', padding:'4rem 0'}}>
+        <div className="bento-grid">
+          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div style={{zIndex:1}}>
+                <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
+                <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
+              </div>
+              <button className="grid-btn" style={{marginTop:'20px'}}>Open Form <FaArrowRight/></button>
+            </div>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p></div>
+              <button className="grid-btn">View Stickers</button>
+            </div>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p></div>
+              <button className="grid-btn">View Labels</button>
+            </div>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p></div>
+              <button className="grid-btn">View Logos</button>
+            </div>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div><h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p></div>
+              <button className="grid-btn">View Cards</button>
+            </div>
+          </TiltCard>
+        </div>
+      </div>
+
+      {/* --- 3. WHAT WE MAKE (Text Left + Live Grid Right) --- */}
       <section className="make-section">
         <div className="make-text">
           <h2>WHAT WE <span style={{color:'var(--accent)'}}>MAKE</span></h2>
-          <p>
+          <p style={{color:'#e0e0e0'}}>
             From stickers that pop to cards that impress. We craft identities that people remember.
             <br/>Browse our diverse categories below.
           </p>
         </div>
 
         <div className="make-visual">
-          {/* 2x2 LIVE CHANGING GRID */}
           <div className="live-grid">
             <ChangingImage folder="Stickers" prefix="stickers" count={5} label="Stickers" />
             <ChangingImage folder="Logos" prefix="logo" count={5} label="Logos" />
@@ -127,7 +171,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. OUR WORK */}
+      {/* --- 4. OUR WORK (Logos) --- */}
       <section style={{padding:'4rem 0', background:'#0a0a0a', display:'flex', flexDirection:'column', alignItems:'center', borderTop:'1px solid #222'}}>
         <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#555', fontWeight:'bold'}}>OUR WORK</p>
         <div style={{height:'150px', display:'flex', alignItems:'center'}}>
@@ -144,7 +188,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. STICKERS MARQUEE */}
+      {/* --- 5. STICKERS MARQUEE --- */}
       <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
         <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
           {[...Array(10), ...Array(10)].map((_, i) => (
@@ -153,7 +197,7 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* 5. HIGHLIGHTS */}
+      {/* --- 6. HIGHLIGHTS --- */}
       <section className="highlights-section">
         <div className="liquid-bg">
           <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
@@ -170,9 +214,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* FOOTER (Global) */}
+      {/* --- 7. GLOBAL FOOTER --- */}
+      <Footer />
 
-      {/* MODAL */}
+      {/* --- MODAL --- */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>

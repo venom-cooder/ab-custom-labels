@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Global Components
 import Navbar from './components/Navbar';
-import Footer from './components/Footer'; // <--- IMPORT FOOTER
+// Footer import removed from here
 
 // Main Pages
 import Home from './pages/Home';
@@ -30,7 +30,7 @@ function App() {
         <Navbar />
         
         {/* 2. PAGE CONTENT (Middle) */}
-        <div style={{ flex: 1 }}> {/* Pushes footer down if content is short */}
+        <div style={{ flex: 1 }}> 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/gallery/:type" element={<Gallery />} />
@@ -45,8 +45,7 @@ function App() {
           </Routes>
         </div>
 
-        {/* 3. GLOBAL FOOTER (Bottom) */}
-        <Footer />
+        {/* NO FOOTER HERE ANYMORE */}
         
       </div>
     </Router>
