@@ -107,44 +107,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* --- 2. BENTO GRID --- */}
-      <div className="bento-section" style={{background:'#050505', padding:'4rem 0'}}>
-        <div className="bento-grid">
-          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div style={{zIndex:1}}>
-                <div style={{fontSize:'0.8rem', opacity:0.7, marginBottom:'5px'}}>HAVE A UNIQUE IDEA?</div>
-                <h2 style={{fontSize:'1.8rem', margin:0}}>Start Custom Order</h2>
-              </div>
-              <button className="grid-btn" style={{marginTop:'20px'}}>Open Form <FaArrowRight/></button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Stickers</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Die-cut & Vinyl.</p></div>
-              <button className="grid-btn">View Stickers</button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Labels</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Rolls & Sheets.</p></div>
-              <button className="grid-btn">View Labels</button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Logos</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Brand Identity.</p></div>
-              <button className="grid-btn">View Logos</button>
-            </div>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div><h3>Cards</h3> <p style={{fontSize:'0.8rem', color:'#666'}}>Visiting Cards.</p></div>
-              <button className="grid-btn">View Cards</button>
-            </div>
-          </TiltCard>
-        </div>
-      </div>
+      
 
       {/* --- 3. WHAT WE MAKE (Text Left + Live Grid Right) --- */}
       <section className="make-section">
