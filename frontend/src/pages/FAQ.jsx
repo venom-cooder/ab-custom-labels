@@ -6,7 +6,7 @@ const FAQ = () => {
   const navigate = useNavigate();
   return (
     <div className="app-container">
-      <nav><div className="logo" onClick={()=>navigate('/')}>AB CUSTOM.</div></nav>
+      
       <div className="content-page">
         <h1>Frequently Asked Questions</h1>
         
