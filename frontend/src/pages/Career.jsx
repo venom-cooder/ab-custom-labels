@@ -80,16 +80,7 @@ const Career = () => {
   return (
     <div className="app-container">
       
-      {/* NAVBAR (Manual because we removed it from App.jsx globally for clean structure) */}
-      <nav>
-        <div className="logo" onClick={()=>navigate('/')}>
-          <img src="/Logos.png" alt="AB" style={{height:'35px'}} /> 
-          AB CUSTOM LABELS
-        </div>
-        <MagneticBtn onClick={() => navigate('/')} style={{ width: 'auto', padding: '10px 20px' }}>
-          Back Home
-        </MagneticBtn>
-      </nav>
+      
 
       {/* --- HERO SECTION WITH BACKGROUND IMAGE --- */}
       <div style={{ position: 'relative', height: '600px', overflow: 'hidden', borderBottom:'1px solid #222' }}>
