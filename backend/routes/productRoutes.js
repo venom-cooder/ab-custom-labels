@@ -1,29 +1,68 @@
 const express = require('express');
 const router = express.Router();
-const Product = require('../models/Product');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+const GalleryItem = require('../models/GalleryItem'); // Ensure you have this model
 
-// @desc    Get all products
-// @route   GET /api/products
+// Cloudinary Config
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'ab-custom-labels',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+  },
+});
+const upload = multer({ storage: storage });
+
+// GET all products
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find();
-    res.json(products);
+    const items = await GalleryItem.find().sort({ createdAt: -1 });
+    res.json(items);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// @desc    Add a product (For Admin)
-// @route   POST /api/products
-router.post('/', async (req, res) => {
-  const { title, category, image } = req.body;
-  
+// POST new product (Upload)
+router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const newProduct = new Product({ title, category, image });
-    await newProduct.save();
-    res.status(201).json(newProduct);
+    const { title, category, subcategory, description } = req.body;
+    let imageUrl = 'https://via.placeholder.com/300';
+
+    if (req.file) {
+      imageUrl = req.file.path;
+    }
+
+    const newItem = new GalleryItem({
+      title,
+      category,
+      subcategory: subcategory || 'general',
+      description,
+      imageUrl
+    });
+
+    await newItem.save();
+    res.status(201).json(newItem);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// DELETE product
+router.delete('/:id', async (req, res) => {
+  try {
+    await GalleryItem.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Item deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
