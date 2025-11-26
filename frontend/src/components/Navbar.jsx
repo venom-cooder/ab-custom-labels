@@ -42,12 +42,14 @@ const Navbar = () => {
     <>
       <nav>
         <div className="logo" onClick={() => navigate('/')} style={{display:'flex', alignItems:'center', gap:'10px'}}>
-          {/* ✅ UPDATED LOGO PATH */}
+          {/* ✅ Logo set to Logos.png from public folder */}
           <img src="/Logos.png" alt="AB Logo" style={{height:'40px', width:'auto'}} /> 
           AB CUSTOM LABELS
         </div>
         
         <div className="nav-links">
+          {/* ✅ Added Home Option */}
+          <span className="nav-link" onClick={() => navigate('/')}>Home</span>
           <span className="nav-link" onClick={() => navigate('/gallery/stickers')}>Stickers</span>
           <span className="nav-link" onClick={() => navigate('/gallery/labels')}>Labels</span>
           <span className="nav-link" onClick={() => navigate('/gallery/logos')}>Logos</span>

@@ -212,8 +212,7 @@ const Career = () => {
         )}
       </AnimatePresence>
 
-      {/* Footer Component */}
-      <Footer />
+  
 
     </div>
   );

@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Global Components
 import Navbar from './components/Navbar';
-// Footer import removed from here
+import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 
 // Main Pages
 import Home from './pages/Home';
@@ -24,19 +25,24 @@ import './App.css';
 function App() {
   return (
     <Router>
+      {/* Ensures page starts at top on navigation */}
+      <ScrollToTop />
+
       <div className="app-container">
         
         {/* 1. GLOBAL NAVBAR (Top) */}
         <Navbar />
         
-        {/* 2. PAGE CONTENT (Middle) */}
+        {/* 2. PAGE CONTENT (Middle - Grows to fill space) */}
         <div style={{ flex: 1 }}> 
           <Routes>
+            {/* Main Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/gallery/:type" element={<Gallery />} />
             <Route path="/career" element={<Career />} />
             <Route path="/secret-admin" element={<Admin />} />
             
+            {/* Info Routes */}
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/faq" element={<FAQ />} />
@@ -45,7 +51,8 @@ function App() {
           </Routes>
         </div>
 
-        {/* NO FOOTER HERE ANYMORE */}
+        {/* 3. GLOBAL FOOTER (Bottom) */}
+        <Footer />
         
       </div>
     </Router>

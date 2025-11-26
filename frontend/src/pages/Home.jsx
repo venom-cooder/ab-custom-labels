@@ -2,18 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-import CardSwap, { Card } from '../components/anim/CardSwap';
 import LiquidChrome from '../components/anim/LiquidChrome';
 import ChangingImage from '../components/anim/ChangingImage';
-
-// Global Footer
-import Footer from '../components/Footer';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -65,9 +61,8 @@ const Home = () => {
   };
 
   return (
-    <div className="app-container">
-      
-      {/* --- NO NAVBAR HERE (Handled by App.jsx) --- */}
+    <div>
+      {/* --- NAVBAR REMOVED (Handled Globally in App.jsx) --- */}
 
       {/* --- 1. HERO SECTION --- */}
       <div className="distortion-wrapper">
@@ -214,18 +209,30 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 7. GLOBAL FOOTER --- */}
-      <Footer />
+      {/* --- FOOTER REMOVED (Handled Globally) --- */}
 
       {/* --- MODAL --- */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>
-             <h2 style={{color:'white', marginBottom:'20px'}}>Start Project</h2>
-             <p style={{color:'#ccc', marginBottom:'30px'}}>Connect with us directly on WhatsApp.</p>
-             <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
-               <FaWhatsapp size={24}/> Open WhatsApp Chat
-             </button>
+             <button onClick={() => setOrderModalOpen(false)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#fff"/></button>
+             {orderStage === 'FORM' ? (
+                <form onSubmit={handleFormSubmit}>
+                  <h2 style={{color:'white', marginBottom:'20px'}}>Start Your Project</h2>
+                  <input name="name" required className="clean-input" placeholder="Your Name" />
+                  <input name="contact" required className="clean-input" placeholder="WhatsApp Contact" />
+                  <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
+                  <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
+                </form>
+              ) : (
+                <div>
+                  <h2 style={{marginBottom:'10px', color:'white'}}>Request Generated</h2>
+                  <p style={{color:'#ccc', marginBottom:'20px'}}>Connect with us directly on WhatsApp.</p>
+                  <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
+                    <FaWhatsapp size={24}/> Open WhatsApp Chat
+                  </button>
+                </div>
+              )}
           </div>
         </div>
       )}

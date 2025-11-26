@@ -157,8 +157,7 @@ const About = () => {
         </div>
       </div>
 
-      {/* 4. FOOTER INCLUDED HERE */}
-      <Footer />
+      
 
     </div>
   );
