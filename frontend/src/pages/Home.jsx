@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-import LiquidChrome from '../components/anim/LiquidChrome';
+import AuroraBackground from '../components/anim/AuroraBackground'; // Using Canva Aurora
 import ChangingImage from '../components/anim/ChangingImage';
 
 const Home = () => {
@@ -18,26 +18,6 @@ const Home = () => {
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
-  const [logoIndex, setLogoIndex] = useState(0);
-  const logos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  // Text Loop State
-  const [showHeroText, setShowHeroText] = useState(true);
-
-  useEffect(() => {
-    const textInterval = setInterval(() => {
-      setShowHeroText(prev => !prev);
-    }, 5000);
-
-    const logoInterval = setInterval(() => {
-      setLogoIndex((prev) => (prev + 1) % logos.length);
-    }, 2000); 
-    
-    return () => {
-      clearInterval(textInterval);
-      clearInterval(logoInterval);
-    };
-  }, []);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -61,62 +41,43 @@ const Home = () => {
   };
 
   return (
-    <div>
-      {/* --- NAVBAR REMOVED (Handled Globally in App.jsx) --- */}
+    <div className="app-container">
+      
+      {/* NAVBAR is handled globally in App.jsx */}
 
-      {/* --- 1. HERO SECTION --- */}
+      {/* 1. HERO SECTION (Canva Style: Aurora BG + Search-like Buttons) */}
       <div className="distortion-wrapper">
-        {/* BACKGROUND IMAGE: Using local Home.png */}
-        <div 
-          className="hero-static-bg" 
-          style={{ backgroundImage: "url('/images/Home.png')" }}
-        ></div>
+        {/* The Aurora Background component provided */}
+        <AuroraBackground />
         
         <div className="hero-overlay">
+          <h1 className="hero-title">
+            What will you <span style={{background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>create</span> today?
+          </h1>
           
-          {/* FADING TEXT LOOP */}
-          <div style={{height:'180px', display:'flex', alignItems:'center', justifyContent:'center', marginBottom:'20px'}}>
-            <AnimatePresence mode="wait">
-              {showHeroText && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.05 }}
-                  transition={{ duration: 1.5, ease: "easeInOut" }}
-                >
-                  <h1 className="hero-title">
-                    WELCOME TO <br/>
-                    <span style={{color:'var(--accent)'}}>AB CUSTOM LABELS</span>
-                  </h1>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          
-          <p className="hero-desc">
-            Your premier design house for engineering branding assets. 
-            From waterproof labels and holographic stickers to professional logos that define product value.
+          <p className="hero-desc" style={{color: 'var(--text-body)'}}>
+            AB Custom Labels is your design partner. Waterproof labels, stickers, and premium branding assets delivered to your door.
           </p>
 
           <div className="hero-buttons-grid">
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib/> LOGOS</button>
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag/> LABELS</button>
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/cards')}><FaIdCard/> CARDS</button>
-            <button className="category-rect-btn" onClick={()=>navigate('/gallery/stickers')}><FaShapes/> STICKERS</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib color="var(--primary)"/> Logos</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag color="var(--accent)"/> Labels</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/cards')}><FaIdCard color="#E1306C"/> Cards</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/stickers')}><FaShapes color="#25D366"/> Stickers</button>
           </div>
         </div>
       </div>
 
-      
-
-      {/* --- 3. WHAT WE MAKE (Text Left + Live Grid Right) --- */}
+      {/* 2. WHAT WE MAKE (Clean 2x2 Grid) */}
       <section className="make-section">
         <div className="make-text">
-          <h2>WHAT WE <span style={{color:'var(--accent)'}}>MAKE</span></h2>
-          <p style={{color:'#e0e0e0'}}>
-            From stickers that pop to cards that impress. We craft identities that people remember.
-            <br/>Browse our diverse categories below.
+          <h2>Quality you can <span style={{color:'var(--primary)'}}>feel.</span></h2>
+          <p>
+            We don't just print; we craft experiences. From matte-finish business cards to die-cut vinyl stickers that withstand the elements.
           </p>
+          <div style={{marginTop:'30px'}}>
+            <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>Start a Project</button>
+          </div>
         </div>
 
         <div className="make-visual">
@@ -129,73 +90,71 @@ const Home = () => {
         </div>
       </section>
 
-      {/* --- 4. OUR WORK (Logos) --- */}
-      <section style={{padding:'4rem 0', background:'#0a0a0a', display:'flex', flexDirection:'column', alignItems:'center', borderTop:'1px solid #222'}}>
-        <p style={{marginBottom:'30px', letterSpacing:'2px', fontSize:'0.9rem', color:'#555', fontWeight:'bold'}}>OUR WORK</p>
-        <div style={{height:'150px', display:'flex', alignItems:'center'}}>
-          <AnimatePresence mode="wait">
-            <motion.img 
-              key={logoIndex}
-              src={`/images/Logos/logo${logos[logoIndex]}.png`} 
-              alt="Logo"
-              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1 }}
-              transition={{ duration: 0.5 }}
-              style={{ maxHeight: '120px', filter:'invert(1)' }} 
-            />
-          </AnimatePresence>
-        </div>
-      </section>
+      {/* 3. BENTO GRID (Updated for Light Theme) */}
+      <div className="bento-section">
+        <h3 style={{textAlign:'center', fontSize:'2rem', fontWeight:'800', marginBottom:'40px', color:'var(--text-main)'}}>Explore Categories</h3>
+        <div className="bento-grid">
+          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div style={{zIndex:1}}>
+                <h2 style={{fontSize:'1.8rem', margin:0, color:'white'}}>Have a unique idea?</h2>
+                <p style={{fontSize:'0.9rem', opacity:0.9, color:'white'}}>Let us design it for you.</p>
+              </div>
+              <button className="grid-btn" style={{marginTop:'20px'}}>Custom Order <FaArrowRight/></button>
+            </div>
+          </TiltCard>
 
-      {/* --- 5. STICKERS MARQUEE --- */}
-      <div style={{overflow:'hidden', whiteSpace:'nowrap', padding:'40px 0', background:'#000', borderTop:'1px solid #222', borderBottom:'1px solid #222'}}>
-        <motion.div style={{display:'flex', gap:'50px'}} animate={{ x: [0, -1000] }} transition={{ repeat: Infinity, duration: 30, ease: "linear" }}>
-          {[...Array(10), ...Array(10)].map((_, i) => (
-            <img key={i} src={`/images/Stickers/stickers${(i % 10) + 1}.png`} style={{height:'100px', width:'auto', filter:'grayscale(0.3)'}} alt="sticker"/>
-          ))}
-        </motion.div>
+          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
+            <div><h3>Stickers</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Die-cut & Vinyl</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
+            <div><h3>Labels</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Rolls & Sheets</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
+            <div><h3>Cards</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Visiting & Event</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
+            <div><h3>Logos</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Brand Identity</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+        </div>
       </div>
 
-      {/* --- 6. HIGHLIGHTS --- */}
-      <section className="highlights-section">
-        <div className="liquid-bg">
-          <LiquidChrome baseColor={[0.2, 0.18, 0.1]} speed={0.4} amplitude={0.3} />
-        </div>
-        <div className="stacked-cards">
-          <div className="glass-card">
-            <img src="/images/Cards/cards5.png" alt="Highlight 1" />
-            <h3 style={{marginTop:'15px', color:'white'}}>Exclusive Prints</h3>
-          </div>
-          <div className="glass-card">
-            <img src="/images/Cards/cards3.png" alt="Highlight 2" />
-            <h3 style={{marginTop:'15px', color:'white'}}>Matte Finish</h3>
-          </div>
-        </div>
-      </section>
-
-      {/* --- FOOTER REMOVED (Handled Globally) --- */}
-
-      {/* --- MODAL --- */}
+      {/* MODAL (Updated Colors) */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
           <div className="order-modal" onClick={e=>e.stopPropagation()}>
-             <button onClick={() => setOrderModalOpen(false)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#fff"/></button>
+             <button onClick={() => setOrderModalOpen(false)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#888"/></button>
+             <h2 style={{color:'var(--text-main)', marginBottom:'20px'}}>Start Project</h2>
+             <p style={{color:'var(--text-body)', marginBottom:'30px'}}>Tell us what you need. We'll connect on WhatsApp.</p>
+             
              {orderStage === 'FORM' ? (
                 <form onSubmit={handleFormSubmit}>
-                  <h2 style={{color:'white', marginBottom:'20px'}}>Start Your Project</h2>
-                  <input name="name" required className="clean-input" placeholder="Your Name" />
-                  <input name="contact" required className="clean-input" placeholder="WhatsApp Contact" />
-                  <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Brand / Name</label>
+                  <input name="name" required className="clean-input" placeholder="Ex: Urban Hype" />
+                  
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>WhatsApp Contact</label>
+                  <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
+                  
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Requirements</label>
+                  <textarea name="details" required className="clean-input" rows="4" placeholder="I need 100 gold foil stickers..." />
+                  
                   <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
                 </form>
-              ) : (
-                <div>
-                  <h2 style={{marginBottom:'10px', color:'white'}}>Request Generated</h2>
-                  <p style={{color:'#ccc', marginBottom:'20px'}}>Connect with us directly on WhatsApp.</p>
-                  <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
-                    <FaWhatsapp size={24}/> Open WhatsApp Chat
-                  </button>
-                </div>
-              )}
+             ) : (
+               <div>
+                 <div style={{background:'#f5f5f5', padding:'15px', borderRadius:'8px', marginBottom:'20px'}}>
+                   <p style={{margin:0, color:'#333'}}><strong>Name:</strong> {formData.name}</p>
+                   <p style={{margin:0, color:'#333'}}><strong>Req:</strong> {formData.details}</p>
+                 </div>
+                 <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
+                   <FaWhatsapp size={24}/> Open WhatsApp Chat
+                 </button>
+               </div>
+             )}
           </div>
         </div>
       )}

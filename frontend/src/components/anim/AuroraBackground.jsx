@@ -5,70 +5,33 @@ const AuroraBackground = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Create parallax offsets based on mouse position
-  // Range: [Screen Start, Screen End] -> [Move -50px, Move +50px]
-  const x1 = useTransform(mouseX, [0, window.innerWidth], [-50, 50]);
-  const y1 = useTransform(mouseY, [0, window.innerHeight], [-50, 50]);
-
-  const x2 = useTransform(mouseX, [0, window.innerWidth], [50, -50]);
-  const y2 = useTransform(mouseY, [0, window.innerHeight], [50, -50]);
+  const x1 = useTransform(mouseX, [0, window.innerWidth], [-30, 30]);
+  const y1 = useTransform(mouseY, [0, window.innerHeight], [-30, 30]);
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-    };
+    const handleMouseMove = (e) => { mouseX.set(e.clientX); mouseY.set(e.clientY); };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0, left: 0,
-        width: "100%", height: "100%",
-        overflow: "hidden",
-        zIndex: 0,
-        background: "#ffffff",
-      }}
-    >
-      {/* Blob 1: Blue/Grey (Follows Mouse) */}
+    <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "hidden", zIndex: 0, background: "#ffffff" }}>
+      {/* Blob 1: Canva Teal */}
       <motion.div
-        style={{
-          x: x1, y: y1,
-          position: "absolute", top: "-10%", left: "-10%",
-          width: "60vw", height: "60vw",
-          background: "rgba(200, 220, 255, 0.5)",
-          borderRadius: "50%", filter: "blur(100px)",
-        }}
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+        style={{ x: x1, y: y1, position: "absolute", top: "-20%", left: "-10%", width: "60vw", height: "60vw", background: "rgba(0, 196, 204, 0.3)", borderRadius: "50%", filter: "blur(100px)" }}
+        animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
       />
 
-      {/* Blob 2: Purple (Opposite Mouse) */}
+      {/* Blob 2: Canva Purple */}
       <motion.div
-        style={{
-          x: x2, y: y2,
-          position: "absolute", top: "10%", right: "-10%",
-          width: "50vw", height: "50vw",
-          background: "rgba(230, 200, 255, 0.4)",
-          borderRadius: "50%", filter: "blur(120px)",
-        }}
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 15, repeat: Infinity, repeatType: "reverse" }}
+        style={{ position: "absolute", top: "10%", right: "-20%", width: "50vw", height: "50vw", background: "rgba(139, 61, 255, 0.25)", borderRadius: "50%", filter: "blur(120px)" }}
+        animate={{ scale: [1, 1.2, 1], x: [0, -50, 0] }} transition={{ duration: 15, repeat: Infinity, repeatType: "reverse" }}
       />
 
-      {/* Blob 3: Silver (Slow Drift) */}
+      {/* Blob 3: Pink/Soft Mix */}
       <motion.div
-        animate={{ x: [0, 30, -30, 0], y: [0, -30, 30, 0] }}
-        transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
-        style={{
-          position: "absolute", bottom: "-20%", left: "20%",
-          width: "70vw", height: "60vw",
-          background: "rgba(245, 245, 245, 0.9)",
-          borderRadius: "50%", filter: "blur(150px)",
-        }}
+        style={{ position: "absolute", bottom: "-30%", left: "20%", width: "70vw", height: "70vw", background: "rgba(255, 100, 200, 0.15)", borderRadius: "50%", filter: "blur(150px)" }}
+        animate={{ x: [0, 30, -30, 0] }} transition={{ duration: 20, repeat: Infinity, repeatType: "reverse" }}
       />
     </div>
   );
