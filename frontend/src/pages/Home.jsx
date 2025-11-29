@@ -59,56 +59,47 @@ const Home = () => {
             backgroundImage: "url('/images/Home.png')",
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
             backgroundSize: 'cover', backgroundPosition: 'center',
+            // Darkened to 0.5 so white text is visible without a box
+            filter: 'brightness(0.5)', 
             zIndex: 0
           }}
         ></div>
         
         <div className="hero-overlay" style={{ paddingTop: '0', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           
-          {/* --- NEW TEXT CONTAINER WITH OVERLAY --- */}
-          <div className="hero-text-container" style={{
-            background: 'rgba(0, 0, 0, 0.6)', // Dark overlay
-            backdropFilter: 'blur(10px)',       // Blur effect
-            padding: '40px',
-            borderRadius: '20px',
-            maxWidth: '800px',
-            margin: '0 auto 40px auto',
-            border: '1px solid rgba(255, 255, 255, 0.1)'
-          }}>
-            {/* STATIC MAIN TITLE */}
-            <h1 className="hero-title" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '10px', color: 'white' }}>
-              We Don’t Print Labels…
-            </h1>
+          {/* STATIC MAIN TITLE */}
+          <h1 className="hero-title" style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '10px', color: 'white', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+            We Don’t Print Labels…
+          </h1>
 
-            {/* ANIMATED SUBTITLES */}
-            <div style={{ height: '50px', marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <AnimatePresence mode="wait">
-                <motion.h2
-                  key={textIndex}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
-                  style={{ 
-                    fontSize: '2.2rem', 
-                    fontWeight: '800', 
-                    // Use brand gradient for animated text
-                    background: 'var(--gradient-primary)', 
-                    WebkitBackgroundClip: 'text', 
-                    WebkitTextFillColor: 'transparent',
-                    margin: 0
-                  }}
-                >
-                  → {heroPhrases[textIndex]}
-                </motion.h2>
-              </AnimatePresence>
-            </div>
-            
-            {/* DESCRIPTION */}
-            <p className="hero-desc" style={{ color: 'rgba(255, 255, 255, 0.9)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem', lineHeight: '1.6' }}>
-              AB Custom Labels is your design partner. Waterproof labels, stickers, and premium branding assets delivered to your door.
-            </p>
+          {/* ANIMATED SUBTITLES */}
+          <div style={{ height: '60px', marginBottom: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={textIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                style={{ 
+                  fontSize: '2.5rem', 
+                  fontWeight: '800', 
+                  // Use brand gradient for animated text
+                  background: 'var(--gradient-primary)', 
+                  WebkitBackgroundClip: 'text', 
+                  WebkitTextFillColor: 'transparent',
+                  margin: 0
+                }}
+              >
+                → {heroPhrases[textIndex]}
+              </motion.h2>
+            </AnimatePresence>
           </div>
+          
+          {/* DESCRIPTION */}
+          <p className="hero-desc" style={{ color: 'rgba(255, 255, 255, 0.9)', maxWidth: '700px', margin: '0 auto 50px auto', fontSize: '1.2rem', lineHeight: '1.6', fontWeight: '500', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+            AB Custom Labels is your design partner. Waterproof labels, stickers, and premium branding assets delivered to your door.
+          </p>
 
           {/* 4 BUTTONS */}
           <div className="hero-buttons-grid">
@@ -192,7 +183,7 @@ const Home = () => {
                   <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
                   
                   <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Requirements</label>
-                  <textarea name="details" required className="clean-input" rows="4" placeholder="I need 100 gold foil stickers..." />
+                  <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
                   
                   <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
                 </form>
