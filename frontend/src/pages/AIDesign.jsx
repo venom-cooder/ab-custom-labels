@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { FaMagic, FaArrowRight, FaCheckCircle, FaRedo, FaWhatsapp, FaPalette, FaShapes, FaFont, FaLightbulb, FaArrowLeft } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { FaMagic, FaArrowRight, FaCheckCircle, FaRedo, FaWhatsapp, FaPalette, FaShapes, FaFont, FaLightbulb, FaArrowLeft, FaImages, FaLayerGroup, FaIdCard, FaPenNib } from 'react-icons/fa';
 
 const AIDesign = () => {
+  const navigate = useNavigate(); // Hook for navigation
   // Use the Vercel Environment Variable for API URL
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
   
@@ -241,8 +243,11 @@ const AIDesign = () => {
           <div style={{ textAlign: 'center', padding: '4rem', background:'white', borderRadius:'20px', border:'1px solid #eee' }}>
             <div className="loading-spinner"></div>
             <h2 style={{ marginTop: '20px', color: '#333', fontSize:'1.5rem' }}>Generating Photo...</h2>
-            <p style={{ color: '#888' }}>Applying {selections.style} aesthetics to your {selections.category}</p>
-            <p style={{ fontSize:'0.8rem', color:'#aaa', marginTop:'10px'}}>Powered by AB Custom AI</p>
+            <p style={{ color: '#888', marginBottom: '10px' }}>Applying {selections.style} aesthetics to your {selections.category}</p>
+            <p style={{ fontSize:'0.9rem', color:'#666', fontWeight: '500', background: '#f0fdf4', padding: '10px', borderRadius: '8px', display: 'inline-block' }}>
+               Note: AI takes minimum 10-15 seconds to generate high-quality results.
+            </p>
+            <p style={{ fontSize:'0.8rem', color:'#aaa', marginTop:'20px'}}>Powered by AB Custom AI</p>
           </div>
         )}
 
@@ -260,25 +265,40 @@ const AIDesign = () => {
               <h4><FaCheckCircle color="green"/> AB Custom Labels Expert Analysis:</h4>
               <p>{result.suggestion}</p>
               <p style={{marginTop:'10px', fontSize:'0.9rem', color:'#555'}}>
-                This design is AI generated. For a 100% perfect, print-ready file, our human designers can refine this concept for you.
+                This design is AI generated with a score of <strong>{result.rating}/100</strong>.
               </p>
             </div>
 
-            <div className="action-buttons">
+            <div className="action-buttons" style={{flexDirection: 'column', gap: '15px'}}>
               <button 
                 className="primary-btn" 
-                style={{ background: '#25D366', flex: 1, border:'none', color:'white' }} 
-                onClick={() => window.open(`https://wa.me/919243858944?text=I generated a design on your AI Studio. Link: ${result.imageUrl}. I want to order a 100/100 perfection of this concept.`, '_blank')}
+                style={{ background: '#25D366', border:'none', color:'white', width: '100%' }} 
+                onClick={() => window.open(`https://wa.me/919243858944?text=I generated a design on your AI Studio. Link: ${result.imageUrl}. It scored ${result.rating}/100. I want AB Custom Labels to create a 100/100 perfection of this concept.`, '_blank')}
               >
-                <FaWhatsapp /> Create Same (100/100)
+                <FaWhatsapp /> Create a 100/100 by AB Custom Labels
               </button>
-              <button className="secondary-btn" style={{ flex: 1 }} onClick={reset}>
-                <FaRedo /> Regenerate
-              </button>
-              <button className="secondary-btn" style={{ flex: 1 }} onClick={() => window.open('https://wa.me/919243858944?text=I have a generated design but I want to customize it further.', '_blank')}>
-                Customize Further
-              </button>
+              
+              <div style={{display: 'flex', gap: '10px'}}>
+                 <button className="secondary-btn" style={{ flex: 1 }} onClick={reset}>
+                   <FaRedo /> Regenerate
+                 </button>
+                 <button className="secondary-btn" style={{ flex: 1 }} onClick={() => navigate('/gallery/' + (selections.category.toLowerCase().includes('sticker') ? 'stickers' : 'logos'))}>
+                   <FaPenNib /> Customize Older Product
+                 </button>
+              </div>
             </div>
+            
+            {/* NEW SECTION: View Our Collections */}
+            <div style={{marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '20px'}}>
+               <h3 style={{fontSize: '1.1rem', color: '#333', marginBottom: '15px', textAlign: 'center'}}>Or View Our Premium Collections</h3>
+               <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center'}}>
+                  <button className="category-rect-btn" onClick={()=>navigate('/gallery/stickers')} style={{padding: '10px 15px', minWidth: 'auto', fontSize: '0.8rem'}}><FaShapes/> Stickers</button>
+                  <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')} style={{padding: '10px 15px', minWidth: 'auto', fontSize: '0.8rem'}}><FaTag/> Labels</button>
+                  <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')} style={{padding: '10px 15px', minWidth: 'auto', fontSize: '0.8rem'}}><FaPenNib/> Logos</button>
+                  <button className="category-rect-btn" onClick={()=>navigate('/gallery/cards')} style={{padding: '10px 15px', minWidth: 'auto', fontSize: '0.8rem'}}><FaIdCard/> Cards</button>
+               </div>
+            </div>
+
           </motion.div>
         )}
 
