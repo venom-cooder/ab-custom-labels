@@ -69,6 +69,25 @@ nav {
 }
 .nav-link:hover { color: var(--primary); }
 
+/* Button inside Navbar */
+.static-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.static-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 196, 204, 0.4);
+}
+
 /* =========================================
    3. HERO SECTION
    ========================================= */
@@ -79,6 +98,14 @@ nav {
   background: linear-gradient(180deg, #ffffff 0%, #f4f7fe 100%);
   padding-bottom: 4rem;
   border-bottom: 1px solid var(--border);
+}
+
+.hero-static-bg {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background-image: url('https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&w=2000&auto=format&fit=crop'); 
+  background-size: cover; background-position: center;
+  filter: brightness(0.4); /* Darken so white text pops */
+  z-index: 0;
 }
 
 .hero-overlay {
@@ -94,19 +121,20 @@ nav {
   font-size: 4rem;
   font-weight: 800;
   line-height: 1.1;
-  color: var(--text-main);
+  color: white; /* Forced white for contrast on dark bg image */
   letter-spacing: -1px;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .hero-desc {
   font-size: 1.2rem;
-  color: var(--text-body);
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 40px;
   max-width: 700px;
   margin-inline: auto;
 }
 
-/* Hero Category Buttons (Pills) */
+/* Hero Buttons */
 .hero-buttons-grid {
   display: flex;
   justify-content: center;
@@ -116,9 +144,10 @@ nav {
 }
 
 .category-rect-btn {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
   padding: 12px 24px;
   font-size: 1rem;
   font-weight: 600;
@@ -127,18 +156,16 @@ nav {
   transition: 0.2s;
   min-width: 120px;
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: var(--shadow-sm);
 }
 
 .category-rect-btn:hover {
-  border-color: var(--primary);
+  background: white;
   color: var(--primary);
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
 }
 
 /* =========================================
-   4. SECTIONS ("What We Make")
+   4. "WHAT WE MAKE" SECTION
    ========================================= */
 .make-section {
   display: grid;
@@ -184,16 +211,54 @@ nav {
 }
 .changing-img-card img { object-fit: cover; }
 
-.img-label-overlay {
-  position: absolute; bottom: 10px; left: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #000; padding: 4px 10px;
-  border-radius: 6px; font-size: 0.75rem; font-weight: 700;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+/* =========================================
+   5. OUR SERVICES SECTION
+   ========================================= */
+.services-section {
+  padding: 6rem 5%;
+  background: #f8f9fa;
+  text-align: center;
 }
 
+.services-header { margin-bottom: 4rem; }
+.services-header h2 { font-size: 3rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; }
+.services-header p { font-size: 1.2rem; color: var(--text-body); max-width: 700px; margin: 0 auto; line-height: 1.6; }
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 Services per row */
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.service-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: left;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #eee;
+  display: flex; flex-direction: column; height: 100%;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border-color: var(--primary);
+}
+
+.service-icon { font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--primary); }
+.service-card h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; }
+.service-card p { font-size: 1rem; color: var(--text-body); line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; }
+
+.service-list { list-style: none; padding: 0; margin: 0; }
+.service-list li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-body); margin-bottom: 8px; font-weight: 500; }
+.check-icon { color: #25D366; font-size: 0.9rem; }
+
 /* =========================================
-   5. SEGREGATED GALLERIES (New Section)
+   6. FULL WIDTH GALLERY (STICKERS/LABELS)
    ========================================= */
 .segregated-gallery-section {
   padding: 4rem 5%;
@@ -214,31 +279,27 @@ nav {
   letter-spacing: -1px;
 }
 
-/* Full Width Grid for Categories - STRICT 3 COLUMNS */
+/* --- STRICT 3-COLUMN GRID FOR HOME PAGE ITEMS --- */
 .full-width-grid {
   display: grid;
-  /* Adjusted to repeat(3, 1fr) to satisfy "not more than 3 in a row" */
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 40px; /* Generous spacing */
+  grid-template-columns: repeat(3, 1fr); /* ✅ Forces 3 items per row */
+  gap: 40px; /* Spacing between items */
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto; /* Centered */
+  max-width: 1200px; /* Prevents them from getting too wide */
+  margin: 0 auto; /* Center the grid */
 }
 
-/* Gallery Items in Full Grid */
 .full-grid-item {
   display: flex;
   flex-direction: column;
-  background: #ffffff; 
+  background: #f9fafb;
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.2s ease;
   cursor: pointer;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  /* Removed padding to let image touch edges if desired, 
-     or keep padding if 'boxed' look wanted. 
-     User said "fit inside box", so let's keep it clean. */
+  padding: 20px; /* White space inside card */
+  min-height: 300px;
 }
 
 .full-grid-item:hover {
@@ -249,55 +310,30 @@ nav {
 
 .full-grid-item img {
   width: 100%;
-  height: 250px; /* Fixed height for image container */
-  object-fit: contain; /* Ensures image is fully visible */
-  background-color: #f8f9fa; /* Light grey background behind image */
+  height: 220px; /* Fixed height for image area */
+  object-fit: contain; /* Ensure image fits inside without crop */
   display: block;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 15px;
+  background-color: transparent;
 }
 
-.grid-item-info {
-  padding: 20px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.grid-item-title {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: var(--text-main);
-  margin: 0;
-}
-
-.grid-item-sub {
-  font-size: 0.85rem;
-  color: var(--text-body);
-}
-
-/* The "Customize" button inside the card */
-.customize-btn-small {
-  margin-top: 10px;
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  align-self: center;
-}
-
-.customize-btn-small:hover {
-  background-color: #7a30e6; /* Darker purple */
-}
-
+.grid-item-info { text-align: left; width: 100%; }
+.grid-item-title { font-weight: 700; font-size: 1.1rem; color: var(--text-main); margin-bottom: 4px; }
+.grid-item-sub { font-size: 0.85rem; color: var(--text-body); }
 
 /* =========================================
-   6. BUTTONS & MODALS
+   7. AI INTELLIGENCE SECTION
+   ========================================= */
+.ai-action-card {
+  width: 100%; maxWidth: 450px;
+  background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px;
+  padding: 40px; box-shadow: 0 20px 60px rgba(139, 61, 255, 0.15);
+  text-align: center;
+}
+
+/* =========================================
+   8. BUTTONS & MODALS
    ========================================= */
 .primary-btn {
   background: var(--gradient-primary);
@@ -325,83 +361,37 @@ nav {
 .order-modal { background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); position: relative; }
 
 /* =========================================
-   7. FOOTER & MASONRY (Legacy Masonry for Gallery Page)
+   9. FOOTER (5 Columns)
    ========================================= */
-/* Gallery Page Masonry - Matches similar constraints */
-.masonry-grid {
-  column-count: 3; 
-  column-gap: 40px;
-  padding: 4rem 2rem; 
-  max-width: 1200px; 
-  margin: 0 auto;
-}
-.masonry-item {
-  break-inside: avoid; margin-bottom: 40px;
-  border-radius: 12px; overflow: hidden;
-  background: #fff; box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border); cursor: pointer; transition: 0.2s;
-  display: flex; flex-direction: column;
-}
-.masonry-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-.masonry-item img { width: 100%; display: block; }
-
-/* Removing overlay button logic since user wants info below */
-.masonry-info { 
-  padding: 20px; 
-  text-align: center;
-  border-top: 1px solid var(--border);
-}
-.masonry-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
-
-/* Footer */
 footer {
   background: #ffffff; color: var(--text-main);
   padding: 4rem 5% 1.5rem; border-top: 1px solid var(--border);
   margin-top: auto;
 }
-.footer-grid { display: grid; grid-template-columns: repeat(4, 1fr) 2fr; gap: 20px; margin-bottom: 3rem; }
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 1.5fr;
+  gap: 20px; margin-bottom: 3rem;
+}
+
 .footer-col h3 { color: var(--text-main); margin-bottom: 15px; font-size: 1rem; font-weight: 700; }
 .footer-link { display: block; color: var(--text-body); margin-bottom: 8px; text-decoration: none; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
 .footer-link:hover { color: var(--primary); }
 
 .contact-col { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-.contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--text-body); }
-.social-icons { display: flex; gap: 15px; margin-top: 15px; }
-.footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); }
+.contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: var(--text-body); justify-content: flex-end; }
+.social-icons { display: flex; gap: 15px; margin-top: 15px; justify-content: flex-end; }
+.footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.8rem; color: #999; }
 
 /* =========================================
-   8. AI STUDIO STYLES
+   10. MOBILE RESPONSIVENESS
    ========================================= */
-.ai-card {
-  background: #ffffff; padding: 2rem; border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;
+@media (max-width: 1024px) {
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .full-width-grid { grid-template-columns: repeat(2, 1fr); }
 }
-.ai-card h3 { margin-bottom: 25px; font-size: 1.4rem; color: #111; font-weight: 700; }
-.ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.ai-option {
-  padding: 25px; border: 2px solid #f3f4f6; border-radius: 12px;
-  background: white; font-weight: 600; cursor: pointer; transition: 0.2s;
-  font-size: 1.1rem; color: #444; text-align: center;
-}
-.ai-option:hover { border-color: #8B3DFF; color: #8B3DFF; background: #fdfaff; transform: translateY(-2px); }
-.ai-option.active { border-color: #8B3DFF; background: #8B3DFF; color: white; box-shadow: 0 5px 15px rgba(139, 61, 255, 0.3); }
-.ai-label { display: flex; align-items: center; gap: 8px; margin: 25px 0 10px; font-weight: 700; color: #333; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.ai-chips { display: flex; flex-wrap: wrap; gap: 10px; }
-.chip { padding: 10px 20px; background: #f3f4f6; border-radius: 50px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; border: 1px solid transparent; color: #555; }
-.chip:hover { background: #e5e7eb; color: #000; }
-.chip.active { background: #8B3DFF; color: white; box-shadow: 0 4px 12px rgba(139, 61, 255, 0.3); }
-.loading-spinner { width: 60px; height: 60px; border: 6px solid #f3f3f3; border-top: 6px solid #8B3DFF; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-.ai-result-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid #eee; }
-.result-image-container { position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
-.result-image-container img { width: 100%; display: block; }
-.score-badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: #00ff00; padding: 8px 16px; border-radius: 50px; font-weight: 800; backdrop-filter: blur(5px); }
-.ai-analysis { background: #f8fcf9; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #dcfce7; }
-.ai-analysis h4 { margin: 0 0 8px 0; color: #166534; display: flex; align-items: center; gap: 10px; font-size: 1rem; }
-.ai-analysis p { margin: 0; color: #15803d; font-size: 0.95rem; line-height: 1.5; }
-.action-buttons { display: flex; gap: 15px; }
 
-/* MOBILE */
 @media (max-width: 768px) {
   .hero-title { font-size: 2.5rem; }
   .make-section { grid-template-columns: 1fr; text-align: center; }
@@ -410,12 +400,10 @@ footer {
   .contact-col { grid-column: span 2; align-items: center; text-align: center; margin-top: 20px; }
   .contact-row, .social-icons { justify-content: center; }
   
-  /* Masonry/Grid Mobile - 1 Column for better size or 2 for density */
-  .masonry-grid { column-count: 1; padding: 1rem; gap: 20px; } 
-  .full-width-grid { grid-template-columns: 1fr; gap: 20px; padding: 0 20px;}
+  .services-grid { grid-template-columns: 1fr; }
+  .full-width-grid { grid-template-columns: 1fr; }
   
   .hero-buttons-grid { flex-direction: column; }
   .category-rect-btn { width: 100%; }
   .nav-links { display: none; }
-  .action-buttons { flex-direction: column; }
 }

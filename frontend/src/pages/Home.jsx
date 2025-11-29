@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios';
-import { FaArrowRight, FaTimes, FaWhatsapp, FaShapes, FaTag, FaIdCard, FaPenNib, FaMagic, FaCheckCircle, FaStar } from 'react-icons/fa';
+import axios from 'axios'; 
+import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib, FaMagic, FaCheckCircle, FaStar, FaCheck } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import ChangingImage from '../components/anim/ChangingImage';
-import AuroraBackground from '../components/anim/AuroraBackground'; // Imported for AI Section
+import AuroraBackground from '../components/anim/AuroraBackground'; 
 
 const Home = () => {
   const navigate = useNavigate();
@@ -54,32 +54,77 @@ const Home = () => {
     setOrderModalOpen(false); setOrderStage('FORM');
   };
 
+  // Service Data
+  const services = [
+    {
+      icon: "🎨",
+      title: "Custom Design",
+      desc: "Bespoke label designs tailored to your brand identity. Our designers create stunning visuals that tell your story.",
+      features: ["Brand consultation", "Multiple concepts", "Unlimited revisions"]
+    },
+    {
+      icon: "🏭",
+      title: "Premium Printing",
+      desc: "State-of-the-art printing technology with premium materials for labels that last and impress.",
+      features: ["High-resolution printing", "Premium materials", "Weather resistant"]
+    },
+    {
+      icon: "🚚",
+      title: "Fast Delivery",
+      desc: "Quick turnaround times without compromising quality. Get your labels when you need them.",
+      features: ["3-5 day production", "Express options", "Tracking included"]
+    },
+    {
+      icon: "📏",
+      title: "Any Size & Shape",
+      desc: "Custom sizes and shapes to fit any product. From tiny vials to large containers.",
+      features: ["Die-cut shapes", "Micro to macro sizes", "Perfect fit guarantee"]
+    },
+    {
+      icon: "✨",
+      title: "Special Finishes",
+      desc: "Luxury finishes that make your products stand out. Foil, embossing, and specialty coatings.",
+      features: ["Gold/silver foil", "Embossed textures", "UV spot coating"]
+    },
+    {
+      icon: "🎯",
+      title: "Industry Expertise",
+      desc: "Specialized knowledge across industries. We understand your market and compliance needs.",
+      features: ["FDA compliance", "Industry standards", "Expert consultation"]
+    }
+  ];
+
+  // --- DATA CONFIG FOR HOME GALLERY ---
+  const gallerySections = [
+    { title: 'Stickers', type: 'stickers', count: 10 },
+    { title: 'Labels', type: 'labels', count: 29 },
+    { title: 'Logos', type: 'logos', count: 10 },
+    { title: 'Cards', type: 'cards', count: 9 }
+  ];
+
   return (
     <div className="app-container">
       
+      {/* NAVBAR handled by App.jsx */}
+
       {/* 1. HERO SECTION */}
       <div className="distortion-wrapper" style={{ height: '80vh', minHeight: '600px' }}>
-        {/* BACKGROUND IMAGE */}
         <div 
           className="hero-static-bg" 
           style={{ 
             backgroundImage: "url('/images/Home.png')",
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
             backgroundSize: 'cover', backgroundPosition: 'center',
-            // Darkened to 0.5 so white text is visible without a box
             filter: 'brightness(0.5)', 
             zIndex: 0
           }}
         ></div>
         
         <div className="hero-overlay" style={{ paddingTop: '0', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          
-          {/* STATIC MAIN TITLE */}
           <h1 className="hero-title" style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '10px', color: 'white', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
             We Don’t Print Labels…
           </h1>
 
-          {/* ANIMATED SUBTITLES */}
           <div style={{ height: '60px', marginBottom: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <AnimatePresence mode="wait">
               <motion.h2
@@ -91,7 +136,6 @@ const Home = () => {
                 style={{ 
                   fontSize: '2.5rem', 
                   fontWeight: '800', 
-                  // Use brand gradient for animated text
                   background: 'var(--gradient-primary)', 
                   WebkitBackgroundClip: 'text', 
                   WebkitTextFillColor: 'transparent',
@@ -103,12 +147,10 @@ const Home = () => {
             </AnimatePresence>
           </div>
           
-          {/* DESCRIPTION */}
           <p className="hero-desc" style={{ color: 'rgba(255, 255, 255, 0.9)', maxWidth: '700px', margin: '0 auto 50px auto', fontSize: '1.2rem', lineHeight: '1.6', fontWeight: '500', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
             AB Custom Labels is your design partner. Waterproof labels, stickers, and premium branding assets delivered to your door.
           </p>
 
-          {/* 4 BUTTONS */}
           <div className="hero-buttons-grid">
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib color="var(--primary)"/> Logos</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag color="var(--accent)"/> Labels</button>
@@ -140,9 +182,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. BRAND IDENTITY BUILDER AI (NEW SECTION) */}
+      {/* 3. AI INTELLIGENCE SECTION */}
       <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
-        {/* Aurora Background for Premium Feel */}
         <AuroraBackground />
         
         <div style={{ 
@@ -152,8 +193,7 @@ const Home = () => {
           gap: '60px', alignItems: 'center' 
         }}>
           
-          {/* Left: Description */}
-          <div style={{ textAlign: 'left' }}>
+          <div>
             <span style={{ 
               background: 'rgba(139, 61, 255, 0.1)', color: 'var(--primary)', 
               padding: '8px 16px', borderRadius: '50px', fontSize: '0.85rem', fontWeight: '700', 
@@ -161,20 +201,17 @@ const Home = () => {
             }}>
               NEW INTELLIGENCE
             </span>
-            
             <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111', lineHeight: '1.1' }}>
               Meet Your <br/>
               <span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Brand Identity Builder AI
               </span>
             </h2>
-            
             <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.6', marginBottom: '30px' }}>
               Not sure if your design is print-ready? Our AI analyzes your brand colors, shapes, and typography to give you a <strong>Professional Print Score</strong>.
               <br/><br/>
-              It doesn't just rate; it recommends the perfect material (Gold Foil, Matte, Vinyl) to make your brand stand out on the shelf.
+              It doesn't just rate; it recommends the perfect material to make your brand stand out.
             </p>
-
             <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#333', fontWeight: '600' }}>
                 <FaCheckCircle color="#25D366" /> Instant Design Rating
@@ -185,7 +222,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Right: Action Card */}
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <TiltCard 
               className="ai-action-card"
@@ -226,38 +262,68 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. BENTO GRID */}
-      <div className="bento-section">
-        <h3 style={{textAlign:'center', fontSize:'2rem', fontWeight:'800', marginBottom:'40px', color:'var(--text-main)'}}>Explore Categories</h3>
-        <div className="bento-grid">
-          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
-            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
-              <div style={{zIndex:1}}>
-                <h2 style={{fontSize:'1.8rem', margin:0, color:'white'}}>Have a unique idea?</h2>
-                <p style={{fontSize:'0.9rem', opacity:0.9, color:'white'}}>Let us design it for you.</p>
-              </div>
-              <button className="grid-btn" style={{marginTop:'20px'}}>Custom Order <FaArrowRight/></button>
-            </div>
-          </TiltCard>
-
-          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
-            <div><h3>Stickers</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Die-cut & Vinyl</p></div>
-            <button className="grid-btn">Browse</button>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
-            <div><h3>Labels</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Rolls & Sheets</p></div>
-            <button className="grid-btn">Browse</button>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
-            <div><h3>Cards</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Visiting & Event</p></div>
-            <button className="grid-btn">Browse</button>
-          </TiltCard>
-          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
-            <div><h3>Logos</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Brand Identity</p></div>
-            <button className="grid-btn">Browse</button>
-          </TiltCard>
+      {/* 4. OUR SERVICES (NEW SECTION) */}
+      <section className="services-section">
+        <div className="services-header">
+          <h2>Our Services</h2>
+          <p>From concept to creation, we deliver exceptional custom labels that elevate your brand and captivate your customers.</p>
         </div>
-      </div>
+        
+        <div className="services-grid">
+          {services.map((service, i) => (
+            <div key={i} className="service-card">
+              <div className="service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.desc}</p>
+              <ul className="service-list">
+                {service.features.map((feature, j) => (
+                  <li key={j}><FaCheck className="check-icon"/> {feature}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. FULL WIDTH GALLERY SECTIONS */}
+      <section className="segregated-gallery-section">
+        {gallerySections.map((section) => (
+          <div key={section.type}>
+            <div className="category-header">
+              <h3>{section.title}</h3>
+            </div>
+            
+            <div className="full-width-grid">
+              {/* Display first 4 items for preview */}
+              {[...Array(Math.min(section.count, 8))].map((_, i) => (
+                <div 
+                  key={i} 
+                  className="full-grid-item" 
+                  onClick={() => navigate(`/gallery/${section.type}`)}
+                >
+                  {/* Assuming images follow standard naming convention locally until backend populated */}
+                  <img 
+                    src={`/images/${section.title}/${section.type === 'logos' ? 'logo' : section.type}${i + 1}.png`} 
+                    alt={`${section.title} ${i+1}`} 
+                    loading="lazy"
+                    onError={(e) => {e.target.style.display='none'}}
+                  />
+                  <div className="grid-item-info" style={{padding: '0 20px 20px'}}>
+                    <div className="grid-item-title">{section.title} Design #{i+1}</div>
+                    <div className="grid-item-sub">Customizable • Premium</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div style={{textAlign:'center', marginTop:'30px'}}>
+               <button onClick={()=>navigate(`/gallery/${section.type}`)} className="category-rect-btn" style={{width:'auto', display:'inline-flex'}}>
+                 View All {section.title} <FaArrowRight/>
+               </button>
+            </div>
+          </div>
+        ))}
+      </section>
 
       {/* MODAL */}
       {isOrderModalOpen && (
@@ -269,13 +335,13 @@ const Home = () => {
              
              {orderStage === 'FORM' ? (
                 <form onSubmit={handleFormSubmit}>
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Brand / Name</label>
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>Brand / Name</label>
                   <input name="name" required className="clean-input" placeholder="Ex: Urban Hype" />
                   
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>WhatsApp Contact</label>
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>WhatsApp Contact</label>
                   <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
                   
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Requirements</label>
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>Requirements</label>
                   <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
                   
                   <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
