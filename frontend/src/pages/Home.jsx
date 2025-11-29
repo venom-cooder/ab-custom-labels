@@ -94,6 +94,14 @@ const Home = () => {
     }
   ];
 
+  // Product Showcase Data
+  const showcaseItems = [
+    { icon: "🍷", title: "Wine & Spirits", desc: "Premium labels for luxury beverages" },
+    { icon: "💄", title: "Cosmetics", desc: "Beautiful labels for beauty products" },
+    { icon: "🥗", title: "Food & Beverage", desc: "Appetizing labels that sell products" },
+    { icon: "💊", title: "Healthcare", desc: "Compliant labels for medical products" }
+  ];
+
   // --- DATA CONFIG FOR HOME GALLERY ---
   const gallerySections = [
     { title: 'Stickers', type: 'stickers', count: 10 },
@@ -182,10 +190,76 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. AI INTELLIGENCE SECTION */}
-      <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
+      {/* 3. OUR SERVICES */}
+      <section className="services-section">
+        <div className="services-header">
+          <h2>Our Services</h2>
+          <p>From concept to creation, we deliver exceptional custom labels that elevate your brand and captivate your customers.</p>
+        </div>
+        
+        <div className="services-grid">
+          {services.map((service, i) => (
+            <div key={i} className="service-card">
+              <div className="service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.desc}</p>
+              <ul className="service-list">
+                {service.features.map((feature, j) => (
+                  <li key={j}><FaCheck className="check-icon"/> {feature}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. PRODUCT SHOWCASE (NEW SECTION with Aurora BG) */}
+      <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
         <AuroraBackground />
         
+        <div style={{ 
+          position: 'relative', zIndex: 1, 
+          width: '100%',
+          maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', 
+          textAlign: 'center'
+        }}>
+          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111' }}>
+            Product Showcase
+          </h2>
+          <p style={{ fontSize: '1.2rem', color: '#555', lineHeight: '1.6', marginBottom: '50px', maxWidth: '800px', margin: '0 auto 50px' }}>
+            From boutique brands to enterprise solutions, our custom labels enhance products across every industry.
+          </p>
+
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(4, 1fr)', // 4 Columns Strict
+            gap: '20px' 
+          }}>
+            {showcaseItems.map((item, index) => (
+              <TiltCard 
+                key={index} 
+                className="service-card" 
+                style={{
+                  textAlign: 'center', 
+                  alignItems: 'center', 
+                  padding: '1.5rem', // Reduced padding
+                  minHeight: '250px', // Smaller height constraint
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  justifyContent: 'center' 
+                }}
+              >
+                <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>{item.icon}</div>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '700' }}>{item.title}</h3>
+                <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>{item.desc}</p>
+              </TiltCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. AI INTELLIGENCE SECTION */}
+      <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#f8f9fa' }}>
         <div style={{ 
           position: 'relative', zIndex: 1, 
           display: 'grid', gridTemplateColumns: '1fr 1fr', 
@@ -262,30 +336,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. OUR SERVICES (NEW SECTION) */}
-      <section className="services-section">
-        <div className="services-header">
-          <h2>Our Services</h2>
-          <p>From concept to creation, we deliver exceptional custom labels that elevate your brand and captivate your customers.</p>
-        </div>
-        
-        <div className="services-grid">
-          {services.map((service, i) => (
-            <div key={i} className="service-card">
-              <div className="service-icon">{service.icon}</div>
-              <h3>{service.title}</h3>
-              <p>{service.desc}</p>
-              <ul className="service-list">
-                {service.features.map((feature, j) => (
-                  <li key={j}><FaCheck className="check-icon"/> {feature}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. FULL WIDTH GALLERY SECTIONS */}
+      {/* 6. FULL WIDTH GALLERY SECTIONS */}
       <section className="segregated-gallery-section">
         {gallerySections.map((section) => (
           <div key={section.type}>
@@ -341,7 +392,7 @@ const Home = () => {
                   <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>WhatsApp Contact</label>
                   <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
                   
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>Requirements</label>
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Requirements</label>
                   <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
                   
                   <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
