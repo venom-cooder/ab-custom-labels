@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib, FaMagic, FaCheckCircle, FaStar, FaCheck } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib, FaMagic, FaCheckCircle, FaStar, FaCheck, FaPlus, FaMinus } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
@@ -16,6 +16,7 @@ const Home = () => {
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
+  const [openFaqIndex, setOpenFaqIndex] = useState(null); // For FAQ accordion
 
   // --- HERO TEXT ANIMATION STATE ---
   const [textIndex, setTextIndex] = useState(0);
@@ -29,7 +30,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTextIndex((prev) => (prev + 1) % heroPhrases.length);
-    }, 2000); // Change every 2 seconds
+    }, 2000); 
     return () => clearInterval(interval);
   }, []);
 
@@ -56,45 +57,14 @@ const Home = () => {
 
   // Service Data
   const services = [
-    {
-      icon: "🎨",
-      title: "Custom Design",
-      desc: "Bespoke label designs tailored to your brand identity. Our designers create stunning visuals that tell your story.",
-      features: ["Brand consultation", "Multiple concepts", "Unlimited revisions"]
-    },
-    {
-      icon: "🏭",
-      title: "Premium Printing",
-      desc: "State-of-the-art printing technology with premium materials for labels that last and impress.",
-      features: ["High-resolution printing", "Premium materials", "Weather resistant"]
-    },
-    {
-      icon: "🚚",
-      title: "Fast Delivery",
-      desc: "Quick turnaround times without compromising quality. Get your labels when you need them.",
-      features: ["3-5 day production", "Express options", "Tracking included"]
-    },
-    {
-      icon: "📏",
-      title: "Any Size & Shape",
-      desc: "Custom sizes and shapes to fit any product. From tiny vials to large containers.",
-      features: ["Die-cut shapes", "Micro to macro sizes", "Perfect fit guarantee"]
-    },
-    {
-      icon: "✨",
-      title: "Special Finishes",
-      desc: "Luxury finishes that make your products stand out. Foil, embossing, and specialty coatings.",
-      features: ["Gold/silver foil", "Embossed textures", "UV spot coating"]
-    },
-    {
-      icon: "🎯",
-      title: "Industry Expertise",
-      desc: "Specialized knowledge across industries. We understand your market and compliance needs.",
-      features: ["FDA compliance", "Industry standards", "Expert consultation"]
-    }
+    { icon: "🎨", title: "Custom Design", desc: "Bespoke label designs tailored to your brand identity. Our designers create stunning visuals that tell your story.", features: ["Brand consultation", "Multiple concepts", "Unlimited revisions"] },
+    { icon: "🏭", title: "Premium Printing", desc: "State-of-the-art printing technology with premium materials for labels that last and impress.", features: ["High-resolution printing", "Premium materials", "Weather resistant"] },
+    { icon: "🚚", title: "Fast Delivery", desc: "Quick turnaround times without compromising quality. Get your labels when you need them.", features: ["3-5 day production", "Express options", "Tracking included"] },
+    { icon: "📏", title: "Any Size & Shape", desc: "Custom sizes and shapes to fit any product. From tiny vials to large containers.", features: ["Die-cut shapes", "Micro to macro sizes", "Perfect fit guarantee"] },
+    { icon: "✨", title: "Special Finishes", desc: "Luxury finishes that make your products stand out. Foil, embossing, and specialty coatings.", features: ["Gold/silver foil", "Embossed textures", "UV spot coating"] },
+    { icon: "🎯", title: "Industry Expertise", desc: "Specialized knowledge across industries. We understand your market and compliance needs.", features: ["FDA compliance", "Industry standards", "Expert consultation"] }
   ];
 
-  // Product Showcase Data
   const showcaseItems = [
     { icon: "🍷", title: "Wine & Spirits", desc: "Premium labels for luxury beverages" },
     { icon: "💄", title: "Cosmetics", desc: "Beautiful labels for beauty products" },
@@ -102,19 +72,17 @@ const Home = () => {
     { icon: "💊", title: "Healthcare", desc: "Compliant labels for medical products" }
   ];
 
-  // Additional Services Data
   const additionalServices = [
-    { icon: "🏷️", title: "Sticker Printing", desc: "High-quality stickers for promotions, branding, and decorative purposes." },
-    { icon: "📦", title: "Packaging Labels", desc: "Complete packaging solutions with shipping and product labels." },
-    { icon: "🎨", title: "Brand Consultation", desc: "Expert guidance on brand identity and label design strategy." },
-    { icon: "⚡", title: "Rush Orders", desc: "Same-day and 24-hour rush printing services for urgent needs." },
-    { icon: "🔒", title: "Security Labels", desc: "Tamper-evident and security labels for product protection." },
-    { icon: "📱", title: "QR Code Labels", desc: "Smart labels with QR codes for digital engagement and tracking." },
-    { icon: "🌿", title: "Eco-Friendly Options", desc: "Sustainable and biodegradable label materials for eco-conscious brands." },
-    { icon: "🎯", title: "Variable Data Printing", desc: "Personalized labels with unique codes, names, or information." }
+    { icon: "🏷️", title: "Sticker Printing", desc: "High-quality stickers for promotions." },
+    { icon: "📦", title: "Packaging Labels", desc: "Complete packaging solutions." },
+    { icon: "🎨", title: "Brand Consultation", desc: "Expert guidance on brand identity." },
+    { icon: "⚡", title: "Rush Orders", desc: "Same-day and 24-hour rush printing." },
+    { icon: "🔒", title: "Security Labels", desc: "Tamper-evident labels for protection." },
+    { icon: "📱", title: "QR Code Labels", desc: "Smart labels for digital engagement." },
+    { icon: "🌿", title: "Eco-Friendly Options", desc: "Sustainable label materials." },
+    { icon: "🎯", title: "Variable Data Printing", desc: "Personalized labels with unique codes." }
   ];
 
-  // --- DATA CONFIG FOR HOME GALLERY ---
   const gallerySections = [
     { title: 'Stickers', type: 'stickers', count: 10 },
     { title: 'Labels', type: 'labels', count: 29 },
@@ -122,11 +90,25 @@ const Home = () => {
     { title: 'Cards', type: 'cards', count: 9 }
   ];
 
+  const faqData = [
+    { q: "What is the minimum order quantity?", a: "Our minimum order quantity is just 100 labels, making us perfect for small businesses and startups. We also offer sample packs of 10-25 labels for testing purposes." },
+    { q: "How long does production take?", a: "Standard production time is 3-5 business days after design approval. We also offer rush services with 24-48 hour turnaround for urgent orders at an additional cost." },
+    { q: "Do you provide design services?", a: "Yes! Our expert design team can create custom labels from scratch or work with your existing artwork. We provide unlimited revisions until you're completely satisfied with the design." },
+    { q: "What materials do you use?", a: "We use premium materials including vinyl, paper, polyester, and eco-friendly options. All materials are weather-resistant and available in various finishes like matte, gloss, and textured surfaces." },
+    { q: "Can you match specific colors?", a: "Absolutely! We can match Pantone colors, provide color proofs, and ensure brand consistency across all your labels. We use advanced color matching technology for precise results." },
+    { q: "Do you ship internationally?", a: "Yes, we ship worldwide! Domestic orders within India typically arrive in 2-3 days, while international shipping takes 7-14 business days depending on the destination." }
+  ];
+
+  const whyChooseUs = [
+    { title: "Premium Quality", desc: "Industry-leading materials and printing technology" },
+    { title: "Fast Turnaround", desc: "3-5 day standard production, rush options available" },
+    { title: "Expert Design Team", desc: "Professional designers with industry expertise" },
+    { title: "Competitive Pricing", desc: "Best value for premium quality labels" }
+  ];
+
   return (
     <div className="app-container">
       
-      {/* NAVBAR handled by App.jsx */}
-
       {/* 1. HERO SECTION */}
       <div className="distortion-wrapper" style={{ height: '80vh', minHeight: '600px' }}>
         <div 
@@ -202,93 +184,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. OUR SERVICES */}
-      <section className="services-section">
-        <div className="services-header">
-          <h2>Our Services</h2>
-          <p>From concept to creation, we deliver exceptional custom labels that elevate your brand and captivate your customers.</p>
-        </div>
-        
-        <div className="services-grid">
-          {services.map((service, i) => (
-            <div key={i} className="service-card">
-              <div className="service-icon">{service.icon}</div>
-              <h3>{service.title}</h3>
-              <p>{service.desc}</p>
-              <ul className="service-list">
-                {service.features.map((feature, j) => (
-                  <li key={j}><FaCheck className="check-icon"/> {feature}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. PRODUCT SHOWCASE */}
-      <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
-        <AuroraBackground />
-        
-        <div style={{ 
-          position: 'relative', zIndex: 1, 
-          width: '100%',
-          maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', 
-          textAlign: 'center'
-        }}>
-          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111' }}>
-            Product Showcase
-          </h2>
-          <p style={{ fontSize: '1.2rem', color: '#555', lineHeight: '1.6', marginBottom: '50px', maxWidth: '800px', margin: '0 auto 50px' }}>
-            From boutique brands to enterprise solutions, our custom labels enhance products across every industry.
-          </p>
-
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(4, 1fr)', 
-            gap: '20px' 
-          }}>
-            {showcaseItems.map((item, index) => (
-              <TiltCard 
-                key={index} 
-                className="service-card" 
-                style={{
-                  textAlign: 'center', 
-                  alignItems: 'center', 
-                  padding: '1.5rem', 
-                  minHeight: '250px', 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  justifyContent: 'center' 
-                }}
-              >
-                <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>{item.icon}</div>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '700' }}>{item.title}</h3>
-                <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>{item.desc}</p>
-              </TiltCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. ADDITIONAL SERVICES (NEW SECTION) */}
-      <section className="additional-services-section">
-        <div className="additional-services-header">
-          <h2>Additional Services</h2>
-          <p>Beyond basic labels, we offer comprehensive solutions to meet all your branding and packaging needs.</p>
-        </div>
-        
-        <div className="additional-services-grid">
-          {additionalServices.map((service, index) => (
-            <div key={index} className="add-service-card">
-              <div className="add-service-icon">{service.icon}</div>
-              <h3>{service.title}</h3>
-              <p>{service.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 6. AI INTELLIGENCE SECTION */}
+      {/* 3. AI INTELLIGENCE SECTION (MOVED UP) */}
       <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#f8f9fa' }}>
         <div style={{ 
           position: 'relative', zIndex: 1, 
@@ -296,7 +192,6 @@ const Home = () => {
           maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', 
           gap: '60px', alignItems: 'center' 
         }}>
-          
           <div>
             <span style={{ 
               background: 'rgba(139, 61, 255, 0.1)', color: 'var(--primary)', 
@@ -313,8 +208,6 @@ const Home = () => {
             </h2>
             <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.6', marginBottom: '30px' }}>
               Not sure if your design is print-ready? Our AI analyzes your brand colors, shapes, and typography to give you a <strong>Professional Print Score</strong>.
-              <br/><br/>
-              It doesn't just rate; it recommends the perfect material to make your brand stand out.
             </p>
             <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#333', fontWeight: '600' }}>
@@ -325,64 +218,97 @@ const Home = () => {
               </div>
             </div>
           </div>
-
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <TiltCard 
-              className="ai-action-card"
-              style={{
-                width: '100%', maxWidth: '450px', 
-                background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(255, 255, 255, 0.8)', borderRadius: '24px',
-                padding: '40px', boxShadow: '0 20px 60px rgba(139, 61, 255, 0.15)',
-                textAlign: 'center'
-              }}
-            >
-              <div style={{ 
-                width: '80px', height: '80px', borderRadius: '50%', 
-                background: 'var(--gradient-primary)', margin: '0 auto 20px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 10px 30px rgba(139, 61, 255, 0.3)'
-              }}>
+            <TiltCard className="ai-action-card" style={{width: '100%', maxWidth: '450px', background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255, 255, 255, 0.8)', borderRadius: '24px', padding: '40px', boxShadow: '0 20px 60px rgba(139, 61, 255, 0.15)', textAlign: 'center'}}>
+              <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'var(--gradient-primary)', margin: '0 auto 20px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(139, 61, 255, 0.3)' }}>
                 <FaStar size={35} color="white" />
               </div>
-              
-              <h3 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#111', marginBottom: '10px' }}>
-                Check Your Brand Score
-              </h3>
-              <p style={{ color: '#666', marginBottom: '30px' }}>
-                Use our AI Studio to generate and rate your next label design concept in seconds.
-              </p>
-              
-              <button 
-                onClick={() => navigate('/ai-design')}
-                className="primary-btn" 
-                style={{ width: '100%', fontSize: '1rem', padding: '16px' }}
-              >
+              <h3 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#111', marginBottom: '10px' }}>Check Your Brand Score</h3>
+              <p style={{ color: '#666', marginBottom: '30px' }}>Use our AI Studio to generate and rate your next label design concept in seconds.</p>
+              <button onClick={() => navigate('/ai-design')} className="primary-btn" style={{ width: '100%', fontSize: '1rem', padding: '16px' }}>
                 Launch AI Studio <FaArrowRight style={{ marginLeft: '8px' }} />
               </button>
             </TiltCard>
           </div>
-
         </div>
       </section>
 
-      {/* 7. FULL WIDTH GALLERY SECTIONS */}
+      {/* 4. OUR SERVICES */}
+      <section className="services-section">
+        <div className="services-header">
+          <h2>Our Services</h2>
+          <p>From concept to creation, we deliver exceptional custom labels that elevate your brand and captivate your customers.</p>
+        </div>
+        <div className="services-grid">
+          {services.map((service, i) => (
+            <div key={i} className="service-card">
+              <div className="service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.desc}</p>
+              <ul className="service-list">
+                {service.features.map((feature, j) => (
+                  <li key={j}><FaCheck className="check-icon"/> {feature}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 5. PRODUCT SHOWCASE */}
+      <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
+        <AuroraBackground />
+        <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111' }}>Product Showcase</h2>
+          <p style={{ fontSize: '1.2rem', color: '#555', lineHeight: '1.6', marginBottom: '50px', maxWidth: '800px', margin: '0 auto 50px' }}>
+            From boutique brands to enterprise solutions, our custom labels enhance products across every industry.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+            {showcaseItems.map((item, index) => (
+              <TiltCard key={index} className="service-card" style={{textAlign: 'center', alignItems: 'center', padding: '1.5rem', minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>{item.icon}</div>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '700' }}>{item.title}</h3>
+                <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>{item.desc}</p>
+              </TiltCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. ADDITIONAL SERVICES */}
+      <section className="additional-services-section">
+        <div className="additional-services-header">
+          <h2>Additional Services</h2>
+          <p>Beyond basic labels, we offer comprehensive solutions to meet all your branding and packaging needs.</p>
+        </div>
+        <div className="additional-services-grid">
+          {additionalServices.map((service, index) => (
+            <div key={index} className="add-service-card">
+              <div className="add-service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. SEGREGATED GALLERY SECTIONS (Strict 3 in a row) */}
       <section className="segregated-gallery-section">
         {gallerySections.map((section) => (
-          <div key={section.type}>
-            <div className="category-header">
+          <div key={section.type} style={{ marginBottom: '60px' }}>
+            <div className="category-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
               <h3>{section.title}</h3>
+              <button onClick={()=>navigate(`/gallery/${section.type}`)} className="secondary-btn" style={{fontSize:'0.9rem'}}>View All</button>
             </div>
             
-            <div className="full-width-grid">
-              {/* Display first 4 items for preview */}
-              {[...Array(Math.min(section.count, 8))].map((_, i) => (
+            {/* STRICT 3 COLUMN GRID - Limiting to 3 items */}
+            <div className="full-width-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+              {[...Array(3)].map((_, i) => (
                 <div 
                   key={i} 
                   className="full-grid-item" 
                   onClick={() => navigate(`/gallery/${section.type}`)}
                 >
-                  {/* Assuming images follow standard naming convention locally until backend populated */}
                   <img 
                     src={`/images/${section.title}/${section.type === 'logos' ? 'logo' : section.type}${i + 1}.png`} 
                     alt={`${section.title} ${i+1}`} 
@@ -398,12 +324,59 @@ const Home = () => {
             </div>
             
             <div style={{textAlign:'center', marginTop:'30px'}}>
-               <button onClick={()=>navigate(`/gallery/${section.type}`)} className="category-rect-btn" style={{width:'auto', display:'inline-flex'}}>
-                 View All {section.title} <FaArrowRight/>
+               <button onClick={()=>navigate(`/gallery/${section.type}`)} className="category-rect-btn" style={{width:'auto', display:'inline-flex', background: 'var(--primary)', color:'white', border:'none'}}>
+                 Explore {section.title} Collection <FaArrowRight/>
                </button>
             </div>
           </div>
         ))}
+      </section>
+
+      {/* 8. FAQS SECTION (NEW) */}
+      <section style={{ padding: '6rem 5%', background: '#fff', maxWidth: '1000px', margin: '0 auto' }}>
+        <h2 style={{ fontSize: '3rem', fontWeight: '800', textAlign: 'center', marginBottom: '40px', color: 'var(--text-main)' }}>
+          Frequently Asked Questions
+        </h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          {faqData.map((item, i) => (
+            <div key={i} style={{ border: '1px solid #eee', borderRadius: '12px', overflow: 'hidden' }}>
+              <button 
+                onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                style={{
+                  width: '100%', padding: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  background: '#f9fafb', border: 'none', cursor: 'pointer', fontSize: '1.1rem', fontWeight: '600', textAlign: 'left'
+                }}
+              >
+                {item.q}
+                {openFaqIndex === i ? <FaMinus color="var(--primary)"/> : <FaPlus color="#ccc"/>}
+              </button>
+              <AnimatePresence>
+                {openFaqIndex === i && (
+                  <motion.div 
+                    initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} 
+                    style={{ overflow: 'hidden', background: '#fff' }}
+                  >
+                    <p style={{ padding: '20px', color: '#666', lineHeight: '1.6', margin: 0 }}>{item.a}</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 9. WHY CHOOSE US (NEW) */}
+      <section style={{ padding: '6rem 5%', background: '#f8f9fa', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '40px' }}>Why Choose AB Custom Labels?</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+          {whyChooseUs.map((item, i) => (
+            <div key={i} style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+              <FaCheckCircle size={40} color="var(--primary)" style={{ marginBottom: '15px' }} />
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '10px' }}>{item.title}</h3>
+              <p style={{ color: '#666', fontSize: '0.95rem' }}>{item.desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* MODAL */}
@@ -418,13 +391,10 @@ const Home = () => {
                 <form onSubmit={handleFormSubmit}>
                   <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>Brand / Name</label>
                   <input name="name" required className="clean-input" placeholder="Ex: Urban Hype" />
-                  
                   <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>WhatsApp Contact</label>
                   <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
-                  
                   <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Requirements</label>
                   <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
-                  
                   <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
                 </form>
              ) : (
