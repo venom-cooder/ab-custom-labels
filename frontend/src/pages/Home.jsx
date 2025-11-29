@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
+import axios from 'axios';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
-import MagneticBtn from '../components/anim/MagneticBtn';
 import ChangingImage from '../components/anim/ChangingImage';
 
 const Home = () => {
@@ -48,19 +47,11 @@ const Home = () => {
     setOrderStage('SUMMARY');
   };
 
-  const connectWhatsApp = () => {
-    const msg = `*NEW INQUIRY* 🚀\n👤 Name: ${formData.name}\n📞 Contact: ${formData.contact}\n📝 Request: ${formData.details}`;
-    window.open(`https://wa.me/919243858944?text=${encodeURIComponent(msg)}`, '_blank');
-    setOrderModalOpen(false); setOrderStage('FORM');
-  };
-
   return (
     <div className="app-container">
       
-      {/* NAVBAR handled by App.jsx */}
-
       {/* 1. HERO SECTION */}
-      <div className="distortion-wrapper">
+      <div className="distortion-wrapper" style={{ height: '80vh', minHeight: '600px' }}>
         {/* BACKGROUND IMAGE */}
         <div 
           className="hero-static-bg" 
@@ -68,44 +59,56 @@ const Home = () => {
             backgroundImage: "url('/images/Home.png')",
             position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
             backgroundSize: 'cover', backgroundPosition: 'center',
-            filter: 'brightness(0.9)', // Slight dim for text readability
             zIndex: 0
           }}
         ></div>
         
-        <div className="hero-overlay">
-          {/* STATIC MAIN TITLE */}
-          <h1 className="hero-title" style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '0', color: 'var(--text-main)' }}>
-            We Don’t Print Labels…
-          </h1>
-
-          {/* ANIMATED SUBTITLES */}
-          <div style={{ height: '60px', marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <AnimatePresence mode="wait">
-              <motion.h2
-                key={textIndex}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-                style={{ 
-                  fontSize: '2.5rem', 
-                  fontWeight: '800', 
-                  background: 'var(--gradient-primary)', 
-                  WebkitBackgroundClip: 'text', 
-                  WebkitTextFillColor: 'transparent',
-                  margin: 0
-                }}
-              >
-                → {heroPhrases[textIndex]}
-              </motion.h2>
-            </AnimatePresence>
-          </div>
+        <div className="hero-overlay" style={{ paddingTop: '0', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           
-          {/* DESCRIPTION */}
-          <p className="hero-desc" style={{ color: 'var(--text-body)', maxWidth: '700px', margin: '0 auto 40px auto', fontSize: '1.1rem', lineHeight: '1.6' }}>
-            AB Custom Labels is your design partner. Waterproof labels, stickers, and premium branding assets delivered to your door.
-          </p>
+          {/* --- NEW TEXT CONTAINER WITH OVERLAY --- */}
+          <div className="hero-text-container" style={{
+            background: 'rgba(0, 0, 0, 0.6)', // Dark overlay
+            backdropFilter: 'blur(10px)',       // Blur effect
+            padding: '40px',
+            borderRadius: '20px',
+            maxWidth: '800px',
+            margin: '0 auto 40px auto',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            {/* STATIC MAIN TITLE */}
+            <h1 className="hero-title" style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '10px', color: 'white' }}>
+              We Don’t Print Labels…
+            </h1>
+
+            {/* ANIMATED SUBTITLES */}
+            <div style={{ height: '50px', marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <AnimatePresence mode="wait">
+                <motion.h2
+                  key={textIndex}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  style={{ 
+                    fontSize: '2.2rem', 
+                    fontWeight: '800', 
+                    // Use brand gradient for animated text
+                    background: 'var(--gradient-primary)', 
+                    WebkitBackgroundClip: 'text', 
+                    WebkitTextFillColor: 'transparent',
+                    margin: 0
+                  }}
+                >
+                  → {heroPhrases[textIndex]}
+                </motion.h2>
+              </AnimatePresence>
+            </div>
+            
+            {/* DESCRIPTION */}
+            <p className="hero-desc" style={{ color: 'rgba(255, 255, 255, 0.9)', maxWidth: '600px', margin: '0 auto', fontSize: '1.1rem', lineHeight: '1.6' }}>
+              AB Custom Labels is your design partner. Waterproof labels, stickers, and premium branding assets delivered to your door.
+            </p>
+          </div>
 
           {/* 4 BUTTONS */}
           <div className="hero-buttons-grid">
