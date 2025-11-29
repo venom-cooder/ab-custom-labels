@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { FaMagic, FaArrowRight, FaCheckCircle, FaRedo, FaWhatsapp, FaPalette, FaShapes, FaFont, FaLightbulb, FaArrowLeft, FaImages, FaLayerGroup, FaIdCard, FaPenNib } from 'react-icons/fa';
+import { FaMagic, FaArrowRight, FaCheckCircle, FaRedo, FaWhatsapp, FaPalette, FaShapes, FaFont, FaLightbulb, FaArrowLeft, FaImages, FaLayerGroup, FaIdCard, FaPenNib, FaTag } from 'react-icons/fa';
 
 const AIDesign = () => {
   const navigate = useNavigate(); // Hook for navigation
