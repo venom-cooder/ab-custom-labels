@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaArrowRight, FaTimes, FaWhatsapp, FaShapes, FaTag, FaIdCard, FaPenNib } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaShapes, FaTag, FaIdCard, FaPenNib, FaMagic, FaCheckCircle, FaStar } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
 import ChangingImage from '../components/anim/ChangingImage';
+import AuroraBackground from '../components/anim/AuroraBackground'; // Imported for AI Section
 
 const Home = () => {
   const navigate = useNavigate();
@@ -45,6 +46,12 @@ const Home = () => {
     setFormData(newOrder);
     try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(e){}
     setOrderStage('SUMMARY');
+  };
+
+  const connectWhatsApp = () => {
+    const msg = `*NEW INQUIRY* 🚀\n👤 Name: ${formData.name}\n📞 Contact: ${formData.contact}\n📝 Request: ${formData.details}`;
+    window.open(`https://wa.me/919243858944?text=${encodeURIComponent(msg)}`, '_blank');
+    setOrderModalOpen(false); setOrderStage('FORM');
   };
 
   return (
@@ -133,7 +140,93 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. BENTO GRID */}
+      {/* 3. BRAND IDENTITY BUILDER AI (NEW SECTION) */}
+      <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
+        {/* Aurora Background for Premium Feel */}
+        <AuroraBackground />
+        
+        <div style={{ 
+          position: 'relative', zIndex: 1, 
+          display: 'grid', gridTemplateColumns: '1fr 1fr', 
+          maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', 
+          gap: '60px', alignItems: 'center' 
+        }}>
+          
+          {/* Left: Description */}
+          <div style={{ textAlign: 'left' }}>
+            <span style={{ 
+              background: 'rgba(139, 61, 255, 0.1)', color: 'var(--primary)', 
+              padding: '8px 16px', borderRadius: '50px', fontSize: '0.85rem', fontWeight: '700', 
+              marginBottom: '20px', display: 'inline-block', letterSpacing: '1px'
+            }}>
+              NEW INTELLIGENCE
+            </span>
+            
+            <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111', lineHeight: '1.1' }}>
+              Meet Your <br/>
+              <span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                Brand Identity Builder AI
+              </span>
+            </h2>
+            
+            <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.6', marginBottom: '30px' }}>
+              Not sure if your design is print-ready? Our AI analyzes your brand colors, shapes, and typography to give you a <strong>Professional Print Score</strong>.
+              <br/><br/>
+              It doesn't just rate; it recommends the perfect material (Gold Foil, Matte, Vinyl) to make your brand stand out on the shelf.
+            </p>
+
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#333', fontWeight: '600' }}>
+                <FaCheckCircle color="#25D366" /> Instant Design Rating
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#333', fontWeight: '600' }}>
+                <FaMagic color="var(--primary)" /> Material Suggestions
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Action Card */}
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <TiltCard 
+              className="ai-action-card"
+              style={{
+                width: '100%', maxWidth: '450px', 
+                background: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.8)', borderRadius: '24px',
+                padding: '40px', boxShadow: '0 20px 60px rgba(139, 61, 255, 0.15)',
+                textAlign: 'center'
+              }}
+            >
+              <div style={{ 
+                width: '80px', height: '80px', borderRadius: '50%', 
+                background: 'var(--gradient-primary)', margin: '0 auto 20px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: '0 10px 30px rgba(139, 61, 255, 0.3)'
+              }}>
+                <FaStar size={35} color="white" />
+              </div>
+              
+              <h3 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#111', marginBottom: '10px' }}>
+                Check Your Brand Score
+              </h3>
+              <p style={{ color: '#666', marginBottom: '30px' }}>
+                Use our AI Studio to generate and rate your next label design concept in seconds.
+              </p>
+              
+              <button 
+                onClick={() => navigate('/ai-design')}
+                className="primary-btn" 
+                style={{ width: '100%', fontSize: '1rem', padding: '16px' }}
+              >
+                Launch AI Studio <FaArrowRight style={{ marginLeft: '8px' }} />
+              </button>
+            </TiltCard>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. BENTO GRID */}
       <div className="bento-section">
         <h3 style={{textAlign:'center', fontSize:'2rem', fontWeight:'800', marginBottom:'40px', color:'var(--text-main)'}}>Explore Categories</h3>
         <div className="bento-grid">
