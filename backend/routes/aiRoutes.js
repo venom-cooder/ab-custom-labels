@@ -1,66 +1,77 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios');
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// POST: Generate Design
+// POST: Generate AI Design & Analysis
 router.post('/generate', async (req, res) => {
   const { category, shape, color, style, text } = req.body;
 
-  // Construct the Prompt
-  const prompt = `A high-quality, professional ${category} design. 
-  Shape: ${shape}. 
-  Primary Color: ${color}. 
-  Style: ${style}. 
-  Text on design: "${text}". 
-  Vector illustration style, clean background, studio lighting, high resolution product label design.`;
-
   try {
-    // 1. CALL GOOGLE IMAGEN (Or OpenAI/Stability if you prefer)
-    // For now, I will simulate a successful response so it works instantly for you.
-    // To make this real, you would uncomment the API call below and add your GEMINI_API_KEY to .env
+    // --- 1. IMAGE GENERATION (Free & Unlimited via Pollinations) ---
+    // This creates a Real AI Image instantly without an API Key.
+    // We construct a detailed prompt to get a high-quality result.
+    const imagePrompt = `Professional ${style} style ${category} design, ${shape} shape, dominant color ${color}, text "${text}" written clearly, high quality product label, vector style, studio lighting, white background, 4k, clean design`;
     
-    /*
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=${process.env.GEMINI_API_KEY}`,
-      { instances: [{ prompt: prompt }], parameters: { sampleCount: 1 } }
-    );
-    const imageBase64 = response.data.predictions[0].bytesBase64Encoded;
-    const imageUrl = `data:image/png;base64,${imageBase64}`;
-    */
+    // We add a random seed to ensure a new unique image every time
+    const randomSeed = Math.floor(Math.random() * 10000);
+    const encodedPrompt = encodeURIComponent(imagePrompt);
+    
+    // Pollinations URL structure
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&seed=${randomSeed}&nologo=true`;
 
-    // MOCK RESPONSE (So you can test the UI immediately without paying for API)
-    // Returns a relevant placeholder based on color
-    const mockImages = {
-      'Red': 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=500&auto=format&fit=crop',
-      'Blue': 'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop',
-      'Green': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&auto=format&fit=crop',
-      'Gold': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop',
-      'Black': 'https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?w=500&auto=format&fit=crop'
-    };
+    // --- 2. EXPERT ANALYSIS (Google Gemini API) ---
+    // This acts as the "Brain" to give professional advice.
+    let rating = 88; // Fallback default if API key is missing or fails
+    let suggestion = `Great choice of ${color}! A ${style} look usually pairs well with a matte finish.`; // Fallback
 
-    const mockUrl = mockImages[color] || mockImages['Gold'];
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        // Use gemini-1.5-flash for speed and free tier availability
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // 2. GENERATE FAKE "AI ANALYSIS"
-    const score = Math.floor(Math.random() * (98 - 85) + 85); // Random score between 85-98
-    const suggestions = [
-      "This design has high contrast. We recommend a 'Matte Finish' to reduce glare.",
-      "The fine details here would look amazing with 'Gold Foil' stamping.",
-      "For this shape, our 'Waterproof Vinyl' is the best durability choice.",
-      "Great color choice! A 'Glossy Coat' will make this pop on shelves."
-    ];
-    const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+        const analysisPrompt = `
+          You are a professional Printing & Brand Design Expert at 'AB Custom Labels'.
+          A user wants a ${category} with these specs:
+          - Shape: ${shape}
+          - Color: ${color}
+          - Style: ${style}
+          - Text: "${text}"
 
-    // Return Data
+          1. Give a quality score out of 100 (be generous but realistic, between 85-99).
+          2. Give ONE short, specific professional printing suggestion (e.g., "Use Gold Foil for the text," "Glossy lamination recommended for durability," "Use waterproof vinyl for this shape").
+
+          Return ONLY a JSON object: { "rating": number, "suggestion": "string" }
+        `;
+
+        const result = await model.generateContent(analysisPrompt);
+        const response = await result.response;
+        const textResponse = response.text();
+        
+        // Clean up markdown if Gemini adds it (e.g. ```json ... ```)
+        const jsonStr = textResponse.replace(/```json|```/g, '').trim();
+        const aiData = JSON.parse(jsonStr);
+        
+        if (aiData.rating) rating = aiData.rating;
+        if (aiData.suggestion) suggestion = aiData.suggestion;
+        
+      } catch (aiError) {
+        console.error("Gemini AI Error (Falling back to defaults):", aiError.message);
+        // We continue without crashing so the user still gets their image
+      }
+    }
+
+    // --- 3. SEND RESPONSE TO FRONTEND ---
     res.json({
       success: true,
-      imageUrl: mockUrl, // Replace with real AI url later
-      rating: score,
-      suggestion: randomSuggestion
+      imageUrl: imageUrl,
+      rating: rating,
+      suggestion: suggestion
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "AI Generation Failed", error: err.message });
+    console.error("Generation Route Error:", err);
+    res.status(500).json({ message: "Failed to generate design", error: err.message });
   }
 });
 
