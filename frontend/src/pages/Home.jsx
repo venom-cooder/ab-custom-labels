@@ -102,6 +102,18 @@ const Home = () => {
     { icon: "💊", title: "Healthcare", desc: "Compliant labels for medical products" }
   ];
 
+  // Additional Services Data
+  const additionalServices = [
+    { icon: "🏷️", title: "Sticker Printing", desc: "High-quality stickers for promotions, branding, and decorative purposes." },
+    { icon: "📦", title: "Packaging Labels", desc: "Complete packaging solutions with shipping and product labels." },
+    { icon: "🎨", title: "Brand Consultation", desc: "Expert guidance on brand identity and label design strategy." },
+    { icon: "⚡", title: "Rush Orders", desc: "Same-day and 24-hour rush printing services for urgent needs." },
+    { icon: "🔒", title: "Security Labels", desc: "Tamper-evident and security labels for product protection." },
+    { icon: "📱", title: "QR Code Labels", desc: "Smart labels with QR codes for digital engagement and tracking." },
+    { icon: "🌿", title: "Eco-Friendly Options", desc: "Sustainable and biodegradable label materials for eco-conscious brands." },
+    { icon: "🎯", title: "Variable Data Printing", desc: "Personalized labels with unique codes, names, or information." }
+  ];
+
   // --- DATA CONFIG FOR HOME GALLERY ---
   const gallerySections = [
     { title: 'Stickers', type: 'stickers', count: 10 },
@@ -213,7 +225,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. PRODUCT SHOWCASE (NEW SECTION with Aurora BG) */}
+      {/* 4. PRODUCT SHOWCASE */}
       <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
         <AuroraBackground />
         
@@ -232,7 +244,7 @@ const Home = () => {
 
           <div style={{ 
             display: 'grid', 
-            gridTemplateColumns: 'repeat(4, 1fr)', // 4 Columns Strict
+            gridTemplateColumns: 'repeat(4, 1fr)', 
             gap: '20px' 
           }}>
             {showcaseItems.map((item, index) => (
@@ -242,8 +254,8 @@ const Home = () => {
                 style={{
                   textAlign: 'center', 
                   alignItems: 'center', 
-                  padding: '1.5rem', // Reduced padding
-                  minHeight: '250px', // Smaller height constraint
+                  padding: '1.5rem', 
+                  minHeight: '250px', 
                   display: 'flex', 
                   flexDirection: 'column', 
                   justifyContent: 'center' 
@@ -258,7 +270,25 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 5. AI INTELLIGENCE SECTION */}
+      {/* 5. ADDITIONAL SERVICES (NEW SECTION) */}
+      <section className="additional-services-section">
+        <div className="additional-services-header">
+          <h2>Additional Services</h2>
+          <p>Beyond basic labels, we offer comprehensive solutions to meet all your branding and packaging needs.</p>
+        </div>
+        
+        <div className="additional-services-grid">
+          {additionalServices.map((service, index) => (
+            <div key={index} className="add-service-card">
+              <div className="add-service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 6. AI INTELLIGENCE SECTION */}
       <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#f8f9fa' }}>
         <div style={{ 
           position: 'relative', zIndex: 1, 
@@ -336,7 +366,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 6. FULL WIDTH GALLERY SECTIONS */}
+      {/* 7. FULL WIDTH GALLERY SECTIONS */}
       <section className="segregated-gallery-section">
         {gallerySections.map((section) => (
           <div key={section.type}>
