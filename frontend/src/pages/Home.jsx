@@ -184,7 +184,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. AI INTELLIGENCE SECTION (MOVED UP) */}
+      {/* 3. AI INTELLIGENCE SECTION */}
       <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#f8f9fa' }}>
         <div style={{ 
           position: 'relative', zIndex: 1, 
@@ -233,7 +233,27 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. OUR SERVICES */}
+      {/* 4. PRODUCT SHOWCASE (Moved Above) */}
+      <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
+        <AuroraBackground />
+        <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111' }}>Product Showcase</h2>
+          <p style={{ fontSize: '1.2rem', color: '#555', lineHeight: '1.6', marginBottom: '50px', maxWidth: '800px', margin: '0 auto 50px' }}>
+            From boutique brands to enterprise solutions, our custom labels enhance products across every industry.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+            {showcaseItems.map((item, index) => (
+              <TiltCard key={index} className="service-card" style={{textAlign: 'center', alignItems: 'center', padding: '1.5rem', minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>{item.icon}</div>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '700' }}>{item.title}</h3>
+                <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>{item.desc}</p>
+              </TiltCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. OUR SERVICES */}
       <section className="services-section">
         <div className="services-header">
           <h2>Our Services</h2>
@@ -252,26 +272,6 @@ const Home = () => {
               </ul>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* 5. PRODUCT SHOWCASE */}
-      <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
-        <AuroraBackground />
-        <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111' }}>Product Showcase</h2>
-          <p style={{ fontSize: '1.2rem', color: '#555', lineHeight: '1.6', marginBottom: '50px', maxWidth: '800px', margin: '0 auto 50px' }}>
-            From boutique brands to enterprise solutions, our custom labels enhance products across every industry.
-          </p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
-            {showcaseItems.map((item, index) => (
-              <TiltCard key={index} className="service-card" style={{textAlign: 'center', alignItems: 'center', padding: '1.5rem', minHeight: '250px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>{item.icon}</div>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '8px', fontWeight: '700' }}>{item.title}</h3>
-                <p style={{ color: '#666', fontSize: '0.9rem', margin: 0 }}>{item.desc}</p>
-              </TiltCard>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -298,7 +298,7 @@ const Home = () => {
           <div key={section.type} style={{ marginBottom: '60px' }}>
             <div className="category-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
               <h3>{section.title}</h3>
-              <button onClick={()=>navigate(`/gallery/${section.type}`)} className="secondary-btn" style={{fontSize:'0.9rem'}}>View All</button>
+              {/* REMOVED THE 'VIEW ALL' BUTTON FROM RIGHT */}
             </div>
             
             {/* STRICT 3 COLUMN GRID - Limiting to 3 items */}
@@ -332,7 +332,24 @@ const Home = () => {
         ))}
       </section>
 
-      {/* 8. FAQS SECTION (NEW) */}
+      {/* 8. WHY CHOOSE US (NEW - with Aurora) */}
+      <section style={{ position: 'relative', padding: '6rem 5%', overflow: 'hidden', textAlign: 'center', background:'#f8f9fa' }}>
+        <AuroraBackground />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '40px', color: 'var(--text-main)' }}>Why Choose AB Custom Labels?</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
+            {whyChooseUs.map((item, i) => (
+              <div key={i} style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
+                <FaCheckCircle size={40} color="var(--primary)" style={{ marginBottom: '15px' }} />
+                <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '10px' }}>{item.title}</h3>
+                <p style={{ color: '#666', fontSize: '0.95rem' }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. FAQS SECTION (NEW) */}
       <section style={{ padding: '6rem 5%', background: '#fff', maxWidth: '1000px', margin: '0 auto' }}>
         <h2 style={{ fontSize: '3rem', fontWeight: '800', textAlign: 'center', marginBottom: '40px', color: 'var(--text-main)' }}>
           Frequently Asked Questions
@@ -360,20 +377,6 @@ const Home = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 9. WHY CHOOSE US (NEW) */}
-      <section style={{ padding: '6rem 5%', background: '#f8f9fa', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '40px' }}>Why Choose AB Custom Labels?</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
-          {whyChooseUs.map((item, i) => (
-            <div key={i} style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
-              <FaCheckCircle size={40} color="var(--primary)" style={{ marginBottom: '15px' }} />
-              <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '10px' }}>{item.title}</h3>
-              <p style={{ color: '#666', fontSize: '0.95rem' }}>{item.desc}</p>
             </div>
           ))}
         </div>
