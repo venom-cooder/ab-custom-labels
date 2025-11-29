@@ -4,41 +4,44 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // POST: Generate AI Design & Analysis
 router.post('/generate', async (req, res) => {
-  const { category, shape, color, style, text } = req.body;
+  // Accepting new detailed parameters
+  const { category, shape, bgColor, textColor, font, style, text, customPrompt } = req.body;
 
   try {
-    // --- 1. IMAGE GENERATION (Free & Unlimited via Pollinations) ---
-    // This creates a Real AI Image instantly without an API Key.
-    // We construct a detailed prompt to get a high-quality result.
-    const imagePrompt = `Professional ${style} style ${category} design, ${shape} shape, dominant color ${color}, text "${text}" written clearly, high quality product label, vector style, studio lighting, white background, 4k, clean design`;
+    // --- 1. IMAGE GENERATION (Pollinations.ai) ---
+    // Constructing a hyper-detailed prompt based on user inputs
+    const basePrompt = `Professional ${style} style ${category} design, ${shape} shape. Background color: ${bgColor}. Text color: ${textColor}. Font style: ${font}. Text: "${text}".`;
     
-    // We add a random seed to ensure a new unique image every time
+    // Add custom user details if provided
+    const additionalDetails = customPrompt ? `Additional details: ${customPrompt}.` : "";
+    
+    const finalImagePrompt = `${basePrompt} ${additionalDetails} high quality product label, vector style, studio lighting, clean lines, 4k resolution, no watermarks.`;
+    
     const randomSeed = Math.floor(Math.random() * 10000);
-    const encodedPrompt = encodeURIComponent(imagePrompt);
+    const encodedPrompt = encodeURIComponent(finalImagePrompt);
     
-    // Pollinations URL structure
+    // Pollinations URL
     const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&seed=${randomSeed}&nologo=true`;
 
     // --- 2. EXPERT ANALYSIS (Google Gemini API) ---
-    // This acts as the "Brain" to give professional advice.
-    let rating = 88; // Fallback default if API key is missing or fails
-    let suggestion = `Great choice of ${color}! A ${style} look usually pairs well with a matte finish.`; // Fallback
+    let rating = 88;
+    let suggestion = `Great choice of ${bgColor} and ${textColor}! This ${style} look pairs well with our premium finishes.`;
 
     if (process.env.GEMINI_API_KEY) {
       try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        // Use gemini-1.5-flash for speed and free tier availability
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const analysisPrompt = `
           You are a professional Printing & Brand Design Expert at 'AB Custom Labels'.
           A user wants a ${category} with these specs:
-          - Shape: ${shape}
-          - Color: ${color}
           - Style: ${style}
-          - Text: "${text}"
+          - Shape: ${shape}
+          - Colors: ${bgColor} (Background) & ${textColor} (Text)
+          - Font: ${font}
+          - User Vision: "${customPrompt}"
 
-          1. Give a quality score out of 100 (be generous but realistic, between 85-99).
+          1. Give a quality score out of 100 (be generous but realistic, 85-99).
           2. Give ONE short, specific professional printing suggestion (e.g., "Use Gold Foil for the text," "Glossy lamination recommended for durability," "Use waterproof vinyl for this shape").
 
           Return ONLY a JSON object: { "rating": number, "suggestion": "string" }
@@ -47,8 +50,6 @@ router.post('/generate', async (req, res) => {
         const result = await model.generateContent(analysisPrompt);
         const response = await result.response;
         const textResponse = response.text();
-        
-        // Clean up markdown if Gemini adds it (e.g. ```json ... ```)
         const jsonStr = textResponse.replace(/```json|```/g, '').trim();
         const aiData = JSON.parse(jsonStr);
         
@@ -56,12 +57,10 @@ router.post('/generate', async (req, res) => {
         if (aiData.suggestion) suggestion = aiData.suggestion;
         
       } catch (aiError) {
-        console.error("Gemini AI Error (Falling back to defaults):", aiError.message);
-        // We continue without crashing so the user still gets their image
+        console.error("Gemini AI Error:", aiError.message);
       }
     }
 
-    // --- 3. SEND RESPONSE TO FRONTEND ---
     res.json({
       success: true,
       imageUrl: imageUrl,
