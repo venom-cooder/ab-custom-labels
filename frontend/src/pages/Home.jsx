@@ -6,9 +6,7 @@ import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhone
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
-import RevealText from '../components/anim/RevealText';
 import MagneticBtn from '../components/anim/MagneticBtn';
-import AuroraBackground from '../components/anim/AuroraBackground'; 
 import ChangingImage from '../components/anim/ChangingImage';
 
 const Home = () => {
@@ -19,13 +17,21 @@ const Home = () => {
   const [formData, setFormData] = useState(null);
   const [orderStage, setOrderStage] = useState('FORM');
 
-  // --- DATA CONFIG FOR HOME GALLERY ---
-  const gallerySections = [
-    { title: 'Stickers', type: 'stickers', count: 10 },
-    { title: 'Labels', type: 'labels', count: 29 },
-    { title: 'Logos', type: 'logos', count: 10 },
-    { title: 'Cards', type: 'cards', count: 9 }
+  // --- HERO TEXT ANIMATION STATE ---
+  const [textIndex, setTextIndex] = useState(0);
+  const heroPhrases = [
+    "We Build Identity",
+    "We Shape Memories",
+    "We Create Stories",
+    "We Add Emotion"
   ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTextIndex((prev) => (prev + 1) % heroPhrases.length);
+    }, 2000); // Change every 2 seconds
+    return () => clearInterval(interval);
+  }, []);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -53,19 +59,55 @@ const Home = () => {
       
       {/* NAVBAR handled by App.jsx */}
 
-      {/* 1. HERO SECTION (Aurora Light Theme) */}
+      {/* 1. HERO SECTION */}
       <div className="distortion-wrapper">
-        <AuroraBackground />
+        {/* BACKGROUND IMAGE */}
+        <div 
+          className="hero-static-bg" 
+          style={{ 
+            backgroundImage: "url('/images/Home.png')",
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            backgroundSize: 'cover', backgroundPosition: 'center',
+            filter: 'brightness(0.9)', // Slight dim for text readability
+            zIndex: 0
+          }}
+        ></div>
         
         <div className="hero-overlay">
-          <h1 className="hero-title">
-            What will you <span style={{background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>create</span> today?
+          {/* STATIC MAIN TITLE */}
+          <h1 className="hero-title" style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '0', color: 'var(--text-main)' }}>
+            We Don’t Print Labels…
           </h1>
+
+          {/* ANIMATED SUBTITLES */}
+          <div style={{ height: '60px', marginBottom: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={textIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                style={{ 
+                  fontSize: '2.5rem', 
+                  fontWeight: '800', 
+                  background: 'var(--gradient-primary)', 
+                  WebkitBackgroundClip: 'text', 
+                  WebkitTextFillColor: 'transparent',
+                  margin: 0
+                }}
+              >
+                → {heroPhrases[textIndex]}
+              </motion.h2>
+            </AnimatePresence>
+          </div>
           
-          <p className="hero-desc" style={{color: 'var(--text-body)'}}>
+          {/* DESCRIPTION */}
+          <p className="hero-desc" style={{ color: 'var(--text-body)', maxWidth: '700px', margin: '0 auto 40px auto', fontSize: '1.1rem', lineHeight: '1.6' }}>
             AB Custom Labels is your design partner. Waterproof labels, stickers, and premium branding assets delivered to your door.
           </p>
 
+          {/* 4 BUTTONS */}
           <div className="hero-buttons-grid">
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/logos')}><FaPenNib color="var(--primary)"/> Logos</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag color="var(--accent)"/> Labels</button>
@@ -97,45 +139,38 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. NEW FULL WIDTH GALLERY SECTIONS */}
-      <section className="segregated-gallery-section">
-        {gallerySections.map((section) => (
-          <div key={section.type}>
-            <div className="category-header">
-              <h3>{section.title}</h3>
+      {/* 3. BENTO GRID */}
+      <div className="bento-section">
+        <h3 style={{textAlign:'center', fontSize:'2rem', fontWeight:'800', marginBottom:'40px', color:'var(--text-main)'}}>Explore Categories</h3>
+        <div className="bento-grid">
+          <TiltCard className="card hero-card" onClick={() => setOrderModalOpen(true)}>
+            <div style={{height:'100%', display:'flex', flexDirection:'column', justifyContent:'space-between'}}>
+              <div style={{zIndex:1}}>
+                <h2 style={{fontSize:'1.8rem', margin:0, color:'white'}}>Have a unique idea?</h2>
+                <p style={{fontSize:'0.9rem', opacity:0.9, color:'white'}}>Let us design it for you.</p>
+              </div>
+              <button className="grid-btn" style={{marginTop:'20px'}}>Custom Order <FaArrowRight/></button>
             </div>
-            
-            <div className="full-width-grid">
-              {/* Display first 4 items for preview */}
-              {[...Array(Math.min(section.count, 8))].map((_, i) => (
-                <div 
-                  key={i} 
-                  className="full-grid-item" 
-                  onClick={() => navigate(`/gallery/${section.type}`)}
-                >
-                  {/* Assuming images follow standard naming convention locally until backend populated */}
-                  <img 
-                    src={`/images/${section.title}/${section.type === 'logos' ? 'logo' : section.type}${i + 1}.png`} 
-                    alt={`${section.title} ${i+1}`} 
-                    loading="lazy"
-                    onError={(e) => {e.target.style.display='none'}}
-                  />
-                  <div className="grid-item-info" style={{padding: '0 20px 20px'}}>
-                    <div className="grid-item-title">{section.title} Design #{i+1}</div>
-                    <div className="grid-item-sub">Customizable • Premium</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div style={{textAlign:'center', marginTop:'30px'}}>
-               <button onClick={()=>navigate(`/gallery/${section.type}`)} className="category-rect-btn" style={{width:'auto', display:'inline-flex'}}>
-                 View All {section.title} <FaArrowRight/>
-               </button>
-            </div>
-          </div>
-        ))}
-      </section>
+          </TiltCard>
+
+          <TiltCard className="card" onClick={() => navigate('/gallery/stickers')}>
+            <div><h3>Stickers</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Die-cut & Vinyl</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/labels')}>
+            <div><h3>Labels</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Rolls & Sheets</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/cards')}>
+            <div><h3>Cards</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Visiting & Event</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+          <TiltCard className="card" onClick={() => navigate('/gallery/logos')}>
+            <div><h3>Logos</h3> <p style={{fontSize:'0.85rem', color:'#666'}}>Brand Identity</p></div>
+            <button className="grid-btn">Browse</button>
+          </TiltCard>
+        </div>
+      </div>
 
       {/* MODAL */}
       {isOrderModalOpen && (
@@ -147,20 +182,23 @@ const Home = () => {
              
              {orderStage === 'FORM' ? (
                 <form onSubmit={handleFormSubmit}>
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>Brand / Name</label>
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Brand / Name</label>
                   <input name="name" required className="clean-input" placeholder="Ex: Urban Hype" />
                   
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>WhatsApp Contact</label>
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>WhatsApp Contact</label>
                   <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
                   
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>Requirements</label>
-                  <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
+                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Requirements</label>
+                  <textarea name="details" required className="clean-input" rows="4" placeholder="I need 100 gold foil stickers..." />
                   
                   <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
                 </form>
              ) : (
                <div>
-                 <h2 style={{marginBottom:'10px', color:'var(--text-main)'}}>Request Generated</h2>
+                 <div style={{background:'#f5f5f5', padding:'15px', borderRadius:'8px', marginBottom:'20px'}}>
+                   <p style={{margin:0, color:'#333'}}><strong>Name:</strong> {formData.name}</p>
+                   <p style={{margin:0, color:'#333'}}><strong>Req:</strong> {formData.details}</p>
+                 </div>
                  <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
                    <FaWhatsapp size={24}/> Open WhatsApp Chat
                  </button>
