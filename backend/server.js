@@ -42,6 +42,7 @@ app.use('/api/support', require('./routes/supportRoutes'));
 
 // FAQs (For Admin to manage FAQs)
 app.use('/api/faqs', require('./routes/faqRoutes'));
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 // 5. Health Check Route (Click your Render link to see this)
 app.get('/', (req, res) => {
