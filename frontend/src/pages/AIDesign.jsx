@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { FaMagic, FaArrowRight, FaCheckCircle, FaRedo, FaWhatsapp, FaPalette, FaShapes, FaFont, FaLightbulb, FaArrowLeft, FaImages, FaLayerGroup, FaIdCard, FaPenNib, FaTag } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaMagic, FaArrowRight, FaCheckCircle, FaRedo, FaWhatsapp, FaPalette, FaShapes, FaFont, FaLightbulb, FaArrowLeft, FaImages, FaLayerGroup, FaIdCard, FaPenNib, FaTag, FaExpand, FaImage } from 'react-icons/fa';
 
 const AIDesign = () => {
-  const navigate = useNavigate(); // Hook for navigation
-  // Use the Vercel Environment Variable for API URL
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
   
   const [step, setStep] = useState(1);
@@ -20,14 +19,18 @@ const AIDesign = () => {
     color: '',
     style: '',
     text: '',
-    font: '',        // Added font selection
-    customPrompt: '' // Added custom prompt
+    font: '',
+    ratio: '1:1',     // Added ratio
+    bgType: 'Plain',  // Added background type
+    customPrompt: ''
   });
 
   // Options Configuration
   const categories = ['Label', 'Sticker', 'Logo', 'Business Card'];
   const shapes = ['Circle', 'Square', 'Rectangle', 'Die-Cut', 'Oval'];
   const colors = ['Gold', 'Black', 'Red', 'Blue', 'Green', 'White', 'Purple', 'Teal'];
+  const ratios = ['1:1 (Square)', '4:3 (Standard)', '3:4 (Portrait)', '16:9 (Wide)'];
+  const bgTypes = ['Plain Color', 'Photo Scene', 'Abstract Pattern'];
   
   const styles = [
     { name: 'Minimalist', desc: 'Clean lines, lots of whitespace, modern simple look.' },
@@ -52,25 +55,44 @@ const AIDesign = () => {
   const generateDesign = async () => {
     if (!selections.text) return alert("Please enter your Brand Name or Text");
     
-    setStep(5); // Go to Loading Screen (Step 5 based on new flow)
+    setStep(6); // Go to Loading Screen (Step 6 based on new flow)
     setLoading(true);
 
     try {
-      // --- REAL AI REQUEST ---
-      // We send the user's choices to our backend
-      const res = await axios.post(`${API_URL}/api/ai/generate`, selections);
+      // Calculate dimensions based on ratio
+      let width = 1024;
+      let height = 1024;
+      if (selections.ratio.includes('4:3')) { height = 768; }
+      else if (selections.ratio.includes('3:4')) { width = 768; }
+      else if (selections.ratio.includes('16:9')) { height = 576; }
+
+      // Enhanced Prompt Construction for better color accuracy
+      const bgPrompt = selections.bgType === 'Plain Color' 
+        ? `solid ${selections.color} background, no background objects, clean background` 
+        : `${selections.bgType} background matching ${selections.color} theme`;
+
+      const enhancedPrompt = `Professional ${selections.style} ${selections.category} design. Shape: ${selections.shape}. Text: "${selections.text}" written clearly in ${selections.font} font. Primary Color: ${selections.color}. ${bgPrompt}. High quality product design, vector style, studio lighting, 4k resolution. ${selections.customPrompt}`;
+
+      // Send modified selections to backend
+      const payload = { 
+        ...selections, 
+        width, 
+        height,
+        customPrompt: enhancedPrompt // Override the custom prompt with our enhanced version
+      };
+
+      const res = await axios.post(`${API_URL}/api/ai/generate`, payload);
       
-      // The backend returns: { imageUrl, rating, suggestion }
       if (res.data.success) {
         setResult(res.data);
-        setStep(6); // Go to Result Screen
+        setStep(7); // Go to Result Screen
       } else {
         throw new Error("Generation failed");
       }
     } catch (err) {
       console.error("AI Generation Error:", err);
       alert("AI Generation failed. Please try again.");
-      setStep(4); // Go back to last input step
+      setStep(5); // Go back to last input step
     } finally {
       setLoading(false);
     }
@@ -78,7 +100,7 @@ const AIDesign = () => {
 
   const reset = () => {
     setStep(1);
-    setSelections({ category: '', shape: '', color: '', style: '', text: '', font: '', customPrompt: '' });
+    setSelections({ category: '', shape: '', color: '', style: '', text: '', font: '', ratio: '1:1', bgType: 'Plain', customPrompt: '' });
     setResult(null);
   };
 
@@ -97,7 +119,7 @@ const AIDesign = () => {
         
         {/* PROGRESS BAR */}
         <div style={{display:'flex', gap:'5px', marginBottom:'30px'}}>
-            {[1,2,3,4,5,6].map(num => (
+            {[1,2,3,4,5,6,7].map(num => (
                 <div key={num} style={{flex:1, height:'6px', borderRadius:'3px', background: step >= num ? '#8B3DFF' : '#ddd', transition:'0.3s'}}></div>
             ))}
         </div>
@@ -212,10 +234,39 @@ const AIDesign = () => {
           </motion.div>
         )}
 
-        {/* STEP 4: CUSTOM PROMPT (OPTIONAL) */}
+        {/* STEP 4: RATIO & BACKGROUND TYPE */}
         {step === 4 && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="ai-card">
-            <h3>4. Final Details (Optional)</h3>
+            <h3>4. Dimensions & Scene</h3>
+
+            <label className="ai-label"><FaExpand/> Aspect Ratio</label>
+            <div className="ai-chips">
+              {ratios.map(r => (
+                <button key={r} className={`chip ${selections.ratio === r ? 'active' : ''}`} onClick={() => handleSelect('ratio', r)}>{r}</button>
+              ))}
+            </div>
+
+            <label className="ai-label" style={{marginTop:'30px'}}><FaImage/> Background Type</label>
+            <div className="ai-chips">
+              {bgTypes.map(type => (
+                <button key={type} className={`chip ${selections.bgType === type ? 'active' : ''}`} onClick={() => handleSelect('bgType', type)}>{type}</button>
+              ))}
+            </div>
+            <p style={{fontSize:'0.8rem', color:'#666', marginTop:'10px'}}>
+              * 'Plain Color' helps ensure the background matches your color choice exactly.
+            </p>
+
+            <div style={{display:'flex', gap:'10px', marginTop:'30px'}}>
+              <button className="secondary-btn" onClick={() => setStep(3)}><FaArrowLeft/> Back</button>
+              <button className="primary-btn" onClick={() => setStep(5)} style={{ flex:1 }}>Next Step <FaArrowRight /></button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* STEP 5: CUSTOM PROMPT (OPTIONAL) */}
+        {step === 5 && (
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="ai-card">
+            <h3>5. Final Details (Optional)</h3>
             <p style={{color:'#666', fontSize:'0.9rem', marginBottom:'20px'}}>
               Have a specific vision? Describe it here to guide the AI.
             </p>
@@ -230,29 +281,32 @@ const AIDesign = () => {
             />
 
             <div style={{display:'flex', gap:'10px', marginTop:'30px'}}>
-                <button className="secondary-btn" onClick={() => setStep(3)}><FaArrowLeft/> Back</button>
-                <button className="primary-btn" onClick={generateDesign} style={{flex:1}}>
-                <FaMagic /> Generate My Design
-                </button>
+                <button className="secondary-btn" onClick={() => setStep(4)}><FaArrowLeft/> Back</button>
+                <div style={{flex:1, display:'flex', flexDirection:'column', gap:'5px'}}>
+                  <button className="primary-btn" onClick={generateDesign} style={{width:'100%'}}>
+                    <FaMagic /> Generate My Design
+                  </button>
+                  <span style={{fontSize:'0.75rem', color:'#666', textAlign:'center'}}>* AI generation takes 10-15 seconds</span>
+                </div>
             </div>
           </motion.div>
         )}
 
-        {/* STEP 5: LOADING */}
-        {step === 5 && (
+        {/* STEP 6: LOADING */}
+        {step === 6 && (
           <div style={{ textAlign: 'center', padding: '4rem', background:'white', borderRadius:'20px', border:'1px solid #eee' }}>
             <div className="loading-spinner"></div>
             <h2 style={{ marginTop: '20px', color: '#333', fontSize:'1.5rem' }}>Generating Photo...</h2>
             <p style={{ color: '#888', marginBottom: '10px' }}>Applying {selections.style} aesthetics to your {selections.category}</p>
-            <p style={{ fontSize:'0.9rem', color:'#666', fontWeight: '500', background: '#f0fdf4', padding: '10px', borderRadius: '8px', display: 'inline-block' }}>
-               Note: AI takes minimum 10-15 seconds to generate high-quality results.
+            <p style={{ fontSize:'0.9rem', color:'#e67e22', fontWeight: '600', background: '#fff7ed', padding: '10px', borderRadius: '8px', display: 'inline-block' }}>
+               Note: AI takes minimum 10-15 seconds to generate high-quality results. Please wait.
             </p>
             <p style={{ fontSize:'0.8rem', color:'#aaa', marginTop:'20px'}}>Powered by AB Custom AI</p>
           </div>
         )}
 
-        {/* STEP 6: RESULT */}
-        {step === 6 && result && (
+        {/* STEP 7: RESULT */}
+        {step === 7 && result && (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="ai-result-card">
             
             <div className="result-image-container">
