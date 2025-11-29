@@ -214,28 +214,31 @@ nav {
   letter-spacing: -1px;
 }
 
-/* Full Width Grid for Categories */
+/* Full Width Grid for Categories - STRICT 3 COLUMNS */
 .full-width-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Strict 4 Columns */
-  gap: 25px;
+  /* Adjusted to repeat(3, 1fr) to satisfy "not more than 3 in a row" */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 40px; /* Generous spacing */
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto; /* Centered */
 }
 
-/* Gallery Items in Full Grid (Like Screenshot) */
+/* Gallery Items in Full Grid */
 .full-grid-item {
   display: flex;
   flex-direction: column;
-  background: #f9fafb; /* Light grey box background */
-  border-radius: 8px;
+  background: #ffffff; 
+  border-radius: 12px;
   overflow: hidden;
   transition: transform 0.2s ease;
   cursor: pointer;
   border: 1px solid var(--border);
-  padding: 20px; /* Internal padding like the screenshot */
-  align-items: center;
-  justify-content: center;
-  min-height: 250px;
+  box-shadow: var(--shadow-sm);
+  /* Removed padding to let image touch edges if desired, 
+     or keep padding if 'boxed' look wanted. 
+     User said "fit inside box", so let's keep it clean. */
 }
 
 .full-grid-item:hover {
@@ -246,27 +249,50 @@ nav {
 
 .full-grid-item img {
   width: 100%;
-  height: 180px; /* Fixed height for image area */
-  object-fit: contain; /* Ensures whole image fits inside */
+  height: 250px; /* Fixed height for image container */
+  object-fit: contain; /* Ensures image is fully visible */
+  background-color: #f8f9fa; /* Light grey background behind image */
   display: block;
-  margin-bottom: 15px;
+  border-bottom: 1px solid var(--border);
 }
 
 .grid-item-info {
-  text-align: left;
-  width: 100%;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .grid-item-title {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: var(--text-main);
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .grid-item-sub {
   font-size: 0.85rem;
   color: var(--text-body);
+}
+
+/* The "Customize" button inside the card */
+.customize-btn-small {
+  margin-top: 10px;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  align-self: center;
+}
+
+.customize-btn-small:hover {
+  background-color: #7a30e6; /* Darker purple */
 }
 
 
@@ -299,8 +325,35 @@ nav {
 .order-modal { background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); position: relative; }
 
 /* =========================================
-   7. FOOTER
+   7. FOOTER & MASONRY (Legacy Masonry for Gallery Page)
    ========================================= */
+/* Gallery Page Masonry - Matches similar constraints */
+.masonry-grid {
+  column-count: 3; 
+  column-gap: 40px;
+  padding: 4rem 2rem; 
+  max-width: 1200px; 
+  margin: 0 auto;
+}
+.masonry-item {
+  break-inside: avoid; margin-bottom: 40px;
+  border-radius: 12px; overflow: hidden;
+  background: #fff; box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border); cursor: pointer; transition: 0.2s;
+  display: flex; flex-direction: column;
+}
+.masonry-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.masonry-item img { width: 100%; display: block; }
+
+/* Removing overlay button logic since user wants info below */
+.masonry-info { 
+  padding: 20px; 
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+.masonry-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+
+/* Footer */
 footer {
   background: #ffffff; color: var(--text-main);
   padding: 4rem 5% 1.5rem; border-top: 1px solid var(--border);
@@ -316,6 +369,38 @@ footer {
 .social-icons { display: flex; gap: 15px; margin-top: 15px; }
 .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--text-muted); }
 
+/* =========================================
+   8. AI STUDIO STYLES
+   ========================================= */
+.ai-card {
+  background: #ffffff; padding: 2rem; border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;
+}
+.ai-card h3 { margin-bottom: 25px; font-size: 1.4rem; color: #111; font-weight: 700; }
+.ai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+.ai-option {
+  padding: 25px; border: 2px solid #f3f4f6; border-radius: 12px;
+  background: white; font-weight: 600; cursor: pointer; transition: 0.2s;
+  font-size: 1.1rem; color: #444; text-align: center;
+}
+.ai-option:hover { border-color: #8B3DFF; color: #8B3DFF; background: #fdfaff; transform: translateY(-2px); }
+.ai-option.active { border-color: #8B3DFF; background: #8B3DFF; color: white; box-shadow: 0 5px 15px rgba(139, 61, 255, 0.3); }
+.ai-label { display: flex; align-items: center; gap: 8px; margin: 25px 0 10px; font-weight: 700; color: #333; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.ai-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip { padding: 10px 20px; background: #f3f4f6; border-radius: 50px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; border: 1px solid transparent; color: #555; }
+.chip:hover { background: #e5e7eb; color: #000; }
+.chip.active { background: #8B3DFF; color: white; box-shadow: 0 4px 12px rgba(139, 61, 255, 0.3); }
+.loading-spinner { width: 60px; height: 60px; border: 6px solid #f3f3f3; border-top: 6px solid #8B3DFF; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto; }
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+.ai-result-card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); border: 1px solid #eee; }
+.result-image-container { position: relative; border-radius: 12px; overflow: hidden; margin-bottom: 20px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05); }
+.result-image-container img { width: 100%; display: block; }
+.score-badge { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: #00ff00; padding: 8px 16px; border-radius: 50px; font-weight: 800; backdrop-filter: blur(5px); }
+.ai-analysis { background: #f8fcf9; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #dcfce7; }
+.ai-analysis h4 { margin: 0 0 8px 0; color: #166534; display: flex; align-items: center; gap: 10px; font-size: 1rem; }
+.ai-analysis p { margin: 0; color: #15803d; font-size: 0.95rem; line-height: 1.5; }
+.action-buttons { display: flex; gap: 15px; }
+
 /* MOBILE */
 @media (max-width: 768px) {
   .hero-title { font-size: 2.5rem; }
@@ -324,10 +409,13 @@ footer {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .contact-col { grid-column: span 2; align-items: center; text-align: center; margin-top: 20px; }
   .contact-row, .social-icons { justify-content: center; }
+  
+  /* Masonry/Grid Mobile - 1 Column for better size or 2 for density */
+  .masonry-grid { column-count: 1; padding: 1rem; gap: 20px; } 
+  .full-width-grid { grid-template-columns: 1fr; gap: 20px; padding: 0 20px;}
+  
   .hero-buttons-grid { flex-direction: column; }
   .category-rect-btn { width: 100%; }
   .nav-links { display: none; }
-  
-  /* Mobile Gallery: 2 Columns */
-  .full-width-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+  .action-buttons { flex-direction: column; }
 }

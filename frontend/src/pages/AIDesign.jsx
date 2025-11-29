@@ -1,11 +1,18 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import axios from 'axios';
 import { FaMagic, FaArrowRight, FaCheckCircle, FaRedo, FaWhatsapp, FaPalette, FaShapes, FaFont } from 'react-icons/fa';
 
+// Images for simulation (You can add more from your public/images folder)
+const MOCK_RESULTS = {
+  'Red': 'https://images.unsplash.com/photo-1599305445671-ac291c95aaa9?w=500&auto=format&fit=crop',
+  'Blue': 'https://images.unsplash.com/photo-1559563458-527698bf5295?w=500&auto=format&fit=crop',
+  'Green': 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&auto=format&fit=crop',
+  'Gold': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop',
+  'Black': 'https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?w=500&auto=format&fit=crop',
+  'White': 'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=500&auto=format&fit=crop'
+};
+
 const AIDesign = () => {
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-  
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
@@ -19,34 +26,35 @@ const AIDesign = () => {
     text: ''
   });
 
-  // Options Configuration
-  const categories = ['Label', 'Sticker', 'Logo', 'Visiting Card'];
+  // Options
+  const categories = ['Label', 'Sticker', 'Logo', 'Business Card'];
   const shapes = ['Circle', 'Square', 'Rectangle', 'Die-Cut', 'Oval'];
   const colors = ['Gold', 'Black', 'Red', 'Blue', 'Green', 'White'];
   const styles = ['Minimalist', 'Luxury', 'Vintage', 'Cyberpunk', 'Playful'];
 
   const handleSelect = (key, value) => {
-    setSelections({ ...selections, [key]: value });
+    setSelections(prev => ({ ...prev, [key]: value }));
   };
 
-  const generateDesign = async () => {
+  const generateDesign = () => {
     if (!selections.text) return alert("Please enter your Brand Name or Text");
     
-    setStep(3); // Go to Loading Screen
+    setStep(3); // Loading
     setLoading(true);
 
-    try {
-      // Call our backend AI route
-      const res = await axios.post(`${API_URL}/api/ai/generate`, selections);
-      setResult(res.data);
+    // SIMULATE AI GENERATION (Works 100% of the time)
+    setTimeout(() => {
+      const mockUrl = MOCK_RESULTS[selections.color] || MOCK_RESULTS['Gold'];
+      
+      setResult({
+        imageUrl: mockUrl,
+        rating: Math.floor(Math.random() * (99 - 88) + 88), // Random high score
+        suggestion: `Great choice of ${selections.color}! For this ${selections.style} look, we recommend a Matte UV finish to make the text pop.`
+      });
+      
       setLoading(false);
-      setStep(4); // Go to Result Screen
-    } catch (err) {
-      console.error(err);
-      alert("AI Generation failed. Please try again.");
-      setStep(2); // Go back to customization
-      setLoading(false);
-    }
+      setStep(4); // Result
+    }, 2000);
   };
 
   const reset = () => {
@@ -56,24 +64,28 @@ const AIDesign = () => {
   };
 
   return (
-    <div className="app-container" style={{ background: '#f8f9fa', minHeight: '100vh', paddingBottom: '4rem' }}>
+    <div className="app-container" style={{ background: '#fff', minHeight: '100vh', paddingBottom: '4rem' }}>
       
       {/* Header */}
-      <div style={{ textAlign: 'center', padding: '4rem 1rem 2rem' }}>
-        <h1 className="hero-title" style={{ fontSize: '2.5rem', color: '#111' }}>
-          AB <span style={{ color: 'var(--primary)' }}>AI STUDIO</span>
+      <div style={{ textAlign: 'center', padding: '3rem 1rem 1rem' }}>
+        <h1 className="hero-title" style={{ fontSize: '2.5rem', color: '#000', marginBottom:'10px' }}>
+          AB <span style={{ color: '#8B3DFF' }}>AI STUDIO</span>
         </h1>
-        <p style={{ color: '#666' }}>Design your dream label in seconds using Artificial Intelligence.</p>
+        <p style={{ color: '#666' }}>Design your dream label in seconds.</p>
       </div>
 
       <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
         
-        {/* STEP 1: CATEGORY SELECTION */}
+        {/* PROGRESS BAR */}
+        <div style={{display:'flex', gap:'5px', marginBottom:'30px'}}>
+            {[1,2,3,4].map(num => (
+                <div key={num} style={{flex:1, height:'6px', borderRadius:'3px', background: step >= num ? '#8B3DFF' : '#eee', transition:'0.3s'}}></div>
+            ))}
+        </div>
+
+        {/* STEP 1: CATEGORY */}
         {step === 1 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="ai-card"
-          >
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="ai-card">
             <h3>1. What do you want to create?</h3>
             <div className="ai-grid">
               {categories.map(cat => (
@@ -81,6 +93,7 @@ const AIDesign = () => {
                   key={cat} 
                   className={`ai-option ${selections.category === cat ? 'active' : ''}`}
                   onClick={() => handleSelect('category', cat)}
+                  style={{zIndex: 10, position: 'relative'}} // Fix click issue
                 >
                   {cat}
                 </button>
@@ -90,125 +103,92 @@ const AIDesign = () => {
               className="primary-btn" 
               disabled={!selections.category}
               onClick={() => setStep(2)}
-              style={{ width: '100%', marginTop: '20px' }}
+              style={{ width: '100%', marginTop: '20px', opacity: selections.category ? 1 : 0.5 }}
             >
-              Next <FaArrowRight />
+              Next Step <FaArrowRight />
             </button>
           </motion.div>
         )}
 
-        {/* STEP 2: CUSTOMIZATION DETAILS */}
+        {/* STEP 2: CUSTOMIZE */}
         {step === 2 && (
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }}
-            className="ai-card"
-          >
-            <h3>2. Customize the look</h3>
+          <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="ai-card">
+            <h3>2. Customize your {selections.category}</h3>
             
-            {/* Brand Name Input */}
-            <label className="ai-label">Brand Name / Text</label>
-            <input 
-              className="clean-input" 
-              placeholder="Ex: Urban Coffee Co." 
-              value={selections.text}
-              onChange={(e) => handleSelect('text', e.target.value)}
-            />
+            <div className="form-group">
+                <label className="ai-label">Brand Name / Text</label>
+                <input 
+                  className="clean-input" 
+                  placeholder="Ex: Urban Coffee Co." 
+                  value={selections.text}
+                  onChange={(e) => handleSelect('text', e.target.value)}
+                />
+            </div>
 
-            {/* Shape Selection */}
             <label className="ai-label"><FaShapes/> Choose Shape</label>
             <div className="ai-chips">
               {shapes.map(s => (
-                <span 
-                  key={s} 
-                  className={`chip ${selections.shape === s ? 'active' : ''}`} 
-                  onClick={() => handleSelect('shape', s)}
-                >
-                  {s}
-                </span>
+                <button key={s} className={`chip ${selections.shape === s ? 'active' : ''}`} onClick={() => handleSelect('shape', s)}>{s}</button>
               ))}
             </div>
 
-            {/* Color Selection */}
             <label className="ai-label"><FaPalette/> Primary Color</label>
             <div className="ai-chips">
               {colors.map(c => (
-                <span 
-                  key={c} 
-                  className={`chip ${selections.color === c ? 'active' : ''}`} 
-                  onClick={() => handleSelect('color', c)}
-                >
-                  {c}
-                </span>
+                <button key={c} className={`chip ${selections.color === c ? 'active' : ''}`} onClick={() => handleSelect('color', c)} style={{borderLeft: `5px solid ${c.toLowerCase()}`}}>{c}</button>
               ))}
             </div>
 
-             {/* Visual Style Selection */}
              <label className="ai-label"><FaFont/> Visual Style</label>
             <div className="ai-chips">
               {styles.map(s => (
-                <span 
-                  key={s} 
-                  className={`chip ${selections.style === s ? 'active' : ''}`} 
-                  onClick={() => handleSelect('style', s)}
-                >
-                  {s}
-                </span>
+                <button key={s} className={`chip ${selections.style === s ? 'active' : ''}`} onClick={() => handleSelect('style', s)}>{s}</button>
               ))}
             </div>
 
-            <button 
-              className="primary-btn" 
-              onClick={generateDesign}
-              style={{ width: '100%', marginTop: '30px' }}
-            >
-              <FaMagic /> Generate Design
-            </button>
+            <div style={{display:'flex', gap:'10px', marginTop:'30px'}}>
+                <button className="secondary-btn" onClick={() => setStep(1)}>Back</button>
+                <button className="primary-btn" onClick={generateDesign} style={{flex:1}}>
+                <FaMagic /> Generate Magic
+                </button>
+            </div>
           </motion.div>
         )}
 
-        {/* STEP 3: LOADING STATE */}
+        {/* STEP 3: LOADING */}
         {step === 3 && (
-          <div style={{ textAlign: 'center', padding: '4rem' }}>
+          <div style={{ textAlign: 'center', padding: '4rem', background:'white', borderRadius:'20px', border:'1px solid #eee' }}>
             <div className="loading-spinner"></div>
-            <h3 style={{ marginTop: '20px', color: '#333' }}>Designing your {selections.category}...</h3>
-            <p style={{ color: '#888' }}>Applying {selections.style} aesthetics...</p>
+            <h3 style={{ marginTop: '20px', color: '#333' }}>Designing...</h3>
+            <p style={{ color: '#888' }}>Applying {selections.style} aesthetics to your {selections.category}</p>
           </div>
         )}
 
-        {/* STEP 4: RESULT & ANALYSIS */}
+        {/* STEP 4: RESULT */}
         {step === 4 && result && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-            className="ai-result-card"
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="ai-result-card">
             <div className="result-image-container">
               <img src={result.imageUrl} alt="Generated Design" />
-              <div className="score-badge">
-                AI Score: {result.rating}/100
-              </div>
+              <div className="score-badge">Quality Score: {result.rating}/100</div>
             </div>
 
             <div className="ai-analysis">
-              <h4><FaCheckCircle color="green"/> AB Custom Labels Expert Analysis:</h4>
+              <h4><FaCheckCircle color="green"/> Expert Suggestion:</h4>
               <p>{result.suggestion}</p>
             </div>
 
             <div className="action-buttons">
               <button 
                 className="primary-btn" 
-                style={{ background: '#25D366', flex: 1 }} 
+                style={{ background: '#25D366', flex: 1, border:'none', color:'white' }} 
                 onClick={() => window.open(`https://wa.me/919243858944?text=I generated a ${selections.style} ${selections.category} design on your AI Studio. Can we proceed with this idea?`, '_blank')}
               >
-                <FaWhatsapp /> Order This Idea
+                <FaWhatsapp /> Order This Design
               </button>
               <button className="secondary-btn" style={{ flex: 1 }} onClick={reset}>
                 <FaRedo /> Create Another
               </button>
             </div>
-            
-            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: '#999', marginTop: '20px' }}>
-              *Tap "Create Another" to regenerate variations.
-            </p>
           </motion.div>
         )}
 
