@@ -58,12 +58,10 @@ const Home = () => {
     };
 
     try {
-      // Send directly to Backend Inventory
       await axios.post(`${API_URL}/api/orders`, newOrder);
       setSubmitSuccess(true);
       setFormData({ name: '', contact: '', projectType: 'Stickers', details: '', qty: '' });
       
-      // Auto close after 3 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
         setOrderModalOpen(false);
@@ -315,7 +313,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 7. SEGREGATED GALLERY (UPDATED: 3 In Row + Fixed Sizes) */}
+      {/* 7. SEGREGATED GALLERY (Fixed Rows and Sizes) */}
       <section className="segregated-gallery-section">
         {gallerySections.map((section) => (
           <div key={section.type} style={{ marginBottom: '60px' }}>
@@ -323,7 +321,7 @@ const Home = () => {
               <h3>{section.title}</h3>
             </div>
             
-            {/* STRICT GRID: 3 COLS, FIXED HEIGHT */}
+            {/* STRICT 3 COLUMN GRID */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px', width: '100%' }}>
               {[...Array(3)].map((_, i) => (
                 <div 
@@ -337,7 +335,7 @@ const Home = () => {
                   onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
                   onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                 >
-                  {/* FIXED IMAGE BOX */}
+                  {/* FIXED IMAGE BOX - 250px Height */}
                   <div style={{
                     height: '250px', width: '100%', background: '#f9fafb', 
                     display: 'flex', alignItems: 'center', justifyContent: 'center', 
@@ -349,8 +347,8 @@ const Home = () => {
                       loading="lazy"
                       style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
                       onError={(e) => {
-                         e.target.style.display='none'; // Hides broken image icon
-                         e.target.parentNode.innerHTML = '<div style="color:#ccc">Image Preview</div>'; // Fallback text
+                         e.target.style.display='none'; 
+                         e.target.parentNode.innerHTML = '<div style="color:#ccc">Image Preview</div>';
                       }}
                     />
                   </div>
@@ -421,11 +419,26 @@ const Home = () => {
       </section>
 
       {/* ======================================================= */}
-      {/* ============ START PROJECT MODAL (UPDATED) ============ */}
+      {/* ============ FIXED MODAL (POPUP OVERLAY) ============ */}
       {/* ======================================================= */}
       {isOrderModalOpen && (
-        <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
-          <div className="order-modal" onClick={e=>e.stopPropagation()} style={{maxWidth: '500px'}}>
+        <div 
+          style={{
+            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+            background: 'rgba(0,0,0,0.85)', zIndex: 9999,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            backdropFilter: 'blur(5px)'
+          }}
+          onClick={()=>setOrderModalOpen(false)}
+        >
+          <div 
+            onClick={e=>e.stopPropagation()} 
+            style={{
+              background: 'white', padding: '30px', borderRadius: '12px',
+              width: '90%', maxWidth: '500px', position: 'relative',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.5)', overflow: 'hidden'
+            }}
+          >
              <button onClick={() => setOrderModalOpen(false)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#888"/></button>
              
              {submitSuccess ? (
