@@ -37,19 +37,19 @@ const Gallery = () => {
   const categoryInfo = {
     stickers: {
       title: "Premium Custom Stickers",
-      desc: "Elevate your brand visibility with our high-durability stickers. Crafted from weather-resistant vinyl and available in any die-cut shape, these stickers are perfect for packaging, giveaways, or outdoor use."
+      desc: "Elevate your brand visibility with our high-durability stickers. Crafted from weather-resistant vinyl and available in any die-cut shape."
     },
     labels: {
       title: "Professional Product Labels",
-      desc: "Transform your packaging with our industry-grade labels. Whether for bottles, jars, or boxes, we offer roll and sheet formats with premium finishes like gold foil, matte, and gloss."
+      desc: "Transform your packaging with our industry-grade labels. Whether for bottles, jars, or boxes, we offer roll and sheet formats."
     },
     logos: {
       title: "Brand Identity Logos",
-      desc: "Your logo is your first impression. Our design team crafts memorable, scalable, and versatile logos that define your business identity."
+      desc: "Your logo is your first impression. Our design team crafts memorable, scalable, and versatile logos."
     },
     cards: {
       title: "Luxury Visiting Cards",
-      desc: "Make every introduction count with our premium business cards. Featuring high-gsm paper, spot UV, embossing, and unique textures."
+      desc: "Make every introduction count with our premium business cards. Featuring high-gsm paper, spot UV, and embossing."
     }
   };
 
@@ -198,51 +198,52 @@ const Gallery = () => {
         </div>
       )}
 
-      {/* --- 3. GALLERY GRID --- */}
-      <div className="masonry-grid">
+      {/* --- 3. GALLERY GRID (FIXED SIZES) --- */}
+      <div className="container" style={{paddingBottom: '80px', maxWidth: '1200px', margin: '0 auto', paddingLeft:'20px', paddingRight:'20px'}}>
         {loading ? (
           <p style={{color:'#666', width:'100%', textAlign:'center'}}>Loading Collection...</p>
         ) : displayItems.length === 0 ? (
-          <div style={{textAlign:'center', padding:'40px', color:'#444', gridColumn:'span 3'}}>
+          <div style={{textAlign:'center', padding:'40px', color:'#444'}}>
              <FaSearch size={30} style={{marginBottom:'10px', color:'#ccc'}}/>
              <p>No items found.</p>
           </div>
         ) : (
-          displayItems.map((item) => (
-            <motion.div 
-              key={item._id} 
-              className="masonry-item"
-              whileHover={{ translateY: -5 }}
-              layout
-            >
-              <div 
-                style={{cursor:'zoom-in', width: '100%', background: '#f9f9f9', position: 'relative'}} 
-                onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
-              >
-                <img 
-                  src={item.imageUrl} 
-                  alt={item.title} 
-                  loading="lazy"
-                  style={{width: '100%', display: 'block'}}
-                  onError={(e) => { e.target.style.display = 'none'; }} 
-                />
-                <div style={{position:'absolute', bottom:'10px', right:'10px', background:'rgba(0,0,0,0.6)', color:'white', borderRadius:'50%', width:'30px', height:'30px', display:'flex', alignItems:'center', justifyContent:'center'}}>
-                   <FaEye size={14} />
+          /* USING STRICT GRID FOR UNIFORMITY */
+          <div className="strict-grid">
+            {displayItems.map((item) => (
+              <div key={item._id} className="strict-card">
+                
+                {/* Fixed Image Box */}
+                <div className="strict-img-box cursor-zoom-in" onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}>
+                   <img src={item.imageUrl} alt={item.title} loading="lazy" />
+                   
+                   {/* Hover Overlay */}
+                   <div className="absolute inset-0 bg-black/5 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <div className="bg-white p-3 rounded-full shadow-lg">
+                        <FaEye size={20} className="text-slate-800"/>
+                      </div>
+                   </div>
                 </div>
+
+                {/* Info & Button */}
+                <div className="strict-info">
+                   <div>
+                     <h4 style={{fontSize:'1.1rem', fontWeight:'700', color:'var(--text-main)', marginBottom:'5px'}}>{item.title}</h4>
+                     <p style={{fontSize:'0.85rem', color:'var(--text-body)', textTransform:'uppercase', letterSpacing:'1px'}}>{item.subcategory || type}</p>
+                   </div>
+                   
+                   <button 
+                     className="category-rect-btn" 
+                     style={{width:'100%', marginTop:'15px', justifyContent:'center'}}
+                     onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
+                   >
+                     <FaPenNib size={12} style={{marginRight:'5px'}}/> Preview & Customize
+                   </button>
+                </div>
+
               </div>
-              
-              <div className="masonry-info" style={{textAlign:'center', padding:'15px'}}>
-                <h4 className="masonry-title" style={{fontSize:'1rem', fontWeight: '700', marginBottom:'4px'}}>{item.title}</h4>
-                <button 
-                  className="category-rect-btn" 
-                  style={{width:'100%', marginTop:'8px', background:'#fff', color:'var(--primary)', border:'1px solid var(--primary)', fontSize:'0.85rem', padding:'8px 12px'}}
-                  onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
-                >
-                  Preview & Customize
-                </button>
-              </div>
-            </motion.div>
-          ))
+            ))}
+          </div>
         )}
       </div>
 
