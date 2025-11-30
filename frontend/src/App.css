@@ -21,7 +21,7 @@
   --border: #e1e4e8;
   --shadow-sm: 0 2px 8px rgba(14, 19, 24, 0.07);
   --shadow-md: 0 8px 24px rgba(14, 19, 24, 0.08);
-  --radius: 4px; /* CHANGED: Tighter radius for rectangular look */
+  --radius: 12px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -77,7 +77,7 @@ nav {
   padding: 12px 24px;
   font-weight: 800;
   font-size: 0.9rem;
-  border-radius: var(--radius); /* Rectangular */
+  border-radius: 4px;
   cursor: pointer;
   transition: 0.2s;
   text-transform: uppercase;
@@ -91,346 +91,203 @@ nav {
 /* =========================================
    3. HERO SECTION
    ========================================= */
-.distortion-wrapper {
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(180deg, #ffffff 0%, #f4f7fe 100%);
-  padding-bottom: 4rem;
-  border-bottom: 1px solid var(--border);
+.distortion-wrapper { 
+  width: 100%; height: 750px; position: relative; overflow: hidden; 
+  border-bottom: 1px solid var(--border); background: #000;
 }
 
-/* Static BG Fallback */
+/* JS Animation Container */
+.distortion-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Static BG Fallback (if animation is removed) */
 .hero-static-bg {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background-image: url('https://images.unsplash.com/photo-1634152962476-4b8a00e1915c?q=80&w=2000&auto=format&fit=crop'); 
   background-size: cover; background-position: center;
   filter: brightness(0.4); z-index: 0;
+  animation: breathe 15s infinite ease-in-out;
+  will-change: transform;
 }
 
-.hero-overlay {
-  position: relative;
-  z-index: 10;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 6rem 20px 2rem;
-  text-align: center;
+@keyframes breathe {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); } 
+  100% { transform: scale(1); }   
 }
 
-.hero-title {
-  font-size: 4rem;
-  font-weight: 800;
-  line-height: 1.1;
-  color: var(--text-main);
-  letter-spacing: -1px;
+.hero-overlay { 
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+  text-align: center; z-index: 10; width: 100%; max-width: 900px; padding: 20px;
 }
 
-.hero-desc {
-  font-size: 1.2rem;
-  color: var(--text-body);
-  margin-bottom: 40px;
-  max-width: 700px;
-  margin-inline: auto;
+.title-container {
+  height: 180px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
 }
 
-/* Hero Category Buttons (Rectangular) */
-.hero-buttons-grid {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
+.hero-title { font-size: 4.5rem; font-weight: 900; line-height: 1.1; margin: 0; text-shadow: 0 10px 40px rgba(0,0,0,0.9); letter-spacing: -1px; color: #fff; }
+.hero-desc { font-size: 1.15rem; color: #ddd; margin-bottom: 40px; line-height: 1.6; max-width: 800px; margin-inline: auto; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
 
+.hero-buttons-grid { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-top: 30px; }
 .category-rect-btn {
-  background: #ffffff;
-  border: 1px solid var(--border);
-  color: var(--text-main);
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: var(--radius); /* Rectangular */
-  cursor: pointer;
-  transition: 0.2s;
-  min-width: 120px;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  box-shadow: var(--shadow-sm);
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15); color: #eee;
+  padding: 15px 30px; font-size: 0.9rem; font-weight: 700; letter-spacing: 1px; border-radius: 4px; cursor: pointer; transition: 0.3s; min-width: 140px; display: flex; align-items: center; justify-content: center; gap: 10px;
 }
-
-.category-rect-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
+.category-rect-btn:hover { background: var(--accent); color: black; border-color: var(--accent); transform: translateY(-5px); }
 
 /* =========================================
-   4. SECTIONS ("What We Make")
+   4. WHAT WE MAKE SECTION
    ========================================= */
 .make-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 6rem 5%;
-  align-items: center;
-  background: #ffffff;
-  gap: 40px;
+  display: grid; grid-template-columns: 1fr 1fr; min-height: 700px; padding: 4rem 5%; align-items: center; overflow: hidden; background: #080808; position: relative;
 }
+.make-text { z-index: 2; text-align: left; padding-right: 40px; }
+.make-text h2 { font-size: 3.5rem; font-weight: 800; margin-bottom: 20px; color: #fff; }
+.make-text p { font-size: 1.1rem; color: #e0e0e0; line-height: 1.6; margin-bottom: 0; }
 
-.make-text { text-align: left; }
-
-.make-text h2 {
-  font-size: 3rem;
-  font-weight: 800;
-  color: var(--text-main);
-  margin-bottom: 20px;
-}
-
-.make-text p {
-  font-size: 1.1rem;
-  color: var(--text-body);
-  margin-bottom: 30px;
-  line-height: 1.6;
-}
-
-.make-visual {
-  display: flex;
-  justify-content: flex-end;
-}
+.make-visual { position: relative; height: 100%; width: 100%; display: flex; justify-content: flex-end; align-items: center; } 
 
 /* Live Grid */
-.live-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-  width: 100%; max-width: 500px;
+.live-grid { 
+  display: grid; grid-template-columns: 1fr 1fr; gap: 25px; width: 100%; max-width: 800px;
 }
 
-.changing-img-card {
-  position: relative; width: 100%; aspect-ratio: 1;
-  border-radius: 12px; overflow: hidden;
-  background: #f4f4f4;
-  box-shadow: var(--shadow-sm);
+.changing-img-card { 
+  position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 16px; overflow: hidden; background: #161616; border: 1px solid #333; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.6); 
 }
-.changing-img-card img { object-fit: cover; }
 
-.img-label-overlay {
-  position: absolute; bottom: 10px; left: 10px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #000; padding: 4px 10px;
-  border-radius: 6px; font-size: 0.75rem; font-weight: 700;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+.img-label-overlay { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; z-index: 10; border: 1px solid rgba(255,255,255,0.1); }
 
 /* =========================================
-   5. SERVICES SECTION
+   5. ANIMATIONS
    ========================================= */
-.services-section {
-  padding: 6rem 5%;
-  background: #f8f9fa;
-  text-align: center;
-}
+.logo-fader-section { padding: 5rem 0; background: #0a0a0a; display: flex; flex-direction: column; align-items: center; border-top: 1px solid #222; }
+.logo-stage { width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; }
+.marquee-container { padding: 50px 0; background: #000; border-top: 1px solid #222; border-bottom: 1px solid #222; overflow: hidden; white-space: nowrap; }
+.marquee-track { display: flex; gap: 60px; }
+.marquee-img { height: 110px; width: auto; transition: 0.2s; filter: brightness(0.9); }
 
-.services-header { margin-bottom: 4rem; }
-.services-header h2 { font-size: 3rem; font-weight: 800; color: var(--text-main); margin-bottom: 1rem; }
-.services-header p { font-size: 1.2rem; color: var(--text-body); max-width: 700px; margin: 0 auto; line-height: 1.6; }
-
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.service-card {
-  background: #ffffff;
-  border-radius: var(--radius);
-  padding: 2.5rem;
-  text-align: left;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #eee;
-  display: flex; flex-direction: column; height: 100%;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border-color: var(--primary);
-}
-
-.service-icon { font-size: 2.5rem; margin-bottom: 1.5rem; color: var(--primary); }
-.service-card h3 { font-size: 1.4rem; font-weight: 700; color: var(--text-main); margin-bottom: 1rem; }
-.service-card p { font-size: 1rem; color: var(--text-body); line-height: 1.6; margin-bottom: 1.5rem; flex-grow: 1; }
-
-.service-list { list-style: none; padding: 0; margin: 0; }
-.service-list li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: var(--text-body); margin-bottom: 8px; font-weight: 500; }
-.check-icon { color: #25D366; font-size: 0.9rem; }
+/* HIGHLIGHTS */
+.highlights-section { position: relative; padding: 8rem 0 6rem; overflow: hidden; background: #050505; }
+.liquid-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.4; }
+.stacked-cards { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 100px; }
+.glass-card { width: 500px; max-width: 90%; background: rgba(20, 20, 20, 0.85); backdrop-filter: blur(20px); border: 1px solid #333; border-radius: 4px; padding: 15px; box-shadow: 0 30px 80px rgba(0,0,0,0.7); text-align: center; transition: transform 0.3s ease; }
+.glass-card:hover { transform: translateY(-10px); border-color: var(--accent); }
+.glass-card img { width: 100%; border-radius: 4px; border: 1px solid #222; }
 
 /* =========================================
-   6. ADDITIONAL SERVICES SECTION
+   6. GALLERY MASONRY (UPDATED: 3 COLUMNS & NATURAL SIZE)
    ========================================= */
-.additional-services-section {
-  padding: 6rem 5%;
-  background: #ffffff; 
-  text-align: center;
-  border-top: 1px solid var(--border);
-}
-
-.additional-services-header {
-  margin-bottom: 4rem;
-}
-
-.additional-services-header h2 {
-  font-size: 3rem;
-  font-weight: 800;
-  color: var(--text-main);
-  margin-bottom: 1rem;
-}
-
-.additional-services-header p {
-  font-size: 1.2rem;
-  color: var(--text-body);
-  max-width: 700px;
-  margin: 0 auto;
-  line-height: 1.6;
-}
-
-.additional-services-grid {
+.masonry-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 25px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.add-service-card {
-  background: #f8f9fa; 
-  border-radius: var(--radius);
-  padding: 2rem;
-  text-align: center;
-  border: 1px solid #eee;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.add-service-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  border-color: var(--primary);
-  background: #fff;
-}
-
-.add-service-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  display: inline-block;
-}
-
-.add-service-card h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-main);
-  margin-bottom: 0.8rem;
-}
-
-.add-service-card p {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* =========================================
-   7. FULL WIDTH GALLERY (STICKERS/LABELS)
-   ========================================= */
-.segregated-gallery-section {
-  padding: 4rem 5%;
-  background: var(--bg-main);
-}
-
-.category-header {
-  margin: 60px 0 30px;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 10px;
-}
-
-.category-header h3 {
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--text-main);
-  text-transform: uppercase;
-  letter-spacing: -1px;
-}
-
-/* Full Width Grid for Categories */
-.full-width-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Strict 4 Columns */
-  gap: 25px;
+  /* STRICTLY 3 COLUMNS FOR DESKTOP */
+  grid-template-columns: repeat(3, 1fr); 
+  column-gap: 40px; /* Wide spacing */
+  row-gap: 40px;
+  padding: 4rem 2rem;
+  max-width: 1200px; /* Constrain width */
+  margin: 0 auto; 
   width: 100%;
 }
 
-/* Gallery Items in Full Grid */
-.full-grid-item {
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 0; /* Grid gap handles spacing */
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e1e4e8; /* Light border for card look */
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+  background: #fff;
   display: flex;
   flex-direction: column;
-  background: #f9fafb; 
-  border-radius: var(--radius);
-  overflow: hidden;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  padding: 20px; 
-  align-items: center;
-  justify-content: center;
-  min-height: 250px;
+  box-shadow: var(--shadow-sm);
 }
 
-.full-grid-item:hover {
+.masonry-item:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-md);
   border-color: var(--primary);
 }
 
-.full-grid-item img {
-  width: 100%;
-  height: 180px; 
-  object-fit: contain; 
-  display: block;
-  margin-bottom: 15px;
+/* Image Section */
+.masonry-item img { 
+  width: 100%; 
+  height: auto; 
+  display: block; 
+  filter: brightness(1); /* Full brightness */
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.grid-item-info {
-  text-align: left;
-  width: 100%;
+/* Info Section (Title + Button) */
+.masonry-info {
+  padding: 20px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.grid-item-title {
-  font-weight: 700;
-  font-size: 1rem;
+.masonry-title {
+  margin: 0;
   color: var(--text-main);
-  margin-bottom: 4px;
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 
-.grid-item-sub {
-  font-size: 0.85rem;
+.masonry-sub {
+  font-size: 0.8rem;
   color: var(--text-body);
+  font-weight: 500;
 }
+
+/* Button inside Card */
+.masonry-btn {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: auto;
+  transition: 0.2s;
+}
+.masonry-btn:hover { background: #7a30e6; }
+
+.overlay-btn { display: none; } /* Hidden in favor of visible button */
 
 /* =========================================
-   8. AI INTELLIGENCE SECTION (RESTORED CSS)
+   7. FOOTER
    ========================================= */
-.ai-action-card {
-  width: 100%; maxWidth: 450px;
-  background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 24px;
-  padding: 40px; box-shadow: 0 20px 60px rgba(139, 61, 255, 0.15);
-  text-align: center;
+footer {
+  background: #1a1a1a; /* Dark background for footer */
+  color: #fff;
+  padding: 4rem 5% 1.5rem; border-top: 1px solid #333;
+  margin-top: auto;
 }
+.footer-grid { display: grid; grid-template-columns: repeat(4, 1fr) 2fr; gap: 20px; margin-bottom: 3rem; }
+.footer-col h3 { color: #fff; margin-bottom: 15px; font-size: 1rem; font-weight: 700; }
+.footer-link { display: block; color: #bbb; margin-bottom: 8px; text-decoration: none; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
+.footer-link:hover { color: var(--accent); }
 
-/* AI Design Page Specifics */
+.contact-col { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+.contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #ddd; }
+.social-icons { display: flex; gap: 15px; margin-top: 15px; }
+.footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #333; font-size: 0.8rem; color: #666; }
+
+/* =========================================
+   8. AI STUDIO STYLES (UPDATED ACTION BUTTONS)
+   ========================================= */
 .ai-card {
   background: #ffffff; padding: 2rem; border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;
@@ -458,8 +315,13 @@ nav {
 .ai-analysis { background: #f8fcf9; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #dcfce7; }
 .ai-analysis h4 { margin: 0 0 8px 0; color: #166534; display: flex; align-items: center; gap: 10px; font-size: 1rem; }
 .ai-analysis p { margin: 0; color: #15803d; font-size: 0.95rem; line-height: 1.5; }
-.action-buttons { display: flex; gap: 15px; }
 
+/* FIXED: Action Buttons layout for mobile to prevent cut-off */
+.action-buttons { 
+  display: flex; 
+  gap: 15px;
+  flex-wrap: wrap; /* Allows wrapping on small screens */
+}
 
 /* =========================================
    9. BUTTONS & MODALS
@@ -475,57 +337,19 @@ nav {
 
 .big-whatsapp-btn {
   background: #25D366; color: white; width: 100%; padding: 14px;
-  border-radius: var(--radius); font-weight: bold; border: none; cursor: pointer;
+  border-radius: 8px; font-weight: bold; border: none; cursor: pointer;
   display: flex; justify-content: center; gap: 10px; font-size: 1.1rem;
 }
 
 .clean-input {
   width: 100%; padding: 14px; margin-bottom: 15px;
-  border: 1px solid #ccc; border-radius: var(--radius);
+  border: 1px solid #ccc; border-radius: 8px;
   font-size: 1rem; background: #fff; color: #333; outline: none;
 }
 .clean-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139, 61, 255, 0.1); }
 
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
 .order-modal { background: #fff; padding: 40px; border-radius: 16px; width: 100%; max-width: 480px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); position: relative; }
-
-/* =========================================
-   10. FOOTER & MASONRY
-   ========================================= */
-/* Gallery Masonry (Used in Gallery Page) */
-.masonry-grid {
-  display: grid;
-  /* STRICTLY 3 COLUMNS FOR DESKTOP */
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 30px;
-  padding: 4rem 2rem; max-width: 1200px; margin: 0 auto; width: 100%;
-}
-.masonry-item {
-  break-inside: avoid; margin-bottom: 0; /* Grid gap handles spacing */
-  border-radius: var(--radius); overflow: hidden;
-  background: #fff; box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border); cursor: pointer; transition: 0.2s;
-  display: flex; flex-direction: column;
-}
-.masonry-item:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-.masonry-item img { width: 100%; display: block; background-color: #f8f9fa; }
-
-/* Footer */
-footer {
-  background: #1a1a1a; /* Dark background for footer */
-  color: #fff;
-  padding: 4rem 5% 1.5rem; border-top: 1px solid #333;
-  margin-top: auto;
-}
-.footer-grid { display: grid; grid-template-columns: repeat(4, 1fr) 2fr; gap: 20px; margin-bottom: 3rem; }
-.footer-col h3 { color: #fff; margin-bottom: 15px; font-size: 1rem; font-weight: 700; }
-.footer-link { display: block; color: #bbb; margin-bottom: 8px; text-decoration: none; cursor: pointer; transition: 0.2s; font-size: 0.9rem; }
-.footer-link:hover { color: var(--accent); }
-
-.contact-col { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
-.contact-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; color: #ddd; }
-.social-icons { display: flex; gap: 15px; margin-top: 15px; }
-.footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid #333; font-size: 0.8rem; color: #666; }
 
 /* =========================================
    11. MOBILE RESPONSIVENESS
@@ -558,5 +382,14 @@ footer {
     grid-template-columns: repeat(2, 1fr); 
     gap: 15px; 
     padding: 15px; 
+  }
+
+  /* Fix Action Buttons Stacking on Mobile */
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .action-buttons button {
+    width: 100%;
   }
 }
