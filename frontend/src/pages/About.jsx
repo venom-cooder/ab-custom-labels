@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaCheckCircle, FaWhatsapp, FaTimes, FaLightbulb, FaPaperPlane, FaAward, FaUsers, FaPrint, FaLeaf } from 'react-icons/fa';
+import { FaCheckCircle, FaWhatsapp, FaTimes, FaLightbulb, FaPaperPlane, FaStar, FaShippingFast, FaPalette, FaTags } from 'react-icons/fa';
 import AuroraBackground from '../components/anim/AuroraBackground';
 
 const About = () => {
@@ -82,7 +82,7 @@ const About = () => {
     <div className="app-container">
       
       {/* ========================================================== */}
-      {/* 1. TOP SECTION: 5-STEP PROCESS (AURORA BG) - SAME AS GALLERY */}
+      {/* 1. TOP SECTION: 5-STEP PROCESS (AURORA BG) */}
       {/* ========================================================== */}
       <div style={{position:'relative', height:'500px', overflow:'hidden', display:'flex', alignItems:'center', background:'#fff', borderBottom:'1px solid #eee'}}>
         <AuroraBackground />
@@ -126,50 +126,55 @@ const About = () => {
       </div>
 
       {/* ========================================================== */}
-      {/* 2. ABOUT CONTENT (Clean/Professional Theme) */}
+      {/* 2. ABOUT CONTENT (Restored to "We Craft Identities") */}
       {/* ========================================================== */}
       <div className="page-header">
-        <h1>Crafting Identity Since 2020</h1>
-        <p>We are a team of designers, printers, and brand strategists obsessed with perfection.</p>
+        <h1>We Craft Identities.</h1>
+        <p>Premium stickers, labels, and packaging solutions for brands that demand excellence.</p>
       </div>
 
       <div className="container" style={{maxWidth:'1000px', margin:'0 auto', paddingBottom:'80px', paddingLeft:'20px', paddingRight:'20px'}}>
         
-        {/* Story Block */}
+        {/* Story Block - Matching Home.jsx Tone */}
         <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'50px', alignItems:'center', marginBottom:'80px'}}>
            <div>
-              <h2 style={{fontSize:'2rem', fontWeight:'800', marginBottom:'20px', color:'var(--text-main)'}}>More Than Just A Printer.</h2>
+              <h2 style={{fontSize:'2rem', fontWeight:'800', marginBottom:'20px', color:'var(--text-main)'}}>Precision in Every Pixel.</h2>
               <p style={{color:'#555', lineHeight:'1.8', marginBottom:'20px'}}>
-                AB Custom Labels started with a simple idea: <strong>Quality shouldn't be complicated.</strong> We realized that businesses struggled to find reliable suppliers who could deliver premium, waterproof, and die-cut labels without massive minimum order quantities.
+                We don't just print; we craft experiences. From waterproof cosmetics labels to industrial machinery stickers, we deliver high-fidelity printing with premium textures.
               </p>
               <p style={{color:'#555', lineHeight:'1.8'}}>
-                Today, we serve hundreds of brands across India, providing everything from wine labels to industrial stickers, all printed on state-of-the-art digital machinery.
+                Whether you need matte-finish business cards or die-cut vinyl stickers that withstand the elements, AB Custom Labels is your design partner.
               </p>
            </div>
            <div style={{background:'#f9fafb', borderRadius:'12px', padding:'40px', textAlign:'center'}}>
-              <div style={{fontSize:'4rem', fontWeight:'900', color:'var(--primary)'}}>10k+</div>
-              <div style={{color:'#888', fontWeight:'600', marginBottom:'30px'}}>Orders Delivered</div>
-              <div style={{fontSize:'4rem', fontWeight:'900', color:'var(--accent)'}}>99%</div>
-              <div style={{color:'#888', fontWeight:'600'}}>On-Time Delivery</div>
+              <div style={{fontSize:'4rem', fontWeight:'900', color:'var(--primary)'}}>100%</div>
+              <div style={{color:'#888', fontWeight:'600', marginBottom:'30px'}}>Waterproof & Durable</div>
+              <div style={{fontSize:'4rem', fontWeight:'900', color:'var(--accent)'}}>24h</div>
+              <div style={{color:'#888', fontWeight:'600'}}>Rush Production</div>
            </div>
         </div>
 
-        {/* Values Grid */}
-        <div style={{display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'30px', marginBottom:'80px'}}>
-           <div className="strict-card" style={{padding:'30px', textAlign:'center', height:'auto'}}>
-              <FaAward size={40} color="var(--primary)" style={{margin:'0 auto 20px'}}/>
-              <h3 style={{fontSize:'1.2rem', fontWeight:'700', marginBottom:'10px'}}>Premium Quality</h3>
-              <p style={{color:'#666', fontSize:'0.9rem'}}>We use only Avery Dennison stock and UV-resistant inks.</p>
+        {/* Why Choose Us Grid (From Project Context) */}
+        <div style={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:'30px', marginBottom:'80px'}}>
+           <div className="strict-card" style={{padding:'30px', textAlign:'center', height:'auto', border: '1px solid #eee'}}>
+              <FaStar size={35} color="var(--primary)" style={{margin:'0 auto 15px'}}/>
+              <h3 style={{fontSize:'1.1rem', fontWeight:'700', marginBottom:'10px'}}>Premium Quality</h3>
+              <p style={{color:'#666', fontSize:'0.9rem'}}>Avery Dennison stock and industrial grade materials.</p>
            </div>
-           <div className="strict-card" style={{padding:'30px', textAlign:'center', height:'auto'}}>
-              <FaUsers size={40} color="var(--primary)" style={{margin:'0 auto 20px'}}/>
-              <h3 style={{fontSize:'1.2rem', fontWeight:'700', marginBottom:'10px'}}>Customer First</h3>
-              <p style={{color:'#666', fontSize:'0.9rem'}}>Direct WhatsApp support for every single order.</p>
+           <div className="strict-card" style={{padding:'30px', textAlign:'center', height:'auto', border: '1px solid #eee'}}>
+              <FaShippingFast size={35} color="var(--primary)" style={{margin:'0 auto 15px'}}/>
+              <h3 style={{fontSize:'1.1rem', fontWeight:'700', marginBottom:'10px'}}>Fast Turnaround</h3>
+              <p style={{color:'#666', fontSize:'0.9rem'}}>Ships in 24 Hrs with rush options available.</p>
            </div>
-           <div className="strict-card" style={{padding:'30px', textAlign:'center', height:'auto'}}>
-              <FaLeaf size={40} color="var(--primary)" style={{margin:'0 auto 20px'}}/>
-              <h3 style={{fontSize:'1.2rem', fontWeight:'700', marginBottom:'10px'}}>Eco Conscious</h3>
-              <p style={{color:'#666', fontSize:'0.9rem'}}>Offering sustainable and biodegradable label options.</p>
+           <div className="strict-card" style={{padding:'30px', textAlign:'center', height:'auto', border: '1px solid #eee'}}>
+              <FaPalette size={35} color="var(--primary)" style={{margin:'0 auto 15px'}}/>
+              <h3 style={{fontSize:'1.1rem', fontWeight:'700', marginBottom:'10px'}}>Expert Design Team</h3>
+              <p style={{color:'#666', fontSize:'0.9rem'}}>In-house team for brand consultation and fixes.</p>
+           </div>
+           <div className="strict-card" style={{padding:'30px', textAlign:'center', height:'auto', border: '1px solid #eee'}}>
+              <FaTags size={35} color="var(--primary)" style={{margin:'0 auto 15px'}}/>
+              <h3 style={{fontSize:'1.1rem', fontWeight:'700', marginBottom:'10px'}}>Competitive Pricing</h3>
+              <p style={{color:'#666', fontSize:'0.9rem'}}>Best market rates for premium quality labels.</p>
            </div>
         </div>
 
@@ -177,10 +182,10 @@ const About = () => {
         {/* 3. BOTTOM CTA (Triggers Modal) */}
         {/* ========================================================== */}
         <div style={{background:'#0d1216', borderRadius:'16px', padding:'60px', textAlign:'center', color:'white'}}>
-           <FaPrint size={50} style={{marginBottom:'20px', opacity:0.8}}/>
-           <h2 style={{fontSize:'2.5rem', fontWeight:'800', marginBottom:'20px', color:'white'}}>Ready to Print Your Vision?</h2>
+           <FaPaperPlane size={40} style={{marginBottom:'20px', opacity:0.8}}/>
+           <h2 style={{fontSize:'2.5rem', fontWeight:'800', marginBottom:'20px', color:'white'}}>Have a unique idea?</h2>
            <p style={{color:'#a0aec0', marginBottom:'40px', maxWidth:'600px', margin:'0 auto 40px'}}>
-             Whether you need 50 stickers or 50,000 labels, we are ready to help. Start your project today.
+             We can create anything from scratch. Tell us what you need.
            </p>
            <button 
              onClick={() => setModalOpen(true)} 
