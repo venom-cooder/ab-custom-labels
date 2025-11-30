@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaArrowLeft, FaPenNib, FaWhatsapp, FaTimes, FaLightbulb, FaSearch } from 'react-icons/fa';
+import { FaPenNib, FaWhatsapp, FaTimes, FaLightbulb, FaSearch, FaEye } from 'react-icons/fa';
 import AuroraBackground from '../components/anim/AuroraBackground'; 
 
 const Gallery = () => {
@@ -37,19 +37,19 @@ const Gallery = () => {
   const categoryInfo = {
     stickers: {
       title: "Premium Custom Stickers",
-      desc: "Elevate your brand visibility with our high-durability stickers. Crafted from weather-resistant vinyl and available in any die-cut shape, these stickers are perfect for packaging, giveaways, or outdoor use. Let your brand stick in the minds of your customers forever."
+      desc: "Elevate your brand visibility with our high-durability stickers. Crafted from weather-resistant vinyl and available in any die-cut shape, these stickers are perfect for packaging, giveaways, or outdoor use."
     },
     labels: {
       title: "Professional Product Labels",
-      desc: "Transform your packaging with our industry-grade labels. Whether for bottles, jars, or boxes, we offer roll and sheet formats with premium finishes like gold foil, matte, and gloss. Designed to withstand moisture and handling while looking pristine."
+      desc: "Transform your packaging with our industry-grade labels. Whether for bottles, jars, or boxes, we offer roll and sheet formats with premium finishes like gold foil, matte, and gloss."
     },
     logos: {
       title: "Brand Identity Logos",
-      desc: "Your logo is your first impression. Our design team crafts memorable, scalable, and versatile logos that define your business identity. From minimalist modern marks to intricate vintage emblems, we build the visual foundation of your brand."
+      desc: "Your logo is your first impression. Our design team crafts memorable, scalable, and versatile logos that define your business identity."
     },
     cards: {
       title: "Luxury Visiting Cards",
-      desc: "Make every introduction count with our premium business cards. Featuring high-gsm paper, spot UV, embossing, and unique textures. These aren't just cards; they are conversation starters that leave a lasting professional impact."
+      desc: "Make every introduction count with our premium business cards. Featuring high-gsm paper, spot UV, embossing, and unique textures."
     }
   };
 
@@ -57,12 +57,10 @@ const Gallery = () => {
 
   // --- EFFECTS ---
   useEffect(() => {
-    // 5-Step Animation Timer (4 seconds per step)
     const stepInterval = setInterval(() => {
       setStepIndex((prev) => (prev + 1) % steps.length);
     }, 4000);
 
-    // Fetch Data
     const fetchGallery = async () => {
       setLoading(true);
       try {
@@ -92,7 +90,7 @@ const Gallery = () => {
   // --- HANDLERS ---
   const openCustomForm = () => {
     setSelectedItem({ title: 'My Custom Idea', imageUrl: null });
-    setStage('INPUT'); // Custom idea skips preview, goes straight to input
+    setStage('INPUT'); 
   };
 
   const handleGenerate = async (e) => {
@@ -121,22 +119,12 @@ const Gallery = () => {
 
   return (
     <div className="app-container">
-      <nav>
-        <div onClick={() => navigate('/')} style={{display:'flex', alignItems:'center', gap:'10px', cursor:'pointer', fontWeight:'600', color:'#fff'}}>
-          <FaArrowLeft /> Back to Home
-        </div>
-        <div style={{textTransform:'capitalize', fontWeight:'800', fontSize:'1.1rem', color:'#fff'}}>
-          AB {type} Archive
-        </div>
-      </nav>
+      {/* LOCAL NAVBAR REMOVED */}
 
-      {/* --- 1. 5-STEP PROCESS ANIMATION (AURORA BG) --- */}
+      {/* --- 1. 5-STEP PROCESS ANIMATION --- */}
       <div style={{position:'relative', height:'500px', overflow:'hidden', display:'flex', alignItems:'center', background:'#fff', borderBottom:'1px solid #eee'}}>
         <AuroraBackground />
-        
         <div style={{position:'relative', zIndex:1, maxWidth:'1200px', margin:'0 auto', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'center', padding:'0 2rem'}}>
-          
-          {/* Left: Text Animation */}
           <div style={{paddingRight:'40px'}}>
              <AnimatePresence mode="wait">
                <motion.div
@@ -152,8 +140,6 @@ const Gallery = () => {
                  <p style={{fontSize:'1.3rem', color:'#555', lineHeight:'1.6'}}>
                    {steps[stepIndex].desc}
                  </p>
-                 
-                 {/* Progress Dots */}
                  <div style={{display:'flex', gap:'8px', marginTop:'30px'}}>
                    {steps.map((_, i) => (
                      <div key={i} style={{
@@ -167,8 +153,6 @@ const Gallery = () => {
                </motion.div>
              </AnimatePresence>
           </div>
-
-          {/* Right: Image Animation */}
           <div style={{height:'350px', display:'flex', justifyContent:'center', alignItems:'center'}}>
              <AnimatePresence mode="wait">
                <motion.img
@@ -179,33 +163,21 @@ const Gallery = () => {
                  animate={{ opacity: 1, scale: 1 }}
                  exit={{ opacity: 0, scale: 1.1 }}
                  transition={{ duration: 0.5 }}
-                 style={{
-                   maxHeight:'100%', maxWidth:'100%', 
-                   borderRadius:'16px', boxShadow:'0 20px 50px rgba(0,0,0,0.1)',
-                   objectFit: 'contain'
-                 }}
-                 onError={(e) => e.target.src = 'https://via.placeholder.com/400x300?text=Step+Image'} // Fallback
+                 style={{maxHeight:'100%', maxWidth:'100%', borderRadius:'16px', boxShadow:'0 20px 50px rgba(0,0,0,0.1)', objectFit: 'contain'}}
+                 onError={(e) => e.target.src = 'https://via.placeholder.com/400x300?text=Step+Image'} 
                />
              </AnimatePresence>
           </div>
-
         </div>
       </div>
 
-      {/* --- 2. CATEGORY HEADER & DESCRIPTION --- */}
+      {/* --- 2. HEADER --- */}
       <div style={{textAlign:'center', padding:'4rem 1.5rem 2rem', maxWidth:'900px', margin:'0 auto'}}>
-        <h1 style={{fontSize:'3rem', fontWeight:'800', marginBottom:'20px', color:'var(--text-main)'}}>
-          {currentInfo.title}
-        </h1>
-        <p style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.8'}}>
-          {currentInfo.desc}
-        </p>
-        <p style={{fontSize:'0.9rem', color:'#999', marginTop:'15px'}}>
-          Browse our latest {type} below. Click any item to customize.
-        </p>
+        <h1 style={{fontSize:'3rem', fontWeight:'800', marginBottom:'20px', color:'var(--text-main)'}}>{currentInfo.title}</h1>
+        <p style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.8'}}>{currentInfo.desc}</p>
       </div>
 
-      {/* --- LABEL FILTERS --- */}
+      {/* --- FILTERS --- */}
       {type === 'labels' && (
         <div style={{display:'flex', justifyContent:'center', gap:'10px', flexWrap:'wrap', marginBottom:'30px', padding:'0 20px'}}>
           {['all', 'circle', 'oval', 'bottle', 'rounded', 'jar'].map((shape) => (
@@ -226,7 +198,7 @@ const Gallery = () => {
         </div>
       )}
 
-      {/* --- 3. GALLERY GRID (3 Cols) --- */}
+      {/* --- 3. GALLERY GRID --- */}
       <div className="masonry-grid">
         {loading ? (
           <p style={{color:'#666', width:'100%', textAlign:'center'}}>Loading Collection...</p>
@@ -243,9 +215,8 @@ const Gallery = () => {
               whileHover={{ translateY: -5 }}
               layout
             >
-              {/* IMAGE (Click -> Preview) */}
               <div 
-                style={{cursor:'zoom-in', width: '100%', background: '#f9f9f9'}} 
+                style={{cursor:'zoom-in', width: '100%', background: '#f9f9f9', position: 'relative'}} 
                 onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
               >
                 <img 
@@ -255,124 +226,170 @@ const Gallery = () => {
                   style={{width: '100%', display: 'block'}}
                   onError={(e) => { e.target.style.display = 'none'; }} 
                 />
+                <div style={{position:'absolute', bottom:'10px', right:'10px', background:'rgba(0,0,0,0.6)', color:'white', borderRadius:'50%', width:'30px', height:'30px', display:'flex', alignItems:'center', justifyContent:'center'}}>
+                   <FaEye size={14} />
+                </div>
               </div>
               
-              {/* INFO (Button Click -> Preview) */}
               <div className="masonry-info" style={{textAlign:'center', padding:'15px'}}>
                 <h4 className="masonry-title" style={{fontSize:'1rem', fontWeight: '700', marginBottom:'4px'}}>{item.title}</h4>
-                {item.category === 'labels' && item.subcategory && (
-                  <span className="masonry-sub" style={{marginBottom:'10px', display:'block', fontSize:'0.8rem', color: '#888'}}>{item.subcategory}</span>
-                )}
-                
                 <button 
                   className="category-rect-btn" 
-                  style={{
-                    width:'100%', marginTop:'8px', background:'#fff', color:'var(--primary)', border:'1px solid var(--primary)',
-                    fontSize:'0.85rem', padding:'8px 12px'
-                  }}
+                  style={{width:'100%', marginTop:'8px', background:'#fff', color:'var(--primary)', border:'1px solid var(--primary)', fontSize:'0.85rem', padding:'8px 12px'}}
                   onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
                 >
-                  Preview / Customize
+                  Preview & Customize
                 </button>
               </div>
-
             </motion.div>
           ))
         )}
       </div>
 
-      {/* BOTTOM CTA */}
+      {/* --- BOTTOM CTA --- */}
       <div style={{padding:'4rem 2rem', textAlign:'center', background:'#f8f9fa', borderTop:'1px solid #eee'}}>
         <h2 style={{marginBottom:'15px', color:'var(--text-main)'}}>Have a unique idea?</h2>
-        <p style={{color:'#666', marginBottom:'30px'}}>We can create anything from scratch.</p>
         <button onClick={openCustomForm} className="primary-btn" style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}>
           <FaLightbulb /> Fill Form for Custom Idea
         </button>
       </div>
 
-      {/* --- MODAL (FIXED FLOW: PREVIEW -> INPUT) --- */}
+      {/* ========================================================== */}
+      {/* ================= THE MODAL SYSTEM ======================= */}
+      {/* ========================================================== */}
+      
       <AnimatePresence>
         {selectedItem && (
-          <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
-            <motion.div 
-              className="order-modal" 
-              onClick={(e) => e.stopPropagation()} 
-              initial={{ y: 50, opacity: 0 }} 
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 50, opacity: 0 }}
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
+              background: 'rgba(0, 0, 0, 0.9)', zIndex: 9999, 
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              backdropFilter: 'blur(5px)'
+            }}
+            onClick={() => setSelectedItem(null)} // Click outside to close
+          >
+            
+            {/* CLOSE BUTTON */}
+            <button 
+              onClick={() => setSelectedItem(null)} 
+              style={{
+                position:'absolute', top: 30, right: 30, 
+                border:'none', background:'transparent', color: 'white', 
+                cursor:'pointer', zIndex: 10001
+              }}
             >
-              <button 
-                onClick={() => setSelectedItem(null)} 
-                style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer', zIndex: 10}}
-              >
-                <FaTimes size={20} color="#888"/>
-              </button>
+              <FaTimes size={30} />
+            </button>
+
+            {/* CONTENT CONTAINER */}
+            <div onClick={(e) => e.stopPropagation()} style={{width: '100%', maxWidth: '1000px', padding: '20px'}}>
               
-              {/* STAGE 1: PREVIEW (Big Image) */}
+              {/* STAGE 1: FULL SCREEN PREVIEW POPUP */}
               {stage === 'PREVIEW' && (
-                <div style={{textAlign:'center'}}>
-                  {selectedItem.imageUrl && (
-                    <div style={{background: '#f4f4f4', borderRadius: '8px', padding: '10px', marginBottom: '20px'}}>
-                      <img 
-                        src={selectedItem.imageUrl} 
-                        style={{maxWidth:'100%', maxHeight:'50vh', objectFit: 'contain', display: 'block', margin: '0 auto'}} 
-                        alt="Preview"
-                      />
-                    </div>
-                  )}
-                  <h2 style={{color:'var(--text-main)', marginBottom:'10px', fontSize: '1.5rem'}}>{selectedItem.title}</h2>
-                  <p style={{color:'#666', fontSize:'0.9rem', marginBottom:'25px', lineHeight:'1.5'}}>
-                    {selectedItem.description || "Premium quality print available in various sizes and finishes."}
-                  </p>
-                  <button onClick={() => setStage('INPUT')} className="primary-btn" style={{width:'100%'}}>
-                    <FaPenNib/> Customize / Order Now
-                  </button>
-                </div>
-              )}
-
-              {/* STAGE 2: INPUT (Form) */}
-              {stage === 'INPUT' && (
-                <form onSubmit={handleGenerate}>
-                   <div style={{marginBottom:'20px', borderBottom:'1px solid #eee', paddingBottom:'10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                      <h3 style={{color:'var(--text-main)', margin:0}}>Order Details</h3>
-                      <button type="button" onClick={() => setStage('PREVIEW')} style={{background:'none', border:'none', color:'#888', fontSize:'0.8rem', cursor:'pointer', textDecoration:'underline'}}>Back to Preview</button>
-                   </div>
-                  
-                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>Your Name</label>
-                  <input name="name" required className="clean-input" placeholder="Enter your name" />
-                  
-                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>WhatsApp Number</label>
-                  <input name="contact" required className="clean-input" placeholder="+91 XXXXXXXXXX" />
-                  
-                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>Customization Notes</label>
-                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Size, text changes, color preference..." />
-                  
-                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>Quantity</label>
-                  <input name="qty" type="number" required className="clean-input" placeholder="Ex: 100" />
-                  
-                  <button type="submit" className="primary-btn" disabled={isSaving} style={{width: '100%'}}>
-                    {isSaving ? 'Saving...' : 'Generate Request'}
-                  </button>
-                </form>
-              )}
-
-              {/* STAGE 3: CONFIRM (WhatsApp) */}
-              {stage === 'CONFIRM' && (
-                <div style={{textAlign: 'center', padding: '20px 0'}}>
-                  <div style={{width: '60px', height: '60px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px'}}>
-                     <FaWhatsapp size={30} color="#16a34a"/>
+                <motion.div 
+                  initial={{ scale: 0.9 }} animate={{ scale: 1 }}
+                  style={{display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%'}}
+                >
+                  {/* BIG IMAGE */}
+                  <div style={{
+                    marginBottom: '30px', maxHeight: '70vh', width: '100%', 
+                    display: 'flex', justifyContent: 'center', alignItems: 'center'
+                  }}>
+                    <img 
+                      src={selectedItem.imageUrl} 
+                      alt={selectedItem.title} 
+                      style={{
+                        maxHeight: '70vh', maxWidth: '100%', objectFit: 'contain', 
+                        borderRadius: '8px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)'
+                      }} 
+                    />
                   </div>
-                  <h3 style={{marginBottom: '10px'}}>Order Ready!</h3>
-                  <p style={{color: '#666', marginBottom: '20px'}}>Click below to send these details to our team on WhatsApp.</p>
-                  <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366', width: '100%', border: 'none'}}>
-                    <FaWhatsapp/> Chat on WhatsApp
-                  </button>
-                </div>
+
+                  {/* TITLE & CUSTOMIZE BUTTON */}
+                  <div style={{textAlign: 'center', color: 'white'}}>
+                    <h2 style={{fontSize: '2rem', fontWeight: '800', marginBottom: '10px'}}>{selectedItem.title}</h2>
+                    <p style={{color: '#ccc', marginBottom: '30px', maxWidth: '600px', margin: '0 auto 30px'}}>
+                      {selectedItem.description || "High-quality premium print. Fully customizable size, material, and finish."}
+                    </p>
+                    
+                    <button 
+                      onClick={() => setStage('INPUT')} 
+                      className="primary-btn" 
+                      style={{
+                        padding: '16px 40px', fontSize: '1.2rem', 
+                        boxShadow: '0 0 30px rgba(139, 61, 255, 0.4)'
+                      }}
+                    >
+                      <FaPenNib /> Customize This Design
+                    </button>
+                  </div>
+                </motion.div>
               )}
-            </motion.div>
-          </div>
+
+              {/* STAGE 2: FORM (White Card) */}
+              {stage === 'INPUT' && (
+                <motion.div 
+                  initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+                  style={{
+                    background: 'white', padding: '40px', borderRadius: '12px', 
+                    width: '100%', maxWidth: '500px', margin: '0 auto',
+                    boxShadow: '0 25px 50px rgba(0,0,0,0.3)'
+                  }}
+                >
+                  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', paddingBottom: '15px', borderBottom: '1px solid #eee'}}>
+                    <h3 style={{fontSize: '1.5rem', fontWeight: '800', color: '#333'}}>Customize Order</h3>
+                    <button onClick={() => setStage('PREVIEW')} style={{color: '#666', background: 'none', border: 'none', cursor: 'pointer', textDecoration: 'underline'}}>Back to Image</button>
+                  </div>
+
+                  <form onSubmit={handleGenerate}>
+                    <label style={{fontSize: '0.9rem', fontWeight: '700', color: '#555', display: 'block', marginBottom: '5px'}}>Your Name</label>
+                    <input name="name" required className="clean-input" placeholder="Enter your name" style={{background: '#f8f9fa'}} />
+                    
+                    <label style={{fontSize: '0.9rem', fontWeight: '700', color: '#555', display: 'block', marginBottom: '5px'}}>WhatsApp Number</label>
+                    <input name="contact" required className="clean-input" placeholder="+91 XXXXXXXXXX" style={{background: '#f8f9fa'}} />
+                    
+                    <label style={{fontSize: '0.9rem', fontWeight: '700', color: '#555', display: 'block', marginBottom: '5px'}}>Customization Request</label>
+                    <textarea name="changes" required className="clean-input" rows="3" placeholder="Change color to blue, Add text 'My Brand', Size 3x3 inches..." style={{background: '#f8f9fa'}} />
+                    
+                    <label style={{fontSize: '0.9rem', fontWeight: '700', color: '#555', display: 'block', marginBottom: '5px'}}>Quantity</label>
+                    <input name="qty" type="number" required className="clean-input" placeholder="Ex: 500" style={{background: '#f8f9fa'}} />
+                    
+                    <button type="submit" className="primary-btn" disabled={isSaving} style={{width: '100%', marginTop: '10px'}}>
+                      {isSaving ? 'Processing...' : 'Generate Request'}
+                    </button>
+                  </form>
+                </motion.div>
+              )}
+
+              {/* STAGE 3: CONFIRMATION */}
+              {stage === 'CONFIRM' && (
+                 <motion.div 
+                   initial={{ scale: 0.9 }} animate={{ scale: 1 }}
+                   style={{
+                     background: 'white', padding: '40px', borderRadius: '12px', 
+                     width: '100%', maxWidth: '400px', margin: '0 auto', textAlign: 'center'
+                   }}
+                 >
+                    <div style={{width: '80px', height: '80px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px'}}>
+                       <FaWhatsapp size={40} color="#16a34a"/>
+                    </div>
+                    <h2 style={{fontSize: '1.8rem', fontWeight: '800', marginBottom: '10px', color: '#333'}}>Ready to Send!</h2>
+                    <p style={{color: '#666', marginBottom: '25px'}}>Your design request is ready. Click below to open WhatsApp.</p>
+                    <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366', width: '100%', border: 'none', fontSize: '1.1rem'}}>
+                      <FaWhatsapp style={{marginRight: '8px'}}/> Chat with Team
+                    </button>
+                 </motion.div>
+              )}
+
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 };
