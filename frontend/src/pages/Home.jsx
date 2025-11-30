@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaShapes, FaTag, FaIdCard, FaPenNib, FaMagic, FaCheckCircle, FaStar, FaCheck, FaPlus, FaMinus } from 'react-icons/fa';
+import { FaArrowRight, FaTimes, FaWhatsapp, FaCheckCircle, FaStar, FaCheck, FaPlus, FaMinus, FaPenNib, FaTag, FaIdCard, FaShapes, FaMagic, FaLightbulb, FaPaperPlane } from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
@@ -13,19 +13,24 @@ const Home = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
+  // --- MODAL STATE ---
   const [isOrderModalOpen, setOrderModalOpen] = useState(false);
-  const [formData, setFormData] = useState(null);
-  const [orderStage, setOrderStage] = useState('FORM');
-  const [openFaqIndex, setOpenFaqIndex] = useState(null); // For FAQ accordion
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState(null);
+
+  // --- FORM STATE ---
+  const [formData, setFormData] = useState({
+    name: '',
+    contact: '',
+    projectType: 'Stickers',
+    details: '',
+    qty: ''
+  });
 
   // --- HERO TEXT ANIMATION STATE ---
   const [textIndex, setTextIndex] = useState(0);
-  const heroPhrases = [
-    "We Build Identity",
-    "We Shape Memories",
-    "We Create Stories",
-    "We Add Emotion"
-  ];
+  const heroPhrases = ["We Build Identity", "We Shape Memories", "We Create Stories", "We Add Emotion"];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -34,35 +39,50 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // --- HANDLERS ---
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const data = new FormData(e.target);
+    setIsSubmitting(true);
+
     const newOrder = {
-      name: data.get('name'),
-      contact: data.get('contact'),
-      details: data.get('details'),
-      type: 'Home Request',
+      name: formData.name,
+      contact: formData.contact,
+      details: `PROJECT START: ${formData.projectType} | Desc: ${formData.details}`,
+      type: 'New Project Inquiry',
+      qty: formData.qty,
       date: new Date().toLocaleString()
     };
-    setFormData(newOrder);
-    try { await axios.post(`${API_URL}/api/orders`, newOrder); } catch(e){}
-    setOrderStage('SUMMARY');
+
+    try {
+      // Send directly to Backend Inventory
+      await axios.post(`${API_URL}/api/orders`, newOrder);
+      setSubmitSuccess(true);
+      setFormData({ name: '', contact: '', projectType: 'Stickers', details: '', qty: '' });
+      
+      // Auto close after 3 seconds
+      setTimeout(() => {
+        setSubmitSuccess(false);
+        setOrderModalOpen(false);
+      }, 3000);
+    } catch (err) {
+      console.error("Submission failed", err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const connectWhatsApp = () => {
-    const msg = `*NEW INQUIRY* 🚀\n👤 Name: ${formData.name}\n📞 Contact: ${formData.contact}\n📝 Request: ${formData.details}`;
-    window.open(`https://wa.me/919243858944?text=${encodeURIComponent(msg)}`, '_blank');
-    setOrderModalOpen(false); setOrderStage('FORM');
-  };
-
-  // Service Data
+  // Data Arrays
   const services = [
-    { icon: "🎨", title: "Custom Design", desc: "Bespoke label designs tailored to your brand identity. Our designers create stunning visuals that tell your story.", features: ["Brand consultation", "Multiple concepts", "Unlimited revisions"] },
-    { icon: "🏭", title: "Premium Printing", desc: "State-of-the-art printing technology with premium materials for labels that last and impress.", features: ["High-resolution printing", "Premium materials", "Weather resistant"] },
-    { icon: "🚚", title: "Fast Delivery", desc: "Quick turnaround times without compromising quality. Get your labels when you need them.", features: ["3-5 day production", "Express options", "Tracking included"] },
-    { icon: "📏", title: "Any Size & Shape", desc: "Custom sizes and shapes to fit any product. From tiny vials to large containers.", features: ["Die-cut shapes", "Micro to macro sizes", "Perfect fit guarantee"] },
-    { icon: "✨", title: "Special Finishes", desc: "Luxury finishes that make your products stand out. Foil, embossing, and specialty coatings.", features: ["Gold/silver foil", "Embossed textures", "UV spot coating"] },
-    { icon: "🎯", title: "Industry Expertise", desc: "Specialized knowledge across industries. We understand your market and compliance needs.", features: ["FDA compliance", "Industry standards", "Expert consultation"] }
+    { icon: "🎨", title: "Custom Design", desc: "Bespoke label designs tailored to your brand identity.", features: ["Brand consultation", "Unlimited revisions"] },
+    { icon: "🏭", title: "Premium Printing", desc: "State-of-the-art printing technology with premium materials.", features: ["High-res printing", "Weather resistant"] },
+    { icon: "🚚", title: "Fast Delivery", desc: "Quick turnaround times without compromising quality.", features: ["3-5 day production", "Tracking included"] },
+    { icon: "📏", title: "Any Size & Shape", desc: "Custom sizes and shapes to fit any product.", features: ["Die-cut shapes", "Perfect fit guarantee"] },
+    { icon: "✨", title: "Special Finishes", desc: "Luxury finishes that make your products stand out.", features: ["Gold/silver foil", "UV spot coating"] },
+    { icon: "🎯", title: "Industry Expertise", desc: "Specialized knowledge across industries.", features: ["FDA compliance", "Expert consultation"] }
   ];
 
   const showcaseItems = [
@@ -84,19 +104,19 @@ const Home = () => {
   ];
 
   const gallerySections = [
-    { title: 'Stickers', type: 'stickers', count: 10 },
-    { title: 'Labels', type: 'labels', count: 29 },
-    { title: 'Logos', type: 'logos', count: 10 },
-    { title: 'Cards', type: 'cards', count: 9 }
+    { title: 'Stickers', type: 'stickers' },
+    { title: 'Labels', type: 'labels' },
+    { title: 'Logos', type: 'logos' },
+    { title: 'Cards', type: 'cards' }
   ];
 
   const faqData = [
-    { q: "What is the minimum order quantity?", a: "Our minimum order quantity is just 100 labels, making us perfect for small businesses and startups. We also offer sample packs of 10-25 labels for testing purposes." },
-    { q: "How long does production take?", a: "Standard production time is 3-5 business days after design approval. We also offer rush services with 24-48 hour turnaround for urgent orders at an additional cost." },
-    { q: "Do you provide design services?", a: "Yes! Our expert design team can create custom labels from scratch or work with your existing artwork. We provide unlimited revisions until you're completely satisfied with the design." },
-    { q: "What materials do you use?", a: "We use premium materials including vinyl, paper, polyester, and eco-friendly options. All materials are weather-resistant and available in various finishes like matte, gloss, and textured surfaces." },
-    { q: "Can you match specific colors?", a: "Absolutely! We can match Pantone colors, provide color proofs, and ensure brand consistency across all your labels. We use advanced color matching technology for precise results." },
-    { q: "Do you ship internationally?", a: "Yes, we ship worldwide! Domestic orders within India typically arrive in 2-3 days, while international shipping takes 7-14 business days depending on the destination." }
+    { q: "What is the minimum order quantity?", a: "Our minimum order quantity is just 100 labels, making us perfect for small businesses and startups." },
+    { q: "How long does production take?", a: "Standard production time is 3-5 business days after design approval. Rush options available." },
+    { q: "Do you provide design services?", a: "Yes! Our expert design team can create custom labels from scratch or work with your existing artwork." },
+    { q: "What materials do you use?", a: "We use premium materials including vinyl, paper, polyester, and eco-friendly options." },
+    { q: "Can you match specific colors?", a: "Absolutely! We can match Pantone colors and provide color proofs." },
+    { q: "Do you ship internationally?", a: "Yes, we ship worldwide! International shipping takes 7-14 business days." }
   ];
 
   const whyChooseUs = [
@@ -136,11 +156,8 @@ const Home = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
                 style={{ 
-                  fontSize: '2.5rem', 
-                  fontWeight: '800', 
-                  background: 'var(--gradient-primary)', 
-                  WebkitBackgroundClip: 'text', 
-                  WebkitTextFillColor: 'transparent',
+                  fontSize: '2.5rem', fontWeight: '800', 
+                  background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                   margin: 0
                 }}
               >
@@ -159,6 +176,12 @@ const Home = () => {
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/cards')}><FaIdCard color="#E1306C"/> Cards</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/stickers')}><FaShapes color="#25D366"/> Stickers</button>
           </div>
+          
+          <div style={{marginTop: '40px'}}>
+             <button onClick={() => setOrderModalOpen(true)} className="primary-btn" style={{padding: '16px 40px', fontSize: '1.1rem', boxShadow: '0 0 20px rgba(139, 61, 255, 0.5)'}}>
+               Start Your Project
+             </button>
+          </div>
         </div>
       </div>
 
@@ -170,7 +193,7 @@ const Home = () => {
             We don't just print; we craft experiences. From matte-finish business cards to die-cut vinyl stickers that withstand the elements.
           </p>
           <div style={{marginTop:'30px'}}>
-            <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>Start a Project</button>
+            <button className="primary-btn" onClick={() => setOrderModalOpen(true)}>Start a Custom Order</button>
           </div>
         </div>
 
@@ -184,7 +207,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 3. AI INTELLIGENCE SECTION */}
+      {/* 3. AI INTELLIGENCE */}
       <section style={{ position: 'relative', minHeight: '600px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#f8f9fa' }}>
         <div style={{ 
           position: 'relative', zIndex: 1, 
@@ -233,7 +256,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 4. PRODUCT SHOWCASE (Moved Above) */}
+      {/* 4. PRODUCT SHOWCASE */}
       <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
         <AuroraBackground />
         <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
@@ -253,7 +276,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 5. OUR SERVICES */}
+      {/* 5. SERVICES */}
       <section className="services-section">
         <div className="services-header">
           <h2>Our Services</h2>
@@ -292,32 +315,50 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 7. SEGREGATED GALLERY SECTIONS (Strict 3 in a row) */}
+      {/* 7. SEGREGATED GALLERY (UPDATED: 3 In Row + Fixed Sizes) */}
       <section className="segregated-gallery-section">
         {gallerySections.map((section) => (
           <div key={section.type} style={{ marginBottom: '60px' }}>
             <div className="category-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
               <h3>{section.title}</h3>
-              {/* REMOVED THE 'VIEW ALL' BUTTON FROM RIGHT */}
             </div>
             
-            {/* STRICT 3 COLUMN GRID - Limiting to 3 items */}
-            <div className="full-width-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+            {/* STRICT GRID: 3 COLS, FIXED HEIGHT */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px', width: '100%' }}>
               {[...Array(3)].map((_, i) => (
                 <div 
                   key={i} 
-                  className="full-grid-item" 
                   onClick={() => navigate(`/gallery/${section.type}`)}
+                  style={{
+                    border: '1px solid #e1e4e8', borderRadius: '4px', background: '#fff',
+                    overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.2s',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                 >
-                  <img 
-                    src={`/images/${section.title}/${section.type === 'logos' ? 'logo' : section.type}${i + 1}.png`} 
-                    alt={`${section.title} ${i+1}`} 
-                    loading="lazy"
-                    onError={(e) => {e.target.style.display='none'}}
-                  />
-                  <div className="grid-item-info" style={{padding: '0 20px 20px'}}>
-                    <div className="grid-item-title">{section.title} Design #{i+1}</div>
-                    <div className="grid-item-sub">Customizable • Premium</div>
+                  {/* FIXED IMAGE BOX */}
+                  <div style={{
+                    height: '250px', width: '100%', background: '#f9fafb', 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', 
+                    borderBottom: '1px solid #eee', padding: '20px'
+                  }}>
+                    <img 
+                      src={`/images/${section.title}/${section.type === 'logos' ? 'logo' : section.type}${i + 1}.png`} 
+                      alt={`${section.title} ${i+1}`} 
+                      loading="lazy"
+                      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+                      onError={(e) => {
+                         e.target.style.display='none'; // Hides broken image icon
+                         e.target.parentNode.innerHTML = '<div style="color:#ccc">Image Preview</div>'; // Fallback text
+                      }}
+                    />
+                  </div>
+                  
+                  {/* TEXT */}
+                  <div style={{padding: '20px', textAlign: 'center'}}>
+                    <div style={{fontWeight: '700', fontSize: '1rem', color: '#111'}}>{section.title} Design #{i+1}</div>
+                    <div style={{fontSize: '0.85rem', color: '#888', marginTop: '5px'}}>Customizable • Premium</div>
                   </div>
                 </div>
               ))}
@@ -332,7 +373,7 @@ const Home = () => {
         ))}
       </section>
 
-      {/* 8. WHY CHOOSE US (NEW - with Aurora) */}
+      {/* 8. WHY CHOOSE US */}
       <section style={{ position: 'relative', padding: '6rem 5%', overflow: 'hidden', textAlign: 'center', background:'#f8f9fa' }}>
         <AuroraBackground />
         <div style={{ position: 'relative', zIndex: 1 }}>
@@ -349,7 +390,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* 9. FAQS SECTION (NEW) */}
+      {/* 9. FAQS */}
       <section style={{ padding: '6rem 5%', background: '#fff', maxWidth: '1000px', margin: '0 auto' }}>
         <h2 style={{ fontSize: '3rem', fontWeight: '800', textAlign: 'center', marginBottom: '40px', color: 'var(--text-main)' }}>
           Frequently Asked Questions
@@ -369,10 +410,7 @@ const Home = () => {
               </button>
               <AnimatePresence>
                 {openFaqIndex === i && (
-                  <motion.div 
-                    initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} 
-                    style={{ overflow: 'hidden', background: '#fff' }}
-                  >
+                  <motion.div initial={{ height: 0 }} animate={{ height: 'auto' }} exit={{ height: 0 }} style={{ overflow: 'hidden', background: '#fff' }}>
                     <p style={{ padding: '20px', color: '#666', lineHeight: '1.6', margin: 0 }}>{item.a}</p>
                   </motion.div>
                 )}
@@ -382,38 +420,75 @@ const Home = () => {
         </div>
       </section>
 
-      {/* MODAL */}
+      {/* ======================================================= */}
+      {/* ============ START PROJECT MODAL (UPDATED) ============ */}
+      {/* ======================================================= */}
       {isOrderModalOpen && (
         <div className="modal-overlay" onClick={()=>setOrderModalOpen(false)}>
-          <div className="order-modal" onClick={e=>e.stopPropagation()}>
+          <div className="order-modal" onClick={e=>e.stopPropagation()} style={{maxWidth: '500px'}}>
              <button onClick={() => setOrderModalOpen(false)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#888"/></button>
-             <h2 style={{color:'var(--text-main)', marginBottom:'20px'}}>Start Project</h2>
-             <p style={{color:'var(--text-body)', marginBottom:'30px'}}>Tell us what you need. We'll connect on WhatsApp.</p>
              
-             {orderStage === 'FORM' ? (
-                <form onSubmit={handleFormSubmit}>
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>Brand / Name</label>
-                  <input name="name" required className="clean-input" placeholder="Ex: Urban Hype" />
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', marginBottom:'5px', display:'block', color:'var(--text-main)'}}>WhatsApp Contact</label>
-                  <input name="contact" required className="clean-input" placeholder="+91 00000 00000" />
-                  <label style={{fontSize:'0.85rem', fontWeight:'600', color:'var(--text-main)', marginBottom:'5px', display:'block'}}>Requirements</label>
-                  <textarea name="details" required className="clean-input" rows="4" placeholder="Describe your idea..." />
-                  <button type="submit" className="primary-btn" style={{width:'100%'}}>Generate Request</button>
-                </form>
-             ) : (
-               <div>
-                 <div style={{background:'#f5f5f5', padding:'15px', borderRadius:'8px', marginBottom:'20px'}}>
-                   <p style={{margin:0, color:'#333'}}><strong>Name:</strong> {formData.name}</p>
-                   <p style={{margin:0, color:'#333'}}><strong>Req:</strong> {formData.details}</p>
+             {submitSuccess ? (
+               <div style={{textAlign: 'center', padding: '30px 10px'}}>
+                 <div style={{width: '70px', height: '70px', background: '#dcfce7', color: '#16a34a', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px'}}>
+                    <FaCheckCircle size={35} />
                  </div>
-                 <button className="big-whatsapp-btn" onClick={()=>window.open('https://wa.me/919243858944','_blank')}>
-                   <FaWhatsapp size={24}/> Open WhatsApp Chat
-                 </button>
+                 <h2 style={{color:'var(--text-main)', marginBottom:'10px'}}>Project Started!</h2>
+                 <p style={{color:'var(--text-body)', lineHeight: '1.6'}}>We have received your request. Our team has added it to the inventory and will contact you shortly.</p>
                </div>
+             ) : (
+               <>
+                 <div style={{marginBottom: '25px', display: 'flex', alignItems: 'center', gap: '10px'}}>
+                   <div style={{background: '#f3e8ff', padding: '10px', borderRadius: '50%', color: 'var(--primary)'}}><FaLightbulb size={20}/></div>
+                   <div>
+                      <h2 style={{color:'var(--text-main)', margin: 0, fontSize: '1.5rem'}}>Start New Project</h2>
+                      <p style={{color:'var(--text-body)', margin: 0, fontSize: '0.9rem'}}>Tell us what you need.</p>
+                   </div>
+                 </div>
+                 
+                 <form onSubmit={handleFormSubmit} style={{display: 'flex', flexDirection: 'column', gap: '15px'}}>
+                    <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px'}}>
+                      <div>
+                        <label style={{fontSize:'0.75rem', fontWeight:'700', textTransform:'uppercase', color:'#888', marginBottom:'5px', display:'block'}}>Name</label>
+                        <input name="name" value={formData.name} onChange={handleInputChange} required className="clean-input" placeholder="Your Name" />
+                      </div>
+                      <div>
+                        <label style={{fontSize:'0.75rem', fontWeight:'700', textTransform:'uppercase', color:'#888', marginBottom:'5px', display:'block'}}>Contact</label>
+                        <input name="contact" value={formData.contact} onChange={handleInputChange} required className="clean-input" placeholder="+91..." />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{fontSize:'0.75rem', fontWeight:'700', textTransform:'uppercase', color:'#888', marginBottom:'5px', display:'block'}}>Project Type</label>
+                      <select name="projectType" value={formData.projectType} onChange={handleInputChange} className="clean-input" style={{width: '100%', background: 'white'}}>
+                        <option>Stickers</option>
+                        <option>Product Labels</option>
+                        <option>Logo Design</option>
+                        <option>Packaging</option>
+                        <option>Business Cards</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{fontSize:'0.75rem', fontWeight:'700', textTransform:'uppercase', color:'#888', marginBottom:'5px', display:'block'}}>Project Details</label>
+                      <textarea name="details" value={formData.details} onChange={handleInputChange} required className="clean-input" rows="3" placeholder="Describe size, colors, or specific ideas..." />
+                    </div>
+
+                    <div>
+                       <label style={{fontSize:'0.75rem', fontWeight:'700', textTransform:'uppercase', color:'#888', marginBottom:'5px', display:'block'}}>Quantity</label>
+                       <input name="qty" type="number" value={formData.qty} onChange={handleInputChange} required className="clean-input" placeholder="Ex: 500" />
+                    </div>
+
+                    <button type="submit" className="primary-btn" disabled={isSubmitting} style={{width:'100%', marginTop: '10px', display: 'flex', justifyContent: 'center', gap: '8px'}}>
+                       {isSubmitting ? 'Sending...' : <><FaPaperPlane/> Send to Inventory</>}
+                    </button>
+                 </form>
+               </>
              )}
           </div>
         </div>
       )}
+
     </div>
   );
 };
