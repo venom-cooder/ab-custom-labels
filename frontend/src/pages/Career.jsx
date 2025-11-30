@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBriefcase, FaEnvelope, FaMapMarkerAlt, FaClock, FaArrowRight, FaTimes, FaCheckCircle, FaLink, FaPaperPlane } from 'react-icons/fa';
-import AuroraBackground from '../components/anim/AuroraBackground'; 
 
 const Career = () => {
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
@@ -112,14 +111,26 @@ const Career = () => {
   return (
     <div className="app-container">
       
-      {/* 1. HERO SECTION (Aurora Theme + Your Text) */}
-      <div style={{position:'relative', height:'400px', overflow:'hidden', display:'flex', alignItems:'center', background:'#fff', borderBottom:'1px solid #eee'}}>
-        <AuroraBackground />
-        <div className="container" style={{position:'relative', zIndex:1, textAlign:'center'}}>
-          <h1 style={{fontSize:'3.5rem', fontWeight:'900', color:'var(--text-main)', marginBottom:'20px'}}>
-            JOIN THE <span style={{color:'var(--primary)'}}>TEAM</span>
+      {/* 1. HERO SECTION (Static BG + Centered Text) */}
+      <div style={{ position: 'relative', height: '500px', overflow: 'hidden' }}>
+        {/* Background Image */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+          backgroundImage: 'url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop")', // Team collaboration image
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.4)', zIndex: 0
+        }}></div>
+
+        {/* Content */}
+        <div className="container" style={{
+          position: 'relative', zIndex: 1, height: '100%',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+          textAlign: 'center', padding: '0 20px'
+        }}>
+          <h1 style={{ fontSize: '3.5rem', fontWeight: '900', color: 'white', marginBottom: '20px', textShadow: '0 4px 10px rgba(0,0,0,0.3)' }}>
+            JOIN THE <span style={{ color: 'var(--accent)' }}>TEAM</span>
           </h1>
-          <p style={{fontSize:'1.2rem', color:'#555', maxWidth:'700px', margin:'0 auto'}}>
+          <p style={{ fontSize: '1.2rem', color: '#eee', maxWidth: '700px', lineHeight: '1.6', textShadow: '0 2px 5px rgba(0,0,0,0.5)' }}>
             Shape the Future of Label Design With Us. We're more than a design brand — we're building a movement of creativity, customisation, and craft.
           </p>
         </div>
