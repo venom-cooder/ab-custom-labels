@@ -14,8 +14,9 @@ const Gallery = () => {
   const [loading, setLoading] = useState(true);
   const [labelFilter, setLabelFilter] = useState('all'); 
 
+  // Modal & Order State
   const [selectedItem, setSelectedItem] = useState(null);
-  const [stage, setStage] = useState('PREVIEW'); 
+  const [stage, setStage] = useState('PREVIEW'); // 'PREVIEW' -> 'INPUT' -> 'CONFIRM'
   const [customData, setCustomData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -91,7 +92,7 @@ const Gallery = () => {
   // --- HANDLERS ---
   const openCustomForm = () => {
     setSelectedItem({ title: 'My Custom Idea', imageUrl: null });
-    setStage('INPUT');
+    setStage('INPUT'); // Custom idea skips preview, goes straight to input
   };
 
   const handleGenerate = async (e) => {
@@ -115,7 +116,7 @@ const Gallery = () => {
     const phone = "919243858944";
     const msg = `*GALLERY INQUIRY* 🖼\nRef: ${selectedItem?.title || 'Custom Idea'}\n👤: ${customData.name}\n📞: ${customData.contact}\n📝: ${customData.changes}\n🔢: ${customData.qty}`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-    setSelectedItem(null); setStage('INPUT');
+    setSelectedItem(null); setStage('PREVIEW');
   };
 
   return (
@@ -212,7 +213,7 @@ const Gallery = () => {
               key={shape}
               onClick={() => setLabelFilter(shape)}
               style={{
-                padding: '8px 16px', borderRadius: '20px', border: '1px solid #eee',
+                padding: '8px 16px', borderRadius: '4px', border: '1px solid #eee',
                 background: labelFilter === shape ? 'var(--primary)' : '#fff',
                 color: labelFilter === shape ? '#fff' : '#666',
                 cursor: 'pointer', textTransform: 'capitalize', fontWeight: '600', transition: '0.2s',
@@ -225,7 +226,7 @@ const Gallery = () => {
         </div>
       )}
 
-      {/* --- 3. GALLERY GRID (Title Below + Button) --- */}
+      {/* --- 3. GALLERY GRID (3 Cols) --- */}
       <div className="masonry-grid">
         {loading ? (
           <p style={{color:'#666', width:'100%', textAlign:'center'}}>Loading Collection...</p>
@@ -240,32 +241,34 @@ const Gallery = () => {
               key={item._id} 
               className="masonry-item"
               whileHover={{ translateY: -5 }}
+              layout
             >
-              {/* IMAGE */}
+              {/* IMAGE (Click -> Preview) */}
               <div 
-                style={{cursor:'pointer'}} 
+                style={{cursor:'zoom-in', width: '100%', background: '#f9f9f9'}} 
                 onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
               >
                 <img 
                   src={item.imageUrl} 
                   alt={item.title} 
                   loading="lazy"
+                  style={{width: '100%', display: 'block'}}
                   onError={(e) => { e.target.style.display = 'none'; }} 
                 />
               </div>
               
-              {/* TITLE & BUTTON BELOW */}
-              <div className="masonry-info" style={{textAlign:'center', paddingBottom:'20px'}}>
-                <h4 className="masonry-title" style={{fontSize:'1.1rem', marginBottom:'5px'}}>{item.title}</h4>
+              {/* INFO (Button Click -> Preview) */}
+              <div className="masonry-info" style={{textAlign:'center', padding:'15px'}}>
+                <h4 className="masonry-title" style={{fontSize:'1rem', fontWeight: '700', marginBottom:'4px'}}>{item.title}</h4>
                 {item.category === 'labels' && item.subcategory && (
-                  <span className="masonry-sub" style={{marginBottom:'15px'}}>{item.subcategory}</span>
+                  <span className="masonry-sub" style={{marginBottom:'10px', display:'block', fontSize:'0.8rem', color: '#888'}}>{item.subcategory}</span>
                 )}
                 
                 <button 
                   className="category-rect-btn" 
                   style={{
-                    width:'100%', marginTop:'10px', background:'#fff', color:'var(--primary)', border:'1px solid var(--primary)',
-                    fontSize:'0.85rem', padding:'10px'
+                    width:'100%', marginTop:'8px', background:'#fff', color:'var(--primary)', border:'1px solid var(--primary)',
+                    fontSize:'0.85rem', padding:'8px 12px'
                   }}
                   onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
                 >
@@ -287,40 +290,83 @@ const Gallery = () => {
         </button>
       </div>
 
-      {/* --- MODAL --- */}
+      {/* --- MODAL (FIXED FLOW: PREVIEW -> INPUT) --- */}
       <AnimatePresence>
         {selectedItem && (
           <div className="modal-overlay" onClick={() => setSelectedItem(null)}>
-            <motion.div className="order-modal" onClick={(e) => e.stopPropagation()} initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-              <button onClick={() => setSelectedItem(null)} style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer'}}><FaTimes size={20} color="#888"/></button>
+            <motion.div 
+              className="order-modal" 
+              onClick={(e) => e.stopPropagation()} 
+              initial={{ y: 50, opacity: 0 }} 
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 50, opacity: 0 }}
+            >
+              <button 
+                onClick={() => setSelectedItem(null)} 
+                style={{position:'absolute', top:15, right:15, border:'none', background:'transparent', cursor:'pointer', zIndex: 10}}
+              >
+                <FaTimes size={20} color="#888"/>
+              </button>
               
+              {/* STAGE 1: PREVIEW (Big Image) */}
               {stage === 'PREVIEW' && (
                 <div style={{textAlign:'center'}}>
                   {selectedItem.imageUrl && (
-                    <img src={selectedItem.imageUrl} style={{maxWidth:'100%', maxHeight:'350px', borderRadius:'8px', marginBottom:'20px', border:'1px solid #eee'}} />
+                    <div style={{background: '#f4f4f4', borderRadius: '8px', padding: '10px', marginBottom: '20px'}}>
+                      <img 
+                        src={selectedItem.imageUrl} 
+                        style={{maxWidth:'100%', maxHeight:'50vh', objectFit: 'contain', display: 'block', margin: '0 auto'}} 
+                        alt="Preview"
+                      />
+                    </div>
                   )}
-                  <h2 style={{color:'var(--text-main)', marginBottom:'10px'}}>{selectedItem.title}</h2>
-                  <p style={{color:'#666', fontSize:'0.9rem', marginBottom:'25px', lineHeight:'1.5'}}>{selectedItem.description}</p>
-                  <button onClick={() => setStage('INPUT')} className="primary-btn" style={{width:'100%'}}><FaPenNib/> Customize / Order</button>
+                  <h2 style={{color:'var(--text-main)', marginBottom:'10px', fontSize: '1.5rem'}}>{selectedItem.title}</h2>
+                  <p style={{color:'#666', fontSize:'0.9rem', marginBottom:'25px', lineHeight:'1.5'}}>
+                    {selectedItem.description || "Premium quality print available in various sizes and finishes."}
+                  </p>
+                  <button onClick={() => setStage('INPUT')} className="primary-btn" style={{width:'100%'}}>
+                    <FaPenNib/> Customize / Order Now
+                  </button>
                 </div>
               )}
+
+              {/* STAGE 2: INPUT (Form) */}
               {stage === 'INPUT' && (
                 <form onSubmit={handleGenerate}>
-                   <div style={{marginBottom:'20px', borderBottom:'1px solid #eee', paddingBottom:'10px'}}>
+                   <div style={{marginBottom:'20px', borderBottom:'1px solid #eee', paddingBottom:'10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                       <h3 style={{color:'var(--text-main)', margin:0}}>Order Details</h3>
-                      <span style={{color:'var(--primary)', fontSize:'0.8rem'}}>{selectedItem.title}</span>
+                      <button type="button" onClick={() => setStage('PREVIEW')} style={{background:'none', border:'none', color:'#888', fontSize:'0.8rem', cursor:'pointer', textDecoration:'underline'}}>Back to Preview</button>
                    </div>
-                  <input name="name" required className="clean-input" placeholder="Your Name" />
-                  <input name="contact" required className="clean-input" placeholder="WhatsApp Contact Number" />
-                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Describe changes..." />
-                  <input name="qty" type="number" required className="clean-input" placeholder="Quantity" />
-                  <button type="submit" className="primary-btn" disabled={isSaving}>{isSaving ? '...' : 'Generate Request'}</button>
+                  
+                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>Your Name</label>
+                  <input name="name" required className="clean-input" placeholder="Enter your name" />
+                  
+                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>WhatsApp Number</label>
+                  <input name="contact" required className="clean-input" placeholder="+91 XXXXXXXXXX" />
+                  
+                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>Customization Notes</label>
+                  <textarea name="changes" required className="clean-input" rows="3" placeholder="Size, text changes, color preference..." />
+                  
+                  <label style={{fontSize: '0.85rem', fontWeight: 'bold', color: '#555'}}>Quantity</label>
+                  <input name="qty" type="number" required className="clean-input" placeholder="Ex: 100" />
+                  
+                  <button type="submit" className="primary-btn" disabled={isSaving} style={{width: '100%'}}>
+                    {isSaving ? 'Saving...' : 'Generate Request'}
+                  </button>
                 </form>
               )}
+
+              {/* STAGE 3: CONFIRM (WhatsApp) */}
               {stage === 'CONFIRM' && (
-                <div>
-                  <div className="summary-box"><p style={{color:'green'}}>Request Saved!</p></div>
-                  <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366'}}><FaWhatsapp/> Chat on WhatsApp</button>
+                <div style={{textAlign: 'center', padding: '20px 0'}}>
+                  <div style={{width: '60px', height: '60px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px'}}>
+                     <FaWhatsapp size={30} color="#16a34a"/>
+                  </div>
+                  <h3 style={{marginBottom: '10px'}}>Order Ready!</h3>
+                  <p style={{color: '#666', marginBottom: '20px'}}>Click below to send these details to our team on WhatsApp.</p>
+                  <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366', width: '100%', border: 'none'}}>
+                    <FaWhatsapp/> Chat on WhatsApp
+                  </button>
                 </div>
               )}
             </motion.div>
