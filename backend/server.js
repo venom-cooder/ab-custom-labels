@@ -9,10 +9,15 @@ const app = express();
 // 1. Connect to MongoDB Atlas
 connectDB();
 
-// 2. CORS CONFIGURATION (Crucial for Vercel + Render)
-// This allows your frontend (on Vercel) to talk to this backend (on Render)
+// 2. CORS CONFIGURATION (Crucial for Vercel + Render + Custom Domain)
 app.use(cors({
-  origin: '*', // Allow requests from any origin (simplest for deployment)
+  origin: [
+    "https://abcustomlabels.com", 
+    "https://www.abcustomlabels.com",
+    "http://localhost:5173",            // Local development
+    "https://ab-custom-labels.vercel.app" // Vercel fallback
+  ],
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -26,7 +31,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/orders', require('./routes/orderRoutes'));
 
 // Products/Gallery (For fetching items & Admin uploads)
-// Note: This route handles both public fetching and admin uploading via Cloudinary
 app.use('/api/products', require('./routes/productRoutes'));
 // Alias for consistency if frontend calls 'admin/gallery'
 app.use('/api/admin/gallery', require('./routes/productRoutes')); 
@@ -42,9 +46,11 @@ app.use('/api/support', require('./routes/supportRoutes'));
 
 // FAQs (For Admin to manage FAQs)
 app.use('/api/faqs', require('./routes/faqRoutes'));
+
+// AI Design Routes
 app.use('/api/ai', require('./routes/aiRoutes'));
 
-// 5. Health Check Route (Click your Render link to see this)
+// 5. Health Check Route
 app.get('/', (req, res) => {
   res.send('AB Custom Labels API is Live & Running! 🚀');
 });
