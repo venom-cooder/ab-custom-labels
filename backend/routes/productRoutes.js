@@ -64,6 +64,36 @@ router.post('/', upload.single('image'), async (req, res) => {
   }
 });
 
+// PUT: Update existing item
+router.put('/:id', upload.single('image'), async (req, res) => {
+  try {
+    const { title, category, subcategory, description } = req.body;
+    
+    // 1. Find the existing product
+    let product = await GalleryItem.findById(req.params.id);
+    if (!product) return res.status(404).json({ msg: 'Product not found' });
+
+    // 2. Update text fields if provided
+    product.title = title || product.title;
+    product.category = category || product.category;
+    product.subcategory = subcategory || product.subcategory;
+    product.description = description || product.description;
+
+    // 3. Update Image ONLY if a new one is uploaded
+    if (req.file) {
+      product.imageUrl = req.file.path; // Cloudinary automatically provides this .path
+    }
+
+    // 4. Save
+    await product.save();
+    res.json(product);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Server Error');
+  }
+});
+
 // DELETE: Remove item
 router.delete('/:id', async (req, res) => {
   try {

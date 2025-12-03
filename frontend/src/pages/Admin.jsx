@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios'; 
 import { 
-  FaLock, FaBox, FaEnvelope, FaTrash, FaPlus, FaSignOutAlt, 
-  FaSync, FaCheckCircle, FaWhatsapp, FaUserTie, FaExternalLinkAlt, 
-  FaPaperPlane, FaQuestionCircle, FaBriefcase, FaEdit, FaTimes 
-} from 'react-icons/fa';
+  Lock, Box, Mail, Trash2, Plus, LogOut, 
+  RefreshCcw, CheckCircle, MessageCircle, User, ExternalLink, 
+  Send, HelpCircle, Briefcase, Edit, X 
+} from 'lucide-react';
 
 const Admin = () => {
   // --- STATE MANAGEMENT ---
@@ -31,10 +31,13 @@ const Admin = () => {
     title: '',
     description: '',
     category: 'stickers',
-    subcategory: 'general'
+    subcategory: 'general',
+    materials: '', // New Optional Field
+    idealFor: ''   // New Optional Field
   });
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+  // Hardcoded API URL to fix build error
+  const API_URL = 'http://localhost:5001';
 
   // --- 1. LOGIN ---
   const handleLogin = (e) => {
@@ -99,8 +102,12 @@ const Admin = () => {
     
     formData.append('title', invForm.title);
     formData.append('category', invForm.category);
-    formData.append('subcategory', invForm.category === 'labels' ? invForm.subcategory : 'general');
+    formData.append('subcategory', invForm.subcategory);
     formData.append('description', invForm.description);
+    
+    // Add Optional Fields
+    formData.append('materials', invForm.materials);
+    formData.append('idealFor', invForm.idealFor);
     
     // Only append image if a new one is selected
     if (form.image.files[0]) {
@@ -130,7 +137,7 @@ const Admin = () => {
       resetInventoryForm();
       fetchAllData(); 
     } catch (err) {
-      alert("Operation failed.");
+      alert("Operation failed. Ensure Backend has PUT route enabled.");
       console.error(err);
     }
     setIsUploading(false);
@@ -143,7 +150,9 @@ const Admin = () => {
       title: item.title,
       description: item.description || '',
       category: item.category,
-      subcategory: item.subcategory || 'general'
+      subcategory: item.subcategory || 'general',
+      materials: item.materials || '',
+      idealFor: item.idealFor || ''
     });
     // Scroll to top of form
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -155,13 +164,16 @@ const Admin = () => {
       title: '',
       description: '',
       category: 'stickers',
-      subcategory: 'general'
+      subcategory: 'general',
+      materials: '',
+      idealFor: ''
     });
-    // Reset file input manually if needed, usually form reset handles it but since we bind value...
-    document.getElementById('fileInput').value = "";
+    // Reset file input manually
+    const fileInput = document.getElementById('fileInput');
+    if(fileInput) fileInput.value = "";
   };
 
-  // --- 5. CAREER: ADD JOB ---
+  // --- 5. CAREER & FAQ ACTIONS ---
   const addJob = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -177,7 +189,6 @@ const Admin = () => {
     } catch (err) { alert("Error posting job"); }
   };
 
-  // --- 6. FAQ: ADD FAQ ---
   const addFaq = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -198,7 +209,7 @@ const Admin = () => {
     return (
       <div style={styles.loginContainer}>
         <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} style={styles.loginBox}>
-          <div style={styles.lockIcon}><FaLock size={30} color="#333" /></div>
+          <div style={styles.lockIcon}><Lock size={30} color="#333" /></div>
           <h2 style={{ marginBottom: '10px', fontSize: '1.8rem' }}>Admin Portal</h2>
           <p style={{color:'#666', marginBottom:'30px'}}>AB Custom Labels Command Center</p>
           <form onSubmit={handleLogin}>
@@ -221,7 +232,7 @@ const Admin = () => {
           <span style={{ fontWeight: '800', fontSize: '1.2rem', letterSpacing: '-0.5px' }}>AB COMMAND CENTER</span>
         </div>
         <button onClick={() => { setIsAuthenticated(false); sessionStorage.removeItem('adminAuth'); }} style={styles.logoutBtn}>
-          <FaSignOutAlt /> Logout
+          <LogOut size={16} /> Logout
         </button>
       </nav>
 
@@ -231,25 +242,25 @@ const Admin = () => {
         <div style={styles.headerRow}>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <button onClick={() => setActiveTab('ORDERS')} style={activeTab === 'ORDERS' ? styles.activeTab : styles.tab}>
-              <FaEnvelope /> Orders <span style={styles.badge}>{orders.length}</span>
+              <Mail size={16} /> Orders <span style={styles.badge}>{orders.length}</span>
             </button>
             <button onClick={() => setActiveTab('INVENTORY')} style={activeTab === 'INVENTORY' ? styles.activeTab : styles.tab}>
-              <FaBox /> Inventory
+              <Box size={16} /> Inventory
             </button>
             <button onClick={() => setActiveTab('CAREERS')} style={activeTab === 'CAREERS' ? styles.activeTab : styles.tab}>
-              <FaUserTie /> Careers <span style={styles.badge}>{applications.length}</span>
+              <User size={16} /> Careers <span style={styles.badge}>{applications.length}</span>
             </button>
             <button onClick={() => setActiveTab('FAQS')} style={activeTab === 'FAQS' ? styles.activeTab : styles.tab}>
-              <FaQuestionCircle /> FAQs
+              <HelpCircle size={16} /> FAQs
             </button>
           </div>
-          <button onClick={fetchAllData} style={styles.refreshBtn}><FaSync /> Refresh Data</button>
+          <button onClick={fetchAllData} style={styles.refreshBtn}><RefreshCcw size={16} /> Refresh Data</button>
         </div>
 
         {/* --- TAB 1: ORDERS --- */}
         {activeTab === 'ORDERS' && (
           <div style={styles.listContainer}>
-             {orders.length === 0 && <div style={styles.emptyState}><FaCheckCircle size={40} color="#ddd"/><p>No pending orders.</p></div>}
+             {orders.length === 0 && <div style={styles.emptyState}><CheckCircle size={40} color="#ddd"/><p>No pending orders.</p></div>}
              {orders.map(order => (
                <div key={order._id} style={styles.card}>
                  <div style={{marginBottom:'15px'}}>
@@ -262,8 +273,8 @@ const Admin = () => {
                  </div>
                  <div style={styles.detailBox}><strong>Request:</strong> {order.details}</div>
                  <div style={styles.actionRow}>
-                    <button onClick={() => window.open(`https://wa.me/919243858944?text=Hello ${order.name}, regarding your order...`, '_blank')} style={styles.whatsappBtn}><FaWhatsapp/> Reply</button>
-                    <button onClick={() => deleteItem('orders', order._id)} style={styles.deleteBtn}><FaTrash/></button>
+                    <button onClick={() => window.open(`https://wa.me/919243858944?text=Hello ${order.name}, regarding your order...`, '_blank')} style={styles.whatsappBtn}><MessageCircle size={16}/> Reply</button>
+                    <button onClick={() => deleteItem('orders', order._id)} style={styles.deleteBtn}><Trash2 size={16}/></button>
                  </div>
                </div>
              ))}
@@ -277,7 +288,7 @@ const Admin = () => {
             <div style={styles.formCard}>
                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'20px'}}>
                  <h3 style={{ fontSize:'1.4rem', margin:0 }}>{editId ? 'Edit Item' : 'Add to Gallery'}</h3>
-                 {editId && <button onClick={resetInventoryForm} style={{background:'none', border:'none', color:'#666', cursor:'pointer'}}><FaTimes/> Cancel Edit</button>}
+                 {editId && <button onClick={resetInventoryForm} style={{background:'none', border:'none', color:'#666', cursor:'pointer', display:'flex', alignItems:'center', gap:'5px'}}><X size={16}/> Cancel Edit</button>}
                </div>
                
                <form onSubmit={handleInventorySubmit}>
@@ -287,32 +298,49 @@ const Admin = () => {
                     name="category" 
                     style={styles.input} 
                     value={invForm.category}
-                    onChange={(e) => setInvForm({...invForm, category: e.target.value})}
+                    onChange={(e) => setInvForm({...invForm, category: e.target.value, subcategory: 'general'})}
                  >
                    <option value="stickers">Stickers</option>
                    <option value="logos">Logos</option>
                    <option value="labels">Labels</option>
                    <option value="cards">Cards</option>
-                   <option value="posters">Posters</option> {/* Added */}
-                   <option value="banners">Banners</option> {/* Added */}
+                   <option value="posters">Posters</option>
+                   <option value="banners">Banners</option>
                  </select>
 
-                 {/* CONDITIONAL: ONLY SHOW SHAPE IF LABELS SELECTED */}
+                 {/* DYNAMIC SUBCATEGORY SELECTION */}
                  {invForm.category === 'labels' && (
-                   <div style={{marginBottom:'15px', background:'#fefce8', padding:'15px', borderRadius:'8px', border:'1px solid #fde047'}}>
-                      <label style={styles.label}>2. Shape / Type</label>
-                      <select 
-                        name="subcategory" 
-                        style={styles.input}
-                        value={invForm.subcategory}
-                        onChange={(e) => setInvForm({...invForm, subcategory: e.target.value})}
-                      >
-                        <option value="general">General / Other</option>
-                        <option value="circle">Circle Labels</option>
-                        <option value="oval">Oval Labels</option>
-                        <option value="bottle">Water Bottle Labels</option>
-                        <option value="rounded">Rounded Corner</option>
-                        <option value="jar">Jar Labels</option>
+                   <div style={styles.subCatBox}>
+                      <label style={styles.label}>2. Shape Type</label>
+                      <select name="subcategory" style={styles.input} value={invForm.subcategory} onChange={(e) => setInvForm({...invForm, subcategory: e.target.value})}>
+                        <option value="general">General</option>
+                        <option value="circle">Circle</option>
+                        <option value="oval">Oval</option>
+                        <option value="bottle">Bottle</option>
+                        <option value="rounded">Rounded</option>
+                        <option value="jar">Jar</option>
+                      </select>
+                   </div>
+                 )}
+                 {invForm.category === 'posters' && (
+                   <div style={styles.subCatBox}>
+                      <label style={styles.label}>2. Poster Type</label>
+                      <select name="subcategory" style={styles.input} value={invForm.subcategory} onChange={(e) => setInvForm({...invForm, subcategory: e.target.value})}>
+                        <option value="general">General</option>
+                        <option value="event">Event</option>
+                        <option value="art">Art / Decor</option>
+                        <option value="promo">Promotional</option>
+                      </select>
+                   </div>
+                 )}
+                 {invForm.category === 'banners' && (
+                   <div style={styles.subCatBox}>
+                      <label style={styles.label}>2. Banner Type</label>
+                      <select name="subcategory" style={styles.input} value={invForm.subcategory} onChange={(e) => setInvForm({...invForm, subcategory: e.target.value})}>
+                        <option value="general">General</option>
+                        <option value="outdoor">Outdoor</option>
+                        <option value="standee">Standee</option>
+                        <option value="vinyl">Vinyl</option>
                       </select>
                    </div>
                  )}
@@ -336,6 +364,30 @@ const Admin = () => {
                     onChange={(e) => setInvForm({...invForm, description: e.target.value})}
                     required 
                  />
+
+                 {/* NEW OPTIONAL FIELDS */}
+                 <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'10px'}}>
+                   <div>
+                     <label style={styles.label}>Materials (Optional)</label>
+                     <input 
+                        name="materials" 
+                        placeholder="Ex: Vinyl, Gloss" 
+                        style={styles.input} 
+                        value={invForm.materials}
+                        onChange={(e) => setInvForm({...invForm, materials: e.target.value})}
+                     />
+                   </div>
+                   <div>
+                     <label style={styles.label}>Ideal For (Optional)</label>
+                     <input 
+                        name="idealFor" 
+                        placeholder="Ex: Bottles, Laptops" 
+                        style={styles.input} 
+                        value={invForm.idealFor}
+                        onChange={(e) => setInvForm({...invForm, idealFor: e.target.value})}
+                     />
+                   </div>
+                 </div>
 
                  <label style={styles.label}>{editId ? 'Replace Photo (Optional)' : 'Upload Photo'}</label>
                  <input type="file" id="fileInput" name="image" accept="image/*" style={{marginBottom:'20px'}} />
@@ -364,9 +416,12 @@ const Admin = () => {
                       <strong>{item.title}</strong><br/>
                       <span style={{fontSize:'0.75rem', color:'#888', textTransform:'uppercase'}}>{item.subcategory || ''}</span>
                       
+                      {/* Optional fields display if present */}
+                      {item.materials && <p style={{fontSize:'0.8rem', color:'#666', marginTop:'5px'}}><strong>Mat:</strong> {item.materials}</p>}
+                      
                       <div style={{display:'flex', gap:'10px', marginTop:'15px'}}>
-                        <button onClick={() => startEdit(item)} style={styles.editBtn}><FaEdit/> Edit</button>
-                        <button onClick={() => deleteItem('products', item._id)} style={styles.deleteBtn}><FaTrash/></button>
+                        <button onClick={() => startEdit(item)} style={styles.editBtn}><Edit size={16}/> Edit</button>
+                        <button onClick={() => deleteItem('products', item._id)} style={styles.deleteBtn}><Trash2 size={16}/></button>
                       </div>
                     </div>
                   </div>
@@ -379,27 +434,22 @@ const Admin = () => {
         {/* --- TAB 3: CAREERS --- */}
         {activeTab === 'CAREERS' && (
           <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'40px'}}>
-            
-            {/* SECTION A: POST A JOB */}
             <div style={styles.formCard}>
               <h3>Post New Job</h3>
               <form onSubmit={addJob}>
-                <input name="title" placeholder="Job Title (e.g. Graphic Designer)" style={styles.input} required />
-                <input name="location" placeholder="Location (e.g. Katni / Remote)" style={styles.input} required />
+                <input name="title" placeholder="Job Title" style={styles.input} required />
+                <input name="location" placeholder="Location" style={styles.input} required />
                 <textarea name="description" placeholder="Job Description..." style={{...styles.input, height:'100px'}} required />
                 <button type="submit" style={styles.primaryBtn}>Post Job</button>
               </form>
-
               <h4 style={{marginTop:'30px'}}>Active Listings</h4>
               {jobs.map(job => (
                 <div key={job._id} style={{padding:'10px', borderBottom:'1px solid #eee', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                   <span>{job.title}</span>
-                  <button onClick={() => deleteItem('careers', job._id)} style={styles.deleteBtn}><FaTrash/></button>
+                  <button onClick={() => deleteItem('careers', job._id)} style={styles.deleteBtn}><Trash2 size={16}/></button>
                 </div>
               ))}
             </div>
-
-            {/* SECTION B: VIEW APPLICATIONS */}
             <div>
                <h3>Received Applications ({applications.length})</h3>
                {applications.map(app => (
@@ -408,8 +458,8 @@ const Admin = () => {
                    <p style={{fontSize:'0.9rem', color:'#666'}}>Email: {app.email}</p>
                    <p style={{fontStyle:'italic', margin:'10px 0'}}>"{app.whyJoin}"</p>
                    <div style={{display:'flex', gap:'10px'}}>
-                     <a href={app.cvLink} target="_blank" rel="noreferrer" style={styles.linkBtn}><FaExternalLinkAlt/> View CV</a>
-                     <button onClick={() => deleteItem('applications', app._id)} style={styles.deleteBtn}><FaTrash/></button>
+                     <a href={app.cvLink} target="_blank" rel="noreferrer" style={styles.linkBtn}><ExternalLink size={16}/> View CV</a>
+                     <button onClick={() => deleteItem('applications', app._id)} style={styles.deleteBtn}><Trash2 size={16}/></button>
                    </div>
                  </div>
                ))}
@@ -423,19 +473,18 @@ const Admin = () => {
             <div style={styles.formCard}>
               <h3>Add FAQ</h3>
               <form onSubmit={addFaq}>
-                <input name="question" placeholder="Question (e.g. Do you ship?)" style={styles.input} required />
+                <input name="question" placeholder="Question" style={styles.input} required />
                 <textarea name="answer" placeholder="Answer..." style={{...styles.input, height:'100px'}} required />
                 <button type="submit" style={styles.primaryBtn}>Add FAQ</button>
               </form>
             </div>
-
             <div>
               <h3>Existing FAQs</h3>
               {faqs.map(faq => (
                 <div key={faq._id} style={styles.card}>
                   <strong>Q: {faq.question}</strong>
                   <p style={{color:'#666', marginTop:'5px'}}>A: {faq.answer}</p>
-                  <button onClick={() => deleteItem('faqs', faq._id)} style={{...styles.deleteBtn, marginTop:'10px'}}><FaTrash/> Delete</button>
+                  <button onClick={() => deleteItem('faqs', faq._id)} style={{...styles.deleteBtn, marginTop:'10px'}}><Trash2 size={16}/> Delete</button>
                 </div>
               ))}
             </div>
@@ -481,6 +530,7 @@ const styles = {
   
   inventoryGrid: { display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '40px', alignItems: 'start' },
   formCard: { background: 'white', padding: '30px', borderRadius: '20px', border: '1px solid #e5e7eb', position: 'sticky', top: '20px' },
+  subCatBox: { marginBottom:'15px', background:'#fefce8', padding:'15px', borderRadius:'8px', border:'1px solid #fde047' },
   label: { display: 'block', marginBottom: '5px', fontWeight: '600', fontSize: '0.9rem', color: '#374151' },
   input: { width: '100%', padding: '12px', marginBottom: '15px', border: '1px solid #d1d5db', borderRadius: '8px', outline: 'none' },
   primaryBtn: { width: '100%', padding: '14px', background: 'black', color: 'white', border: 'none', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold' },

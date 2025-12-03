@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import { FaPenNib, FaWhatsapp, FaTimes, FaLightbulb, FaSearch, FaEye } from 'react-icons/fa';
+// Using Lucide React to ensure stability in this environment
+import { PenTool, MessageCircle, X, Lightbulb, Search, Eye, CheckCircle } from 'lucide-react';
+// Assuming this component exists in your local project as requested
 import AuroraBackground from '../components/anim/AuroraBackground'; 
 
 const Gallery = () => {
@@ -23,7 +25,8 @@ const Gallery = () => {
   // 5-Step Animation State
   const [stepIndex, setStepIndex] = useState(0);
 
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+  // Fixed API URL to prevent build warnings
+  const API_URL = 'http://localhost:5001';
 
   // --- CONTENT CONFIGURATION ---
   const steps = [
@@ -39,6 +42,7 @@ const Gallery = () => {
     labels: { title: "Professional Product Labels", desc: "Transform your packaging with our industry-grade labels. Whether for bottles, jars, or boxes, we offer roll and sheet formats." },
     logos: { title: "Brand Identity Logos", desc: "Your logo is your first impression. Our design team crafts memorable, scalable, and versatile logos that define your business identity." },
     cards: { title: "Luxury Visiting Cards", desc: "Make every introduction count with our premium business cards. Featuring high-gsm paper, spot UV, embossing, and unique textures." },
+    // NEW CATEGORIES
     posters: { title: "High-Impact Posters", desc: "Turn walls into windows for your brand. High-resolution printing on gloss, matte, or satin paper. Perfect for events, promotions, and art." },
     banners: { title: "Durable Event Banners", desc: "Make a big statement indoors or outdoors. Our weather-resistant vinyl banners come with reinforced grommets for easy hanging and long-lasting color." }
   };
@@ -55,7 +59,6 @@ const Gallery = () => {
       setLoading(true);
       try {
         const res = await axios.get(`${API_URL}/api/products?category=${type}`);
-        // If data exists, use it.
         if (res.data && res.data.length > 0) {
             setItems(res.data);
         } else {
@@ -76,12 +79,12 @@ const Gallery = () => {
             // Cards
             { _id: 6, title: 'Business Card Front', category: 'cards', subcategory: 'standard', imageUrl: 'https://placehold.co/600x600/222/FFF?text=Card+Front' },
             
-            // POSTERS
+            // POSTERS (New Mock Data)
             { _id: 101, title: 'Summer Music Festival', category: 'posters', subcategory: 'event', imageUrl: 'https://placehold.co/400x600/ff5722/ffffff?text=Music+Fest' },
             { _id: 102, title: 'Minimalist Art Print', category: 'posters', subcategory: 'art', imageUrl: 'https://placehold.co/400x600/333333/ffffff?text=Art+Poster' },
             { _id: 103, title: 'Corporate Seminar Flyer', category: 'posters', subcategory: 'promo', imageUrl: 'https://placehold.co/400x600/1a237e/ffffff?text=Seminar+Flyer' },
             
-            // BANNERS
+            // BANNERS (New Mock Data)
             { _id: 201, title: 'Grand Opening Vinyl', category: 'banners', subcategory: 'outdoor', imageUrl: 'https://placehold.co/800x300/d32f2f/ffffff?text=Grand+Opening' },
             { _id: 202, title: 'Trade Show Standee', category: 'banners', subcategory: 'standee', imageUrl: 'https://placehold.co/300x800/00796b/ffffff?text=Standee' },
             { _id: 203, title: 'Seasonal Sale Mesh', category: 'banners', subcategory: 'outdoor', imageUrl: 'https://placehold.co/800x300/fbc02d/000000?text=Big+Sale' },
@@ -179,16 +182,16 @@ const Gallery = () => {
         <p style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.8'}}>{currentInfo.desc}</p>
       </div>
 
-      {/* 3. FILTERS (Dynamic based on Category) */}
+      {/* 3. FILTERS (Dynamic) */}
       <div style={{display:'flex', justifyContent:'center', gap:'10px', flexWrap:'wrap', marginBottom:'30px', padding:'0 20px'}}>
-        {type === 'labels' && ['all', 'circle', 'oval', 'bottle', 'rounded', 'jar'].map((f) => (
-           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
+        {type === 'labels' && ['all', 'circle', 'oval', 'bottle', 'rounded', 'jar'].map((shape) => (
+           <button key={shape} onClick={() => setLabelFilter(shape)} className={`static-btn ${labelFilter === shape ? '' : 'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter !== shape ? {background:'white', color:'#666'} : {}}>{shape}</button>
         ))}
-        {type === 'posters' && ['all', 'event', 'art', 'promo'].map((f) => (
-           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
+        {type === 'posters' && ['all', 'event', 'art', 'promo'].map((shape) => (
+           <button key={shape} onClick={() => setLabelFilter(shape)} className={`static-btn ${labelFilter === shape ? '' : 'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter !== shape ? {background:'white', color:'#666'} : {}}>{shape}</button>
         ))}
-        {type === 'banners' && ['all', 'outdoor', 'standee'].map((f) => (
-           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
+        {type === 'banners' && ['all', 'outdoor', 'standee', 'vinyl'].map((shape) => (
+           <button key={shape} onClick={() => setLabelFilter(shape)} className={`static-btn ${labelFilter === shape ? '' : 'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter !== shape ? {background:'white', color:'#666'} : {}}>{shape}</button>
         ))}
       </div>
 
@@ -198,13 +201,14 @@ const Gallery = () => {
           <p style={{color:'#666', width:'100%', textAlign:'center'}}>Loading Collection...</p>
         ) : displayItems.length === 0 ? (
           <div style={{textAlign:'center', padding:'40px', color:'#444'}}>
-             <FaSearch size={30} style={{marginBottom:'10px', color:'#ccc'}}/>
+             <Search size={30} style={{marginBottom:'10px', color:'#ccc'}}/>
              <p>No items found.</p>
           </div>
         ) : (
+          /* --- THE FIX: STRICT 3 COLUMNS GRID --- */
           <div style={{
             display: 'grid', 
-            gridTemplateColumns: 'repeat(3, 1fr)', 
+            gridTemplateColumns: 'repeat(3, 1fr)', // Forces 3 columns
             gap: '30px',
             width: '100%'
           }}>
@@ -214,16 +218,16 @@ const Gallery = () => {
                 style={{
                   background: '#fff', border: '1px solid #eee', borderRadius: '4px',
                   display: 'flex', flexDirection: 'column', height: '100%',
-                  overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                  overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  cursor: 'pointer' // Makes the whole card clickable feel
                 }}
+                onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
               >
-                {/* IMAGE BOX */}
-                <div 
-                  onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
-                  style={{
+                {/* IMAGE BOX: FIXED HEIGHT, CONTAIN FIT */}
+                <div style={{
                     height: '250px', width: '100%', background: '#f9fafb',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor: 'zoom-in', padding: '15px', position: 'relative'
+                    padding: '15px', position: 'relative'
                   }}
                 >
                   <img 
@@ -232,23 +236,34 @@ const Gallery = () => {
                     loading="lazy"
                     style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}}
                   />
+                  {/* Hover Eye */}
                   <div className="absolute top-2 right-2 text-gray-400">
-                    <FaEye />
+                    <Eye />
                   </div>
                 </div>
                 
                 {/* INFO */}
                 <div style={{padding: '20px', textAlign: 'center', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                   <div>
-                    <h4 style={{fontSize:'1.1rem', fontWeight:'700', color:'var(--text-main)', marginBottom:'5px'}}>{item.title}</h4>
+                    {/* TITLE HOVER ANIMATION */}
+                    <motion.h4 
+                      whileHover={{ scale: 1.05, color: '#8B3DFF' }}
+                      transition={{ type: 'spring', stiffness: 300 }}
+                      style={{fontSize:'1.1rem', fontWeight:'700', color:'var(--text-main)', marginBottom:'5px', display: 'inline-block'}}
+                    >
+                      {item.title}
+                    </motion.h4>
                     <p style={{fontSize:'0.85rem', color:'#888', textTransform:'uppercase'}}>{item.subcategory || type}</p>
                   </div>
                   <button 
-                    onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
+                    onClick={(e) => { 
+                      e.stopPropagation(); // Prevent double trigger
+                      setSelectedItem(item); setStage('PREVIEW'); 
+                    }}
                     className="category-rect-btn" 
                     style={{width:'100%', marginTop:'15px', justifyContent:'center', padding: '10px'}}
                   >
-                    Preview & Customize
+                    <PenTool size={12} style={{marginRight:'5px'}}/> Preview & Customize
                   </button>
                 </div>
               </div>
@@ -261,7 +276,7 @@ const Gallery = () => {
       <div style={{padding:'4rem 2rem', textAlign:'center', background:'#f8f9fa', borderTop:'1px solid #eee'}}>
         <h2 style={{marginBottom:'15px', color:'var(--text-main)'}}>Have a unique idea?</h2>
         <button onClick={openCustomForm} className="primary-btn" style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}>
-          <FaLightbulb /> Fill Form for Custom Idea
+          <Lightbulb /> Fill Form for Custom Idea
         </button>
       </div>
 
@@ -279,7 +294,7 @@ const Gallery = () => {
             onClick={() => setSelectedItem(null)}
           >
             <button onClick={() => setSelectedItem(null)} style={{position:'absolute', top: 30, right: 30, border:'none', background:'transparent', color: 'white', cursor:'pointer', zIndex: 10001}}>
-              <FaTimes size={30} />
+              <X size={30} />
             </button>
 
             <div onClick={(e) => e.stopPropagation()} style={{width: '100%', maxWidth: '1000px', padding: '20px'}}>
@@ -294,7 +309,7 @@ const Gallery = () => {
                     <h2 style={{fontSize: '2rem', fontWeight: '800', marginBottom: '10px'}}>{selectedItem.title}</h2>
                     <p style={{color: '#ccc', marginBottom: '30px'}}>{selectedItem.description || "Premium quality custom print."}</p>
                     <button onClick={() => setStage('INPUT')} className="primary-btn" style={{padding: '16px 40px', fontSize: '1.2rem', boxShadow: '0 0 30px rgba(139, 61, 255, 0.4)'}}>
-                      <FaPenNib /> Customize This Design
+                      <PenTool /> Customize This Design
                     </button>
                   </div>
                 </motion.div>
@@ -323,11 +338,11 @@ const Gallery = () => {
               {stage === 'CONFIRM' && (
                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} style={{background: 'white', padding: '40px', borderRadius: '12px', width: '100%', maxWidth: '400px', margin: '0 auto', textAlign: 'center'}}>
                     <div style={{width: '80px', height: '80px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px'}}>
-                       <FaWhatsapp size={40} color="#16a34a"/>
+                       <CheckCircle size={40} color="#16a34a"/>
                     </div>
                     <h2 style={{fontSize: '1.8rem', fontWeight: '800', marginBottom: '10px'}}>Ready to Send!</h2>
                     <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366', width: '100%', border: 'none', fontSize: '1.1rem'}}>
-                      <FaWhatsapp style={{marginRight: '8px'}}/> Chat with Team
+                      <MessageCircle style={{marginRight: '8px'}}/> Chat with Team
                     </button>
                  </motion.div>
               )}

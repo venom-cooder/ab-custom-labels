@@ -203,7 +203,7 @@ const Career = () => {
            <p style={{color: '#666', marginBottom: '20px'}}>
              Send your portfolio to us anyway.
            </p>
-           <a href="mailto:careers@abcustomlabels.com" style={{color: 'var(--primary)', fontWeight: '700', textDecoration: 'none'}}>
+           <a href="mailto:ab.customlabels@gmail.com" style={{color: 'var(--primary)', fontWeight: '700', textDecoration: 'none'}}>
              careers@abcustomlabels.com
            </a>
         </div>
