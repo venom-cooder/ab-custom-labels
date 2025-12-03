@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-// Using Lucide React to ensure stability in this environment
+// Using Lucide icons for stability
 import { PenTool, MessageCircle, X, Lightbulb, Search, Eye, CheckCircle } from 'lucide-react';
-// Assuming this component exists in your local project as requested
 import AuroraBackground from '../components/anim/AuroraBackground'; 
 
 const Gallery = () => {
@@ -25,7 +24,7 @@ const Gallery = () => {
   // 5-Step Animation State
   const [stepIndex, setStepIndex] = useState(0);
 
-  // Fixed API URL to prevent build warnings
+  // Fixed API URL
   const API_URL = 'http://localhost:5001';
 
   // --- CONTENT CONFIGURATION ---
@@ -140,7 +139,7 @@ const Gallery = () => {
   return (
     <div className="app-container">
       
-      {/* 1. ANIMATION SECTION */}
+      {/* 1. ANIMATION SECTION (AURORA PRESERVED) */}
       <div style={{position:'relative', height:'500px', overflow:'hidden', display:'flex', alignItems:'center', background:'#fff', borderBottom:'1px solid #eee'}}>
         <AuroraBackground />
         <div style={{position:'relative', zIndex:1, maxWidth:'1200px', margin:'0 auto', width:'100%', display:'grid', gridTemplateColumns:'1fr 1fr', alignItems:'center', padding:'0 2rem'}}>
@@ -184,14 +183,14 @@ const Gallery = () => {
 
       {/* 3. FILTERS (Dynamic) */}
       <div style={{display:'flex', justifyContent:'center', gap:'10px', flexWrap:'wrap', marginBottom:'30px', padding:'0 20px'}}>
-        {type === 'labels' && ['all', 'circle', 'oval', 'bottle', 'rounded', 'jar'].map((shape) => (
-           <button key={shape} onClick={() => setLabelFilter(shape)} className={`static-btn ${labelFilter === shape ? '' : 'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter !== shape ? {background:'white', color:'#666'} : {}}>{shape}</button>
+        {type === 'labels' && ['all', 'circle', 'oval', 'bottle', 'rounded', 'jar'].map((f) => (
+           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
         ))}
-        {type === 'posters' && ['all', 'event', 'art', 'promo'].map((shape) => (
-           <button key={shape} onClick={() => setLabelFilter(shape)} className={`static-btn ${labelFilter === shape ? '' : 'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter !== shape ? {background:'white', color:'#666'} : {}}>{shape}</button>
+        {type === 'posters' && ['all', 'event', 'art', 'promo'].map((f) => (
+           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
         ))}
-        {type === 'banners' && ['all', 'outdoor', 'standee', 'vinyl'].map((shape) => (
-           <button key={shape} onClick={() => setLabelFilter(shape)} className={`static-btn ${labelFilter === shape ? '' : 'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter !== shape ? {background:'white', color:'#666'} : {}}>{shape}</button>
+        {type === 'banners' && ['all', 'outdoor', 'standee', 'vinyl'].map((f) => (
+           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
         ))}
       </div>
 
@@ -245,7 +244,7 @@ const Gallery = () => {
                 {/* INFO */}
                 <div style={{padding: '20px', textAlign: 'center', flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
                   <div>
-                    {/* TITLE HOVER ANIMATION */}
+                    {/* HOVER ANIMATION FOR TITLE */}
                     <motion.h4 
                       whileHover={{ scale: 1.05, color: '#8B3DFF' }}
                       transition={{ type: 'spring', stiffness: 300 }}
