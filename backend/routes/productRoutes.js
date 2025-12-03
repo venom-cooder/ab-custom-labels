@@ -5,7 +5,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 const GalleryItem = require('../models/GalleryItem');
 
-// Cloudinary Setup
+// Cloudinary Config
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_KEY,
@@ -22,19 +22,12 @@ const storage = new CloudinaryStorage({
 const upload = multer({ storage: storage });
 
 // GET: Fetch filtered items
-// Example: /api/products?category=stickers
 router.get('/', async (req, res) => {
   try {
     const { category, subcategory } = req.query;
     let query = {};
-
-    // ✅ STRICT BACKEND FILTERING
-    // If a category is requested (e.g. 'stickers'), only return those items.
     if (category) query.category = category;
-    
-    // If a subcategory is requested (and isn't 'all'), filter by that too.
     if (subcategory && subcategory !== 'all') query.subcategory = subcategory;
-
     const items = await GalleryItem.find(query).sort({ createdAt: -1 });
     res.json(items);
   } catch (err) {
@@ -42,10 +35,11 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST: Add new item (Admin Upload)
+// POST: Add new item (UPDATED)
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const { title, category, subcategory, description } = req.body;
+    // ✅ Extract new fields here
+    const { title, category, subcategory, description, material, idealFor } = req.body;
     
     if (!req.file) return res.status(400).json({ message: 'Image required' });
 
@@ -54,6 +48,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       category,
       subcategory: subcategory || 'general',
       description,
+      material, // ✅ Save Material
+      idealFor, // ✅ Save IdealFor
       imageUrl: req.file.path
     });
 
@@ -64,27 +60,29 @@ router.post('/', upload.single('image'), async (req, res) => {
   }
 });
 
-// PUT: Update existing item
+// PUT: Update item (UPDATED)
 router.put('/:id', upload.single('image'), async (req, res) => {
   try {
-    const { title, category, subcategory, description } = req.body;
+    const { title, category, subcategory, description, material, idealFor } = req.body;
     
-    // 1. Find the existing product
     let product = await GalleryItem.findById(req.params.id);
     if (!product) return res.status(404).json({ msg: 'Product not found' });
 
-    // 2. Update text fields if provided
+    // Update Text Fields
     product.title = title || product.title;
     product.category = category || product.category;
     product.subcategory = subcategory || product.subcategory;
     product.description = description || product.description;
+    
+    // ✅ Update New Fields
+    product.material = material || product.material;
+    product.idealFor = idealFor || product.idealFor;
 
-    // 3. Update Image ONLY if a new one is uploaded
+    // Update Image if new one exists
     if (req.file) {
-      product.imageUrl = req.file.path; // Cloudinary automatically provides this .path
+      product.imageUrl = req.file.path;
     }
 
-    // 4. Save
     await product.save();
     res.json(product);
 
@@ -94,7 +92,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
   }
 });
 
-// DELETE: Remove item
+// DELETE
 router.delete('/:id', async (req, res) => {
   try {
     await GalleryItem.findByIdAndDelete(req.params.id);

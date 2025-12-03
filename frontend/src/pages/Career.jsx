@@ -204,7 +204,7 @@ const Career = () => {
              Send your portfolio to us anyway.
            </p>
            <a href="mailto:ab.customlabels@gmail.com" style={{color: 'var(--primary)', fontWeight: '700', textDecoration: 'none'}}>
-             careers@abcustomlabels.com
+             ab.customlabels@gmail.com
            </a>
         </div>
 
