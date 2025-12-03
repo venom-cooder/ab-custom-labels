@@ -114,7 +114,7 @@ nav {
   z-index: 10;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 8rem 20px 4rem; /* Adjusted top padding for desktop */
+  padding: 8rem 20px 4rem; 
   text-align: center;
 }
 
@@ -512,27 +512,78 @@ footer {
 }
 
 @media (max-width: 768px) {
-  /* --- STRICT FIX 1: HERO VISIBILITY --- */
+  /* --- STRICT FIX 1: HERO VISIBILITY (Photo 2 Fix) --- */
   nav { padding: 1rem; }
+  
   .distortion-wrapper { 
-    height: auto; 
-    min-height: 100vh; /* Allow it to grow */
+    height: auto !important; 
+    min-height: 100vh !important; 
   }
+  
   .hero-overlay {
-    padding: 7rem 20px 4rem; /* Top padding pushes text BELOW navbar */
+    padding: 7rem 20px 4rem !important; /* Pushes content down so Navbar doesn't cover */
   }
-  .hero-title { 
-    font-size: 2.2rem; /* Reduced from 4rem so it fits */
-    margin-top: 20px;
-  }
-  .hero-desc { font-size: 1rem; }
 
-  /* --- STRICT FIX 2: GALLERY PREVIEW BUTTON --- */
+  /* Make Main Title Smaller */
+  .hero-title { 
+    font-size: 2.2rem !important;
+    margin-top: 20px;
+    line-height: 1.2;
+  }
+
+  /* Make Animated Header Glow & Pop */
+  .hero-overlay h2 {
+    font-size: 2rem !important;
+    color: #fff !important;
+    text-shadow: 0 0 10px rgba(139, 61, 255, 0.8), 0 2px 5px rgba(0,0,0,0.9);
+    margin-bottom: 15px !important;
+  }
+
+  /* Dark box for description to ensure readability */
+  .hero-desc { 
+    font-size: 1rem !important; 
+    color: #fff !important;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 30px !important;
+  }
+
+  /* Stack Buttons Vertically */
+  .hero-buttons-grid { 
+    flex-direction: column !important; 
+    gap: 12px;
+  }
+
+  /* --- STRICT FIX 2: GALLERY & BUTTONS (Photo 1 Fix) --- */
+  
+  /* Force Inline Gallery Grid to be 1 Column */
+  .container > div[style*="grid"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* Prevent Squashing of Product Boxes */
+  .product-box, 
+  .container > div > div {
+    width: 100% !important;
+    min-height: auto !important;
+  }
+
+  /* Ensure Images are Visible */
+  .product-image-wrapper {
+    height: 220px !important;
+  }
+
+  /* Fix Button Layout on Mobile */
   .category-rect-btn {
-    width: 100%; 
-    padding: 10px 16px; /* Reduced padding for cleaner look */
-    font-size: 0.9rem;
-    margin-top: 10px; /* Spacing between text and button */
+    width: 100% !important; 
+    padding: 14px !important;
+    font-size: 1rem !important;
+    justify-content: center !important;
+    background: #fff !important;
+    color: #333 !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   }
 
   /* General Mobile Adjustments */
@@ -545,8 +596,6 @@ footer {
   .services-grid { grid-template-columns: 1fr; }
   .full-width-grid { grid-template-columns: 1fr; }
   .additional-services-grid { grid-template-columns: 1fr; gap: 20px; }
-  
-  .hero-buttons-grid { flex-direction: column; }
   
   .nav-links { display: none; }
   .additional-services-header h2 { font-size: 2.5rem; }
