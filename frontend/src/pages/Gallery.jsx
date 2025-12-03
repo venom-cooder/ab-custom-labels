@@ -35,10 +35,12 @@ const Gallery = () => {
   ];
 
   const categoryInfo = {
-    stickers: { title: "Premium Custom Stickers", desc: "Elevate your brand visibility with our high-durability stickers." },
-    labels: { title: "Professional Product Labels", desc: "Transform your packaging with our industry-grade labels." },
-    logos: { title: "Brand Identity Logos", desc: "Your logo is your first impression." },
-    cards: { title: "Luxury Visiting Cards", desc: "Make every introduction count with our premium business cards." }
+    stickers: { title: "Premium Custom Stickers", desc: "Elevate your brand visibility with our high-durability stickers. Crafted from weather-resistant vinyl and available in any die-cut shape." },
+    labels: { title: "Professional Product Labels", desc: "Transform your packaging with our industry-grade labels. Whether for bottles, jars, or boxes, we offer roll and sheet formats." },
+    logos: { title: "Brand Identity Logos", desc: "Your logo is your first impression. Our design team crafts memorable, scalable, and versatile logos that define your business identity." },
+    cards: { title: "Luxury Visiting Cards", desc: "Make every introduction count with our premium business cards. Featuring high-gsm paper, spot UV, embossing, and unique textures." },
+    posters: { title: "High-Impact Posters", desc: "Turn walls into windows for your brand. High-resolution printing on gloss, matte, or satin paper. Perfect for events, promotions, and art." },
+    banners: { title: "Durable Event Banners", desc: "Make a big statement indoors or outdoors. Our weather-resistant vinyl banners come with reinforced grommets for easy hanging and long-lasting color." }
   };
 
   const currentInfo = categoryInfo[type] || categoryInfo['stickers'];
@@ -53,9 +55,39 @@ const Gallery = () => {
       setLoading(true);
       try {
         const res = await axios.get(`${API_URL}/api/products?category=${type}`);
-        setItems(res.data);
+        // If data exists, use it.
+        if (res.data && res.data.length > 0) {
+            setItems(res.data);
+        } else {
+            throw new Error("No data"); // Trigger fallback
+        }
       } catch (err) {
-        console.error("Failed to load gallery", err);
+        console.warn("Using Fallback Mock Data for", type);
+        // FALLBACK MOCK DATA
+        const mockData = [
+            // Stickers
+            { _id: 1, title: 'Holographic Die-Cut', category: 'stickers', subcategory: 'die-cut', imageUrl: 'https://placehold.co/600x600/8B3DFF/FFF?text=Holo+Sticker' },
+            { _id: 4, title: 'QR Code Sticker', category: 'stickers', subcategory: 'square', imageUrl: 'https://placehold.co/600x600/eee/333?text=QR+Sticker' },
+            // Labels
+            { _id: 2, title: 'Matte Jar Label', category: 'labels', subcategory: 'jar', imageUrl: 'https://placehold.co/600x600/00C4CC/FFF?text=Jar+Label' },
+            { _id: 5, title: 'Wine Bottle Label', category: 'labels', subcategory: 'bottle', imageUrl: 'https://placehold.co/600x600/550000/FFF?text=Wine+Label' },
+            // Logos
+            { _id: 3, title: 'Gold Foil Logo', category: 'logos', subcategory: 'modern', imageUrl: 'https://placehold.co/600x600/111/FFF?text=Gold+Logo' },
+            // Cards
+            { _id: 6, title: 'Business Card Front', category: 'cards', subcategory: 'standard', imageUrl: 'https://placehold.co/600x600/222/FFF?text=Card+Front' },
+            
+            // POSTERS
+            { _id: 101, title: 'Summer Music Festival', category: 'posters', subcategory: 'event', imageUrl: 'https://placehold.co/400x600/ff5722/ffffff?text=Music+Fest' },
+            { _id: 102, title: 'Minimalist Art Print', category: 'posters', subcategory: 'art', imageUrl: 'https://placehold.co/400x600/333333/ffffff?text=Art+Poster' },
+            { _id: 103, title: 'Corporate Seminar Flyer', category: 'posters', subcategory: 'promo', imageUrl: 'https://placehold.co/400x600/1a237e/ffffff?text=Seminar+Flyer' },
+            
+            // BANNERS
+            { _id: 201, title: 'Grand Opening Vinyl', category: 'banners', subcategory: 'outdoor', imageUrl: 'https://placehold.co/800x300/d32f2f/ffffff?text=Grand+Opening' },
+            { _id: 202, title: 'Trade Show Standee', category: 'banners', subcategory: 'standee', imageUrl: 'https://placehold.co/300x800/00796b/ffffff?text=Standee' },
+            { _id: 203, title: 'Seasonal Sale Mesh', category: 'banners', subcategory: 'outdoor', imageUrl: 'https://placehold.co/800x300/fbc02d/000000?text=Big+Sale' },
+        ];
+        // Filter mock data for current page type
+        setItems(mockData.filter(i => i.category === type));
       }
       setLoading(false);
     };
@@ -66,13 +98,10 @@ const Gallery = () => {
     return () => clearInterval(stepInterval);
   }, [type, API_URL]);
 
+  // --- FILTER LOGIC ---
   const displayItems = items.filter(item => {
-    if (item.category !== type) return false;
-    if (type === 'labels') {
-      if (labelFilter === 'all') return true;
-      return item.subcategory === labelFilter;
-    }
-    return true;
+    if (labelFilter === 'all') return true;
+    return item.subcategory && item.subcategory.toLowerCase() === labelFilter.toLowerCase();
   });
 
   // --- HANDLERS ---
@@ -150,24 +179,18 @@ const Gallery = () => {
         <p style={{color:'#666', fontSize:'1.1rem', lineHeight:'1.8'}}>{currentInfo.desc}</p>
       </div>
 
-      {/* 3. FILTERS */}
-      {type === 'labels' && (
-        <div style={{display:'flex', justifyContent:'center', gap:'10px', flexWrap:'wrap', marginBottom:'30px', padding:'0 20px'}}>
-          {['all', 'circle', 'oval', 'bottle', 'rounded', 'jar'].map((shape) => (
-            <button key={shape} onClick={() => setLabelFilter(shape)}
-              style={{
-                padding: '8px 16px', borderRadius: '4px', border: '1px solid #eee',
-                background: labelFilter === shape ? 'var(--primary)' : '#fff',
-                color: labelFilter === shape ? '#fff' : '#666',
-                cursor: 'pointer', textTransform: 'capitalize', fontWeight: '600', transition: '0.2s',
-                boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
-              }}
-            >
-              {shape}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* 3. FILTERS (Dynamic based on Category) */}
+      <div style={{display:'flex', justifyContent:'center', gap:'10px', flexWrap:'wrap', marginBottom:'30px', padding:'0 20px'}}>
+        {type === 'labels' && ['all', 'circle', 'oval', 'bottle', 'rounded', 'jar'].map((f) => (
+           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
+        ))}
+        {type === 'posters' && ['all', 'event', 'art', 'promo'].map((f) => (
+           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
+        ))}
+        {type === 'banners' && ['all', 'outdoor', 'standee'].map((f) => (
+           <button key={f} onClick={()=>setLabelFilter(f)} className={`static-btn ${labelFilter===f?'':'bg-white text-gray-500 border-gray-200 shadow-none'}`} style={labelFilter!==f?{background:'white',color:'#666'}:{}}>{f}</button>
+        ))}
+      </div>
 
       {/* 4. GALLERY GRID (STRICT 3 COLS) */}
       <div className="container" style={{maxWidth: '1200px', margin: '0 auto', paddingBottom: '80px', paddingLeft: '20px', paddingRight: '20px'}}>
@@ -179,10 +202,9 @@ const Gallery = () => {
              <p>No items found.</p>
           </div>
         ) : (
-          /* --- THE FIX: STRICT 3 COLUMNS GRID --- */
           <div style={{
             display: 'grid', 
-            gridTemplateColumns: 'repeat(3, 1fr)', // Forces 3 columns
+            gridTemplateColumns: 'repeat(3, 1fr)', 
             gap: '30px',
             width: '100%'
           }}>
@@ -195,7 +217,7 @@ const Gallery = () => {
                   overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
                 }}
               >
-                {/* IMAGE BOX: FIXED HEIGHT, CONTAIN FIT */}
+                {/* IMAGE BOX */}
                 <div 
                   onClick={() => { setSelectedItem(item); setStage('PREVIEW'); }}
                   style={{
@@ -210,7 +232,6 @@ const Gallery = () => {
                     loading="lazy"
                     style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}}
                   />
-                  {/* Hover Eye */}
                   <div className="absolute top-2 right-2 text-gray-400">
                     <FaEye />
                   </div>

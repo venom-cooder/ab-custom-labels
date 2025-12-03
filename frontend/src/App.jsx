@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import ReactGA from "react-ga4"; // Google Analytics
 import { FaHome, FaMagic } from 'react-icons/fa';
 
 // Global Components
@@ -12,17 +13,31 @@ import Home from './pages/Home';
 import Gallery from './pages/Gallery';
 import Admin from './pages/Admin';
 import Career from './pages/Career';
-import AIDesign from './pages/AIDesign'; // New AI Page
+import AIDesign from './pages/AIDesign'; 
 
 // Info & Support Pages
 import About from './pages/About';
-import Privacy from './pages/Privacy';
 import FAQ from './pages/FAQ';
+// Note: Ensure these files exist or create placeholders if they don't
+import Privacy from './pages/Privacy';
 import Feedback from './pages/Feedback';
 import Help from './pages/Help';
 
 // Styles
 import './App.css';
+
+// --- GOOGLE ANALYTICS SETUP ---
+// Replace "G-XXXXXXXXXX" with your actual Measurement ID
+ReactGA.initialize("G-RHE2B3ZH48");
+
+// Internal Component to track page views inside Router
+const AnalyticsTracker = () => {
+  const location = useLocation();
+  useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: location.pathname + location.search });
+  }, [location]);
+  return null;
+};
 
 // --- INTERNAL COMPONENT: Floating Home Button ---
 const BackHomeBtn = () => {
@@ -106,6 +121,9 @@ function App() {
       {/* Ensures page starts at top on navigation */}
       <ScrollToTop />
       
+      {/* Tracks Page Views for Google Analytics */}
+      <AnalyticsTracker />
+      
       {/* Floating Buttons */}
       <BackHomeBtn />
       <AiStudioBtn />
@@ -121,14 +139,16 @@ function App() {
             {/* Main Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/gallery/:type" element={<Gallery />} />
-            <Route path="/ai-design" element={<AIDesign />} /> {/* Restored Route */}
+            <Route path="/ai-design" element={<AIDesign />} />
             <Route path="/career" element={<Career />} />
             <Route path="/secret-admin" element={<Admin />} />
             
             {/* Info Routes */}
             <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<Privacy />} />
             <Route path="/faq" element={<FAQ />} />
+            
+            {/* Ensure these components exist or route will fail */}
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/help" element={<Help />} />
           </Routes>

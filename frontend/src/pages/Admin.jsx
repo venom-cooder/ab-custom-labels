@@ -4,7 +4,7 @@ import axios from 'axios';
 import { 
   FaLock, FaBox, FaEnvelope, FaTrash, FaPlus, FaSignOutAlt, 
   FaSync, FaCheckCircle, FaWhatsapp, FaUserTie, FaExternalLinkAlt, 
-  FaPaperPlane, FaQuestionCircle, FaBriefcase 
+  FaPaperPlane, FaQuestionCircle, FaBriefcase, FaEdit, FaTimes 
 } from 'react-icons/fa';
 
 const Admin = () => {
@@ -18,15 +18,21 @@ const Admin = () => {
   // Data States
   const [orders, setOrders] = useState([]);
   const [gallery, setGallery] = useState([]);
-  const [applications, setApplications] = useState([]); // Received CVs
-  const [jobs, setJobs] = useState([]); // Job Postings
-  const [faqs, setFaqs] = useState([]); // FAQ Questions
+  const [applications, setApplications] = useState([]); 
+  const [jobs, setJobs] = useState([]); 
+  const [faqs, setFaqs] = useState([]); 
 
   const [loading, setLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Inventory Form Logic
-  const [invCategory, setInvCategory] = useState('stickers'); // Default
+  // --- INVENTORY FORM STATE (For Add & Edit) ---
+  const [editId, setEditId] = useState(null); // If null, we are adding. If set, we are editing.
+  const [invForm, setInvForm] = useState({
+    title: '',
+    description: '',
+    category: 'stickers',
+    subcategory: 'general'
+  });
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
@@ -83,40 +89,76 @@ const Admin = () => {
     }
   };
 
-  // --- 4. INVENTORY: ADD ITEM ---
-  const addToGallery = async (e) => {
+  // --- 4. INVENTORY: HANDLE SUBMIT (ADD or EDIT) ---
+  const handleInventorySubmit = async (e) => {
     e.preventDefault();
     setIsUploading(true);
     
     const form = e.target;
     const formData = new FormData();
     
-    formData.append('title', form.title.value);
-    formData.append('category', invCategory); // Uses state
-    // Only add subcategory if it's a label
-    formData.append('subcategory', invCategory === 'labels' ? form.subcategory.value : 'general');
-    formData.append('description', form.description.value);
+    formData.append('title', invForm.title);
+    formData.append('category', invForm.category);
+    formData.append('subcategory', invForm.category === 'labels' ? invForm.subcategory : 'general');
+    formData.append('description', invForm.description);
     
+    // Only append image if a new one is selected
     if (form.image.files[0]) {
       formData.append('image', form.image.files[0]);
-    } else {
+    } else if (!editId) {
+      // If adding new item, image is mandatory
       alert("Please select an image!");
       setIsUploading(false);
       return;
     }
 
     try {
-      await axios.post(`${API_URL}/api/products`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      alert("Item Uploaded Successfully!");
+      if (editId) {
+        // --- EDIT MODE (PUT) ---
+        await axios.put(`${API_URL}/api/products/${editId}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        alert("Item Updated Successfully!");
+      } else {
+        // --- ADD MODE (POST) ---
+        await axios.post(`${API_URL}/api/products`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        alert("Item Uploaded Successfully!");
+      }
+      
+      resetInventoryForm();
       fetchAllData(); 
-      form.reset();
     } catch (err) {
-      alert("Upload failed.");
+      alert("Operation failed.");
       console.error(err);
     }
     setIsUploading(false);
+  };
+
+  // Pre-fill form for editing
+  const startEdit = (item) => {
+    setEditId(item._id);
+    setInvForm({
+      title: item.title,
+      description: item.description || '',
+      category: item.category,
+      subcategory: item.subcategory || 'general'
+    });
+    // Scroll to top of form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const resetInventoryForm = () => {
+    setEditId(null);
+    setInvForm({
+      title: '',
+      description: '',
+      category: 'stickers',
+      subcategory: 'general'
+    });
+    // Reset file input manually if needed, usually form reset handles it but since we bind value...
+    document.getElementById('fileInput').value = "";
   };
 
   // --- 5. CAREER: ADD JOB ---
@@ -228,27 +270,43 @@ const Admin = () => {
           </div>
         )}
 
-        {/* --- TAB 2: INVENTORY --- */}
+        {/* --- TAB 2: INVENTORY (ADD / EDIT) --- */}
         {activeTab === 'INVENTORY' && (
           <div style={styles.inventoryGrid}>
-            {/* ADD FORM */}
+            {/* ADD/EDIT FORM */}
             <div style={styles.formCard}>
-               <h3 style={{ fontSize:'1.4rem', marginBottom: '20px' }}>Add to Gallery</h3>
-               <form onSubmit={addToGallery}>
+               <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'20px'}}>
+                 <h3 style={{ fontSize:'1.4rem', margin:0 }}>{editId ? 'Edit Item' : 'Add to Gallery'}</h3>
+                 {editId && <button onClick={resetInventoryForm} style={{background:'none', border:'none', color:'#666', cursor:'pointer'}}><FaTimes/> Cancel Edit</button>}
+               </div>
+               
+               <form onSubmit={handleInventorySubmit}>
                  
-                 <label style={styles.label}>1. What do you want to add?</label>
-                 <select name="category" style={styles.input} onChange={(e) => setInvCategory(e.target.value)}>
+                 <label style={styles.label}>1. Category</label>
+                 <select 
+                    name="category" 
+                    style={styles.input} 
+                    value={invForm.category}
+                    onChange={(e) => setInvForm({...invForm, category: e.target.value})}
+                 >
                    <option value="stickers">Stickers</option>
                    <option value="logos">Logos</option>
                    <option value="labels">Labels</option>
                    <option value="cards">Cards</option>
+                   <option value="posters">Posters</option> {/* Added */}
+                   <option value="banners">Banners</option> {/* Added */}
                  </select>
 
                  {/* CONDITIONAL: ONLY SHOW SHAPE IF LABELS SELECTED */}
-                 {invCategory === 'labels' && (
+                 {invForm.category === 'labels' && (
                    <div style={{marginBottom:'15px', background:'#fefce8', padding:'15px', borderRadius:'8px', border:'1px solid #fde047'}}>
-                      <label style={styles.label}>2. What is its shape?</label>
-                      <select name="subcategory" style={styles.input}>
+                      <label style={styles.label}>2. Shape / Type</label>
+                      <select 
+                        name="subcategory" 
+                        style={styles.input}
+                        value={invForm.subcategory}
+                        onChange={(e) => setInvForm({...invForm, subcategory: e.target.value})}
+                      >
                         <option value="general">General / Other</option>
                         <option value="circle">Circle Labels</option>
                         <option value="oval">Oval Labels</option>
@@ -260,16 +318,30 @@ const Admin = () => {
                  )}
 
                  <label style={styles.label}>Title</label>
-                 <input name="title" placeholder="Ex: Gold Foil Logo" style={styles.input} required />
+                 <input 
+                    name="title" 
+                    placeholder="Ex: Gold Foil Logo" 
+                    style={styles.input} 
+                    value={invForm.title}
+                    onChange={(e) => setInvForm({...invForm, title: e.target.value})}
+                    required 
+                 />
                  
                  <label style={styles.label}>Description</label>
-                 <textarea name="description" placeholder="Describe material, finish..." style={{...styles.input, height:'80px'}} required />
+                 <textarea 
+                    name="description" 
+                    placeholder="Describe material, finish..." 
+                    style={{...styles.input, height:'80px'}} 
+                    value={invForm.description}
+                    onChange={(e) => setInvForm({...invForm, description: e.target.value})}
+                    required 
+                 />
 
-                 <label style={styles.label}>Upload Photo</label>
-                 <input type="file" name="image" accept="image/*" style={{marginBottom:'20px'}} required />
+                 <label style={styles.label}>{editId ? 'Replace Photo (Optional)' : 'Upload Photo'}</label>
+                 <input type="file" id="fileInput" name="image" accept="image/*" style={{marginBottom:'20px'}} />
 
                  <button type="submit" style={styles.primaryBtn} disabled={isUploading}>
-                   {isUploading ? 'Uploading...' : '+ Add Item'}
+                   {isUploading ? 'Processing...' : (editId ? 'Update Item' : '+ Add Item')}
                  </button>
                </form>
             </div>
@@ -280,11 +352,22 @@ const Admin = () => {
               <div style={styles.galleryGrid}>
                 {gallery.map((item) => (
                   <div key={item._id} style={styles.galleryCard}>
-                    <img src={item.imageUrl} style={styles.galleryImg} alt={item.title} />
+                    <div style={{position:'relative'}}>
+                       <img src={item.imageUrl} style={styles.galleryImg} alt={item.title} />
+                       {/* Category Badge */}
+                       <span style={{position:'absolute', bottom:'10px', left:'10px', background:'rgba(0,0,0,0.6)', color:'white', fontSize:'0.7rem', padding:'2px 6px', borderRadius:'4px', textTransform:'uppercase'}}>
+                         {item.category}
+                       </span>
+                    </div>
+                    
                     <div style={{padding:'15px'}}>
                       <strong>{item.title}</strong><br/>
-                      <span style={{fontSize:'0.75rem', color:'#888', textTransform:'uppercase'}}>{item.category} {item.subcategory ? `• ${item.subcategory}` : ''}</span>
-                      <button onClick={() => deleteItem('products', item._id)} style={{...styles.deleteBtn, marginTop:'10px', width:'100%'}}><FaTrash/> Delete</button>
+                      <span style={{fontSize:'0.75rem', color:'#888', textTransform:'uppercase'}}>{item.subcategory || ''}</span>
+                      
+                      <div style={{display:'flex', gap:'10px', marginTop:'15px'}}>
+                        <button onClick={() => startEdit(item)} style={styles.editBtn}><FaEdit/> Edit</button>
+                        <button onClick={() => deleteItem('products', item._id)} style={styles.deleteBtn}><FaTrash/></button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -325,7 +408,7 @@ const Admin = () => {
                    <p style={{fontSize:'0.9rem', color:'#666'}}>Email: {app.email}</p>
                    <p style={{fontStyle:'italic', margin:'10px 0'}}>"{app.whyJoin}"</p>
                    <div style={{display:'flex', gap:'10px'}}>
-                     <a href={app.cvLink} target="_blank" style={styles.linkBtn}><FaExternalLinkAlt/> View CV</a>
+                     <a href={app.cvLink} target="_blank" rel="noreferrer" style={styles.linkBtn}><FaExternalLinkAlt/> View CV</a>
                      <button onClick={() => deleteItem('applications', app._id)} style={styles.deleteBtn}><FaTrash/></button>
                    </div>
                  </div>
@@ -392,7 +475,8 @@ const styles = {
   
   actionRow: { display: 'flex', gap: '10px', marginTop: '20px', alignItems: 'center' },
   whatsappBtn: { flex: 1, background: '#25D366', color: 'white', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', display:'flex', alignItems:'center', justifyContent:'center', gap:'8px' },
-  deleteBtn: { background: '#fee2e2', color: '#ef4444', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer' },
+  deleteBtn: { background: '#fee2e2', color: '#ef4444', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', flex: 1, display:'flex', alignItems:'center', justifyContent:'center', gap:'5px', fontWeight:'600' },
+  editBtn: { background: '#dbeafe', color: '#2563eb', border: 'none', padding: '10px', borderRadius: '8px', cursor: 'pointer', flex: 1, display:'flex', alignItems:'center', justifyContent:'center', gap:'5px', fontWeight:'600' },
   linkBtn: { textDecoration: 'none', background: 'black', color: 'white', padding: '10px', borderRadius: '8px', display:'flex', alignItems:'center', gap:'5px', fontSize:'0.9rem', fontWeight:'bold' },
   
   inventoryGrid: { display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '40px', alignItems: 'start' },
