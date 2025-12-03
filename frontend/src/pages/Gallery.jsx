@@ -2,9 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-// Using Lucide icons for stability
-import { PenTool, MessageCircle, X, Lightbulb, Search, Eye, CheckCircle } from 'lucide-react';
 import AuroraBackground from '../components/anim/AuroraBackground'; 
+
+// --- INLINE ICONS (No Dependencies) ---
+const Icons = {
+  PenTool: () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg>
+  ),
+  MessageCircle: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+  ),
+  X: () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  ),
+  Lightbulb: () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 16.5 8 4.5 4.5 0 0 0 12 3.5 4.5 4.5 0 0 0 7.5 8c0 1.5.8 2.8 2 3.5.76.76 1.23 1.52 1.41 2.5"></path></svg>
+  ),
+  Search: () => (
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+  ),
+  Eye: () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+  ),
+  CheckCircle: () => (
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+  )
+};
 
 const Gallery = () => {
   const { type } = useParams(); 
@@ -200,7 +223,7 @@ const Gallery = () => {
           <p style={{color:'#666', width:'100%', textAlign:'center'}}>Loading Collection...</p>
         ) : displayItems.length === 0 ? (
           <div style={{textAlign:'center', padding:'40px', color:'#444'}}>
-             <Search size={30} style={{marginBottom:'10px', color:'#ccc'}}/>
+             <Icons.Search />
              <p>No items found.</p>
           </div>
         ) : (
@@ -237,7 +260,7 @@ const Gallery = () => {
                   />
                   {/* Hover Eye */}
                   <div className="absolute top-2 right-2 text-gray-400">
-                    <Eye />
+                    <Icons.Eye />
                   </div>
                 </div>
                 
@@ -260,9 +283,9 @@ const Gallery = () => {
                       setSelectedItem(item); setStage('PREVIEW'); 
                     }}
                     className="category-rect-btn" 
-                    style={{width:'100%', marginTop:'15px', justifyContent:'center', padding: '10px'}}
+                    style={{width:'100%', marginTop:'15px', justifyContent:'center', padding: '10px', display: 'flex', alignItems: 'center', gap: '5px'}}
                   >
-                    <PenTool size={12} style={{marginRight:'5px'}}/> Preview & Customize
+                    <Icons.PenTool /> Preview & Customize
                   </button>
                 </div>
               </div>
@@ -274,8 +297,8 @@ const Gallery = () => {
       {/* BOTTOM CTA */}
       <div style={{padding:'4rem 2rem', textAlign:'center', background:'#f8f9fa', borderTop:'1px solid #eee'}}>
         <h2 style={{marginBottom:'15px', color:'var(--text-main)'}}>Have a unique idea?</h2>
-        <button onClick={openCustomForm} className="primary-btn" style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem'}}>
-          <Lightbulb /> Fill Form for Custom Idea
+        <button onClick={openCustomForm} className="primary-btn" style={{margin:'0 auto', padding:'15px 30px', fontSize:'1rem', display: 'flex', alignItems: 'center', gap: '8px'}}>
+          <Icons.Lightbulb /> Fill Form for Custom Idea
         </button>
       </div>
 
@@ -293,7 +316,7 @@ const Gallery = () => {
             onClick={() => setSelectedItem(null)}
           >
             <button onClick={() => setSelectedItem(null)} style={{position:'absolute', top: 30, right: 30, border:'none', background:'transparent', color: 'white', cursor:'pointer', zIndex: 10001}}>
-              <X size={30} />
+              <Icons.X />
             </button>
 
             <div onClick={(e) => e.stopPropagation()} style={{width: '100%', maxWidth: '1000px', padding: '20px'}}>
@@ -307,8 +330,8 @@ const Gallery = () => {
                   <div style={{textAlign: 'center', color: 'white'}}>
                     <h2 style={{fontSize: '2rem', fontWeight: '800', marginBottom: '10px'}}>{selectedItem.title}</h2>
                     <p style={{color: '#ccc', marginBottom: '30px'}}>{selectedItem.description || "Premium quality custom print."}</p>
-                    <button onClick={() => setStage('INPUT')} className="primary-btn" style={{padding: '16px 40px', fontSize: '1.2rem', boxShadow: '0 0 30px rgba(139, 61, 255, 0.4)'}}>
-                      <PenTool /> Customize This Design
+                    <button onClick={() => setStage('INPUT')} className="primary-btn" style={{padding: '16px 40px', fontSize: '1.2rem', boxShadow: '0 0 30px rgba(139, 61, 255, 0.4)', display: 'flex', alignItems: 'center', gap: '8px'}}>
+                      <Icons.PenTool /> Customize This Design
                     </button>
                   </div>
                 </motion.div>
@@ -337,11 +360,11 @@ const Gallery = () => {
               {stage === 'CONFIRM' && (
                  <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} style={{background: 'white', padding: '40px', borderRadius: '12px', width: '100%', maxWidth: '400px', margin: '0 auto', textAlign: 'center'}}>
                     <div style={{width: '80px', height: '80px', background: '#dcfce7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px'}}>
-                       <CheckCircle size={40} color="#16a34a"/>
+                       <Icons.CheckCircle />
                     </div>
                     <h2 style={{fontSize: '1.8rem', fontWeight: '800', marginBottom: '10px'}}>Ready to Send!</h2>
-                    <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366', width: '100%', border: 'none', fontSize: '1.1rem'}}>
-                      <MessageCircle style={{marginRight: '8px'}}/> Chat with Team
+                    <button onClick={handleFinalWhatsApp} className="primary-btn" style={{background:'#25D366', width: '100%', border: 'none', fontSize: '1.1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
+                      <Icons.MessageCircle /> Chat with Team
                     </button>
                  </motion.div>
               )}
