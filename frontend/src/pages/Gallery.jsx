@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import AuroraBackground from '../components/anim/AuroraBackground';
 
 // --- INTERNAL ICON COMPONENTS (No External Dependencies) ---
 const FaPenNib = (props) => (
@@ -35,20 +36,6 @@ const FaEye = (props) => (
   </svg>
 );
 
-// Fallback for AuroraBackground if file is missing (Guarantees runnability)
-const AuroraFallback = ({children}) => (
-  <div style={{
-    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
-    background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)', zIndex: 0
-  }}>
-    {children}
-  </div>
-);
-
-// Try to import, but we'll use fallback if needed in logic below
-// (In a single file environment, we just assume the fallback for safety unless file exists)
-const AuroraBackground = AuroraFallback; 
-
 const Gallery = () => {
   const { type } = useParams(); 
   const navigate = useNavigate();
@@ -67,7 +54,7 @@ const Gallery = () => {
   // 5-Step Animation State
   const [stepIndex, setStepIndex] = useState(0);
 
-  // Simplified API URL for environment compatibility
+  // Use standard localhost URL for environment compatibility
   const API_URL = 'http://localhost:5001';
 
   // --- CONTENT CONFIGURATION ---
@@ -100,9 +87,12 @@ const Gallery = () => {
       setLoading(true);
       try {
         const res = await axios.get(`${API_URL}/api/products?category=${type}`);
-        // If data exists, use it.
-        if (res.data && res.data.length > 0) {
-            setItems(res.data);
+        // Ensure we only show items that match the current category, 
+        // regardless of whether the backend filtered them or returned all items.
+        const filteredItems = res.data ? res.data.filter(item => item.category === type) : [];
+
+        if (filteredItems.length > 0) {
+            setItems(filteredItems);
         } else {
             throw new Error("No data"); // Trigger fallback
         }
