@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios'; 
-import { FaArrowRight, FaTimes, FaWhatsapp, FaCheckCircle, FaStar, FaCheck, FaPlus, FaMinus, FaPenNib, FaTag, FaIdCard, FaShapes, FaMagic, FaLightbulb, FaPaperPlane } from 'react-icons/fa';
+import { 
+  FaArrowRight, FaTimes, FaWhatsapp, FaCheckCircle, FaStar, FaCheck, FaPlus, FaMinus, 
+  FaPenNib, FaTag, FaIdCard, FaShapes, FaMagic, FaLightbulb, FaPaperPlane,
+  FaImage, FaScroll // ✅ Added Icons for Posters & Banners
+} from 'react-icons/fa';
 
 // Animation Components
 import TiltCard from '../components/anim/TiltCard';
@@ -141,9 +145,14 @@ const Home = () => {
         ></div>
         
         <div className="hero-overlay" style={{ paddingTop: '0', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <h1 className="hero-title" style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '10px', color: 'white', textShadow: '0 4px 12px rgba(0,0,0,0.3)' }}>
+          <motion.h1 
+            className="hero-title"
+            whileHover={{ scale: 1.05, letterSpacing: "2px", color: "var(--primary)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+            style={{ fontSize: '3.5rem', fontWeight: '800', marginBottom: '10px', color: 'white', textShadow: '0 4px 12px rgba(0,0,0,0.3)', cursor: 'default' }}
+          >
             We Don’t Print Labels…
-          </h1>
+          </motion.h1>
 
           <div style={{ height: '60px', marginBottom: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <AnimatePresence mode="wait">
@@ -173,6 +182,10 @@ const Home = () => {
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/labels')}><FaTag color="var(--accent)"/> Labels</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/cards')}><FaIdCard color="#E1306C"/> Cards</button>
             <button className="category-rect-btn" onClick={()=>navigate('/gallery/stickers')}><FaShapes color="#25D366"/> Stickers</button>
+            
+            {/* ✅ ADDED POSTERS & BANNERS */}
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/posters')}><FaImage color="#FF9F43"/> Posters</button>
+            <button className="category-rect-btn" onClick={()=>navigate('/gallery/banners')}><FaScroll color="#0ABDE3"/> Banners</button>
           </div>
           
           <div style={{marginTop: '40px'}}>
@@ -186,7 +199,13 @@ const Home = () => {
       {/* 2. WHAT WE MAKE */}
       <section className="make-section">
         <div className="make-text">
-          <h2>Quality you can <span style={{color:'var(--primary)'}}>feel.</span></h2>
+          <motion.h2 
+            whileHover={{ scale: 1.05, letterSpacing: "1px", color: "var(--primary)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+            style={{ cursor: 'default' }}
+          >
+            Quality you can <span style={{color:'var(--primary)'}}>feel.</span>
+          </motion.h2>
           <p>
             We don't just print; we craft experiences. From matte-finish business cards to die-cut vinyl stickers that withstand the elements.
           </p>
@@ -221,12 +240,16 @@ const Home = () => {
             }}>
               NEW INTELLIGENCE
             </span>
-            <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111', lineHeight: '1.1' }}>
+            <motion.h2 
+              whileHover={{ scale: 1.05, letterSpacing: "1px", color: "var(--primary)" }}
+              transition={{ type: "spring", stiffness: 300 }}
+              style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111', lineHeight: '1.1', cursor: 'default' }}
+            >
               Meet Your <br/>
               <span style={{ background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                 Brand Identity Builder AI
               </span>
-            </h2>
+            </motion.h2>
             <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.6', marginBottom: '30px' }}>
               Not sure if your design is print-ready? Our AI analyzes your brand colors, shapes, and typography to give you a <strong>Professional Print Score</strong>.
             </p>
@@ -258,7 +281,13 @@ const Home = () => {
       <section style={{ position: 'relative', minHeight: '500px', overflow: 'hidden', display: 'flex', alignItems: 'center', background:'#fff' }}>
         <AuroraBackground />
         <div style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-          <h2 style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111' }}>Product Showcase</h2>
+          <motion.h2 
+            whileHover={{ scale: 1.05, letterSpacing: "2px", color: "var(--primary)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+            style={{ fontSize: '3rem', fontWeight: '900', marginBottom: '20px', color: '#111', cursor: 'default' }}
+          >
+            Product Showcase
+          </motion.h2>
           <p style={{ fontSize: '1.2rem', color: '#555', lineHeight: '1.6', marginBottom: '50px', maxWidth: '800px', margin: '0 auto 50px' }}>
             From boutique brands to enterprise solutions, our custom labels enhance products across every industry.
           </p>
@@ -277,7 +306,13 @@ const Home = () => {
       {/* 5. SERVICES */}
       <section className="services-section">
         <div className="services-header">
-          <h2>Our Services</h2>
+          <motion.h2 
+            whileHover={{ scale: 1.05, letterSpacing: "1px", color: "var(--primary)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+            style={{ cursor: 'default' }}
+          >
+            Our Services
+          </motion.h2>
           <p>From concept to creation, we deliver exceptional custom labels that elevate your brand and captivate your customers.</p>
         </div>
         <div className="services-grid">
@@ -299,7 +334,13 @@ const Home = () => {
       {/* 6. ADDITIONAL SERVICES */}
       <section className="additional-services-section">
         <div className="additional-services-header">
-          <h2>Additional Services</h2>
+          <motion.h2 
+            whileHover={{ scale: 1.05, letterSpacing: "1px", color: "var(--primary)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+            style={{ cursor: 'default' }}
+          >
+            Additional Services
+          </motion.h2>
           <p>Beyond basic labels, we offer comprehensive solutions to meet all your branding and packaging needs.</p>
         </div>
         <div className="additional-services-grid">
@@ -318,7 +359,13 @@ const Home = () => {
         {gallerySections.map((section) => (
           <div key={section.type} style={{ marginBottom: '60px' }}>
             <div className="category-header" style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
-              <h3>{section.title}</h3>
+              <motion.h3
+                 whileHover={{ scale: 1.05, letterSpacing: "1px", color: "var(--primary)" }}
+                 transition={{ type: "spring", stiffness: 300 }}
+                 style={{ cursor: 'default' }}
+              >
+                {section.title}
+              </motion.h3>
             </div>
             
             {/* STRICT 3 COLUMN GRID */}
@@ -375,7 +422,13 @@ const Home = () => {
       <section style={{ position: 'relative', padding: '6rem 5%', overflow: 'hidden', textAlign: 'center', background:'#f8f9fa' }}>
         <AuroraBackground />
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <h2 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '40px', color: 'var(--text-main)' }}>Why Choose AB Custom Labels?</h2>
+          <motion.h2 
+            whileHover={{ scale: 1.05, letterSpacing: "1px", color: "var(--primary)" }}
+            transition={{ type: "spring", stiffness: 300 }}
+            style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '40px', color: 'var(--text-main)', cursor: 'default' }}
+          >
+            Why Choose AB Custom Labels?
+          </motion.h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '20px' }}>
             {whyChooseUs.map((item, i) => (
               <div key={i} style={{ background: 'white', padding: '30px', borderRadius: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' }}>
@@ -390,9 +443,13 @@ const Home = () => {
 
       {/* 9. FAQS */}
       <section style={{ padding: '6rem 5%', background: '#fff', maxWidth: '1000px', margin: '0 auto' }}>
-        <h2 style={{ fontSize: '3rem', fontWeight: '800', textAlign: 'center', marginBottom: '40px', color: 'var(--text-main)' }}>
+        <motion.h2 
+          whileHover={{ scale: 1.05, letterSpacing: "1px", color: "var(--primary)" }}
+          transition={{ type: "spring", stiffness: 300 }}
+          style={{ fontSize: '3rem', fontWeight: '800', textAlign: 'center', marginBottom: '40px', color: 'var(--text-main)', cursor: 'default' }}
+        >
           Frequently Asked Questions
-        </h2>
+        </motion.h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           {faqData.map((item, i) => (
             <div key={i} style={{ border: '1px solid #eee', borderRadius: '12px', overflow: 'hidden' }}>
