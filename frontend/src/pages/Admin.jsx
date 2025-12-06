@@ -101,7 +101,11 @@ const Admin = () => {
     
     formData.append('title', invForm.title);
     formData.append('category', invForm.category);
-    formData.append('subcategory', invForm.category === 'labels' ? invForm.subcategory : 'general');
+    
+    // ✅ FIXED: Check logic to include Posters and Banners for subcategories
+    const hasSubcategory = ['labels', 'posters', 'banners'].includes(invForm.category);
+    formData.append('subcategory', hasSubcategory ? invForm.subcategory : 'general');
+    
     formData.append('description', invForm.description);
     // Append new optional fields
     formData.append('material', invForm.material);
@@ -135,7 +139,7 @@ const Admin = () => {
       resetInventoryForm();
       fetchAllData(); 
     } catch (err) {
-      alert("Operation failed.");
+      alert("Operation failed. Check if image is too large or network is down.");
       console.error(err);
     }
     setIsUploading(false);
@@ -297,7 +301,8 @@ const Admin = () => {
                     name="category" 
                     style={styles.input} 
                     value={invForm.category}
-                    onChange={(e) => setInvForm({...invForm, category: e.target.value})}
+                    // Reset subcategory to general when category changes to avoid mismatches
+                    onChange={(e) => setInvForm({...invForm, category: e.target.value, subcategory: 'general'})}
                  >
                    <option value="stickers">Stickers</option>
                    <option value="logos">Logos</option>
@@ -307,22 +312,41 @@ const Admin = () => {
                    <option value="banners">Banners</option>
                  </select>
 
-                 {/* CONDITIONAL: ONLY SHOW SHAPE IF LABELS SELECTED */}
-                 {invForm.category === 'labels' && (
+                 {/* ✅ FIXED: CONDITIONAL SUB-CATEGORY FOR LABELS, POSTERS, AND BANNERS */}
+                 {['labels', 'posters', 'banners'].includes(invForm.category) && (
                    <div style={{marginBottom:'15px', background:'#fefce8', padding:'15px', borderRadius:'8px', border:'1px solid #fde047'}}>
-                      <label style={styles.label}>2. Shape / Type</label>
+                      <label style={styles.label}>2. Type / Subcategory</label>
                       <select 
                         name="subcategory" 
                         style={styles.input}
                         value={invForm.subcategory}
                         onChange={(e) => setInvForm({...invForm, subcategory: e.target.value})}
                       >
-                        <option value="general">General / Other</option>
-                        <option value="circle">Circle Labels</option>
-                        <option value="oval">Oval Labels</option>
-                        <option value="bottle">Water Bottle Labels</option>
-                        <option value="rounded">Rounded Corner</option>
-                        <option value="jar">Jar Labels</option>
+                        {invForm.category === 'labels' && (
+                          <>
+                            <option value="general">General / Other</option>
+                            <option value="circle">Circle Labels</option>
+                            <option value="oval">Oval Labels</option>
+                            <option value="bottle">Water Bottle Labels</option>
+                            <option value="rounded">Rounded Corner</option>
+                            <option value="jar">Jar Labels</option>
+                          </>
+                        )}
+                        {invForm.category === 'posters' && (
+                          <>
+                            <option value="general">General</option>
+                            <option value="event">Event Poster</option>
+                            <option value="art">Art Print</option>
+                            <option value="promo">Promotional</option>
+                          </>
+                        )}
+                        {invForm.category === 'banners' && (
+                          <>
+                            <option value="general">General</option>
+                            <option value="outdoor">Outdoor Vinyl</option>
+                            <option value="standee">Roll-up Standee</option>
+                          </>
+                        )}
                       </select>
                    </div>
                  )}
