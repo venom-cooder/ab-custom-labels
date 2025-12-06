@@ -76,11 +76,7 @@ const Gallery = () => {
       try {
         // ✅ Correctly passing category to backend
         const res = await axios.get(`${API_URL}/api/products?category=${type}`);
-        
-        // Use data directly. If backend returns [], that's fine (empty gallery).
-        // Only use mock data on catch (Error)
         setItems(res.data || []);
-        
       } catch (err) {
         console.warn("API Error, Loading Fallback Data for:", type);
         
@@ -96,6 +92,14 @@ const Gallery = () => {
             { _id: 3, title: 'Gold Foil Logo', category: 'logos', subcategory: 'modern', imageUrl: 'https://placehold.co/600x600/111/FFF?text=Gold+Logo', material: 'Digital Foil', idealFor: 'Branding' },
             // Cards
             { _id: 6, title: 'Business Card Front', category: 'cards', subcategory: 'standard', imageUrl: 'https://placehold.co/600x600/222/FFF?text=Card+Front', material: '350GSM Matte', idealFor: 'Networking' },
+            
+            // POSTERS (Updated Mock)
+            { _id: 101, title: 'Concert Poster', category: 'posters', subcategory: 'event', imageUrl: 'https://placehold.co/600x800/222/FFF?text=Concert+Poster', material: 'Glossy 180gsm', idealFor: 'Music Events' },
+            { _id: 102, title: 'Art Exhibition', category: 'posters', subcategory: 'art', imageUrl: 'https://placehold.co/600x800/444/FFF?text=Art+Print', material: 'Matte Canvas', idealFor: 'Galleries' },
+            
+            // BANNERS (Updated Mock)
+            { _id: 201, title: 'Grand Opening', category: 'banners', subcategory: 'outdoor', imageUrl: 'https://placehold.co/800x400/D00/FFF?text=Opening+Banner', material: 'Heavy Vinyl', idealFor: 'Storefronts' },
+            { _id: 202, title: 'Trade Show Rollup', category: 'banners', subcategory: 'standee', imageUrl: 'https://placehold.co/400x800/00D/FFF?text=Standee', material: 'Retractable', idealFor: 'Expos' }
         ];
         // Filter mock data for current page type
         setItems(mockData.filter(i => i.category === type));
